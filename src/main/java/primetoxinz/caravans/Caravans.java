@@ -39,7 +39,7 @@ public class Caravans {
     @Mod.Instance(owner = MODID)
     public static Caravans INSTANCE;
 
-    @SidedProxy(clientSide = "primetoxinz.caravans.proxy.ClientProxy", serverSide = "primetoxinz.caravans.proxy.CommonProxy")
+    @SidedProxy(clientSide = "primetoxinz.caravans.proxy.ClientProxy", serverSide = "primetoxinz.caravans.proxy.ServerProxy")
     public static CommonProxy proxy;
 
 

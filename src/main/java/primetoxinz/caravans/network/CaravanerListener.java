@@ -53,7 +53,7 @@ public class CaravanerListener implements IWorldEventListener {
 
     @Override
     public void onEntityAdded(Entity entityIn) {
-        if (entityIn.hasCapability(ICaravaner.CARAVANER_CAPABILITY, null)) {
+        if (entityIn != null && entityIn.hasCapability(ICaravaner.CARAVANER_CAPABILITY, null)) {
             ICaravaner caravaner = entityIn.getCapability(ICaravaner.CARAVANER_CAPABILITY, null);
             NetworkHandler.INSTANCE.sendToAll(new MessageCaravan(caravaner));
         }
