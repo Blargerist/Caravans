@@ -24,8 +24,8 @@ public class GuiHandler implements IGuiHandler {
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         Entity entity = world.getEntityByID(ID);
-        if (entity.hasCapability(CapabilityCaravaneer.CARAVANER_CAPABILITY, null)) {
-            ICaravaneer caravaner = entity.getCapability(CapabilityCaravaneer.CARAVANER_CAPABILITY, null);
+        if (entity.hasCapability(CapabilityCaravaneer.CARAVANEER_CAPABILITY, null)) {
+            ICaravaneer caravaner = entity.getCapability(CapabilityCaravaneer.CARAVANEER_CAPABILITY, null);
             ICaravan caravan = caravaner.getCaravan();
             if (caravan != null)
                 return new ContainerCaravan((IItemHandlerModifiable) player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, UP), caravan, world);
@@ -37,8 +37,8 @@ public class GuiHandler implements IGuiHandler {
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         Entity entity = world.getEntityByID(ID);
-        if (entity.hasCapability(CapabilityCaravaneer.CARAVANER_CAPABILITY, null)) {
-            ICaravaneer caravaner = entity.getCapability(CapabilityCaravaneer.CARAVANER_CAPABILITY, null);
+        if (entity.hasCapability(CapabilityCaravaneer.CARAVANEER_CAPABILITY, null)) {
+            ICaravaneer caravaner = entity.getCapability(CapabilityCaravaneer.CARAVANEER_CAPABILITY, null);
             ICaravan caravan = caravaner.getCaravan();
             if (caravan != null)
                 return new GuiCaravan((IItemHandlerModifiable) player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, UP), caravan, world);

@@ -6,8 +6,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import primetoxinz.caravans.CaravanHandler;
-import primetoxinz.caravans.Caravans;
+import primetoxinz.caravans.CaravansMod;
 import primetoxinz.caravans.api.ICaravan;
 import primetoxinz.caravans.capability.ICaravaneer;
 
@@ -28,7 +27,7 @@ public class Caravan<C extends Entity & ICaravaneer> implements ICaravan {
     protected ResourceLocation name;
 
     public Caravan(String name, Class<C> leader, List<Class<C>> followers) {
-        setRegistryName(new ResourceLocation(Caravans.MODID, name));
+        setRegistryName(new ResourceLocation(CaravansMod.MODID, name));
         this.status = CaravanStatus.ARRIVING;
         this.leader = leader;
         this.followers = followers;
@@ -38,17 +37,17 @@ public class Caravan<C extends Entity & ICaravaneer> implements ICaravan {
     public void spawn(World world, BlockPos pos, EntityPlayer player) {
         ICaravaneer leader = getLeader(world).setTarget(player);
         leader.spawn(world, pos, this);
-        List<ICaravaneer> followers = getFollowers(world);
-        int amount = followers.size();
-        List<BlockPos> positions = CaravanHandler.generatePositions(world, pos, 5, amount);
-        for (int i = 0; i < amount; i++) {
-            followers.get(i).spawn(world, positions.get(i), this).setTarget(player);
-        }
+//        List<ICaravaneer> followers = getFollowers(world);
+//        int amount = followers.size();
+//        List<BlockPos> positions = CaravanHandler.generatePositions(world, pos, 5, amount);
+//        for (int i = 0; i < amount; i++) {
+//            followers.get(i).spawn(world, positions.get(i), this).setTarget(player);
+//        }
     }
 
     @Override
     public void open(EntityPlayer player, EnumHand hand, Entity entity) {
-        player.openGui(Caravans.MODID, entity.getEntityId(), player.world, (int) entity.posX, (int) entity.posY, (int) entity.posZ);
+        player.openGui(CaravansMod.MODID, entity.getEntityId(), player.world, (int) entity.posX, (int) entity.posY, (int) entity.posZ);
     }
 
     @Override
@@ -70,7 +69,7 @@ public class Caravan<C extends Entity & ICaravaneer> implements ICaravan {
 
     @Override
     public List<ICaravaneer> getFollowers(World world) {
-        return followers.stream().map(c -> newInstance(c, world)).collect(Collectors.toList());
+        return followers.stream().map(c -> newInstance(c, world,this)).collect(Collectors.toList());
     }
 
     @Override
@@ -92,7 +91,7 @@ public class Caravan<C extends Entity & ICaravaneer> implements ICaravan {
 
     @Override
     public ICaravaneer getLeader(World world) {
-        return newInstance(leader, world);
+        return newInstance(leader, world, this);
     }
 
     @Override
@@ -112,14 +111,19 @@ public class Caravan<C extends Entity & ICaravaneer> implements ICaravan {
         return ICaravan.class;
     }
 
-    public C newInstance(Class<C> clazz, World world) {
+    public C newInstance(Class<C> clazz, World world, ICaravan caravan) {
         try {
-            Constructor<C> c = clazz.getConstructor(World.class);
-            C t = c.newInstance(world);
+            Constructor<C> c = clazz.getConstructor(World.class, ICaravan.class);
+            C t = c.newInstance(world,caravan);
             return t;
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return getRegistryName().toString();
     }
 }

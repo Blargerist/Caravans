@@ -17,7 +17,7 @@ import java.util.Random;
 /**
  * Created by primetoxinz on 7/1/17.
  */
-@Mod.EventBusSubscriber(modid = Caravans.MODID)
+@Mod.EventBusSubscriber(modid = CaravansMod.MODID)
 public class CaravanHandler {
 
 
@@ -28,9 +28,8 @@ public class CaravanHandler {
             return;
         EntityPlayer player = event.getEntityPlayer();
         if (event.getItemStack().getItem() == Items.STICK) {
-
             BlockPos pos = generatePosition(world, player.getPosition(), 60);
-            CaravanAPI.basic.spawn(world, pos, player);
+            CaravanAPI.donkey.spawn(world, pos, player);
             player.sendStatusMessage(new TextComponentString("A Caravan is arriving!"), true);
         }
     }

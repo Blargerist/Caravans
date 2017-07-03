@@ -8,9 +8,14 @@ import primetoxinz.caravans.api.ICaravan;
  */
 public class EntityCaravaneerTrader extends EntityCaravaneer {
 
+    public EntityCaravaneerTrader(World world, ICaravan caravan) {
+        super(world, caravan);
+    }
+
     public EntityCaravaneerTrader(World world) {
         super(world);
     }
+
     @Override
     public ICaravan getCaravan() {
         return null;

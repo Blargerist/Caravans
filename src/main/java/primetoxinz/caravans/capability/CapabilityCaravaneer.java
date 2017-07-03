@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 public class CapabilityCaravaneer {
 
     @CapabilityInject(ICaravaneer.class)
-    public static final Capability<ICaravaneer> CARAVANER_CAPABILITY = null;
+    public static final Capability<ICaravaneer> CARAVANEER_CAPABILITY = null;
 
     public static void register() {
         CapabilityManager.INSTANCE.register(

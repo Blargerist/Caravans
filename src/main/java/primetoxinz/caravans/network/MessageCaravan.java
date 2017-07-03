@@ -2,8 +2,7 @@ package primetoxinz.caravans.network;
 
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import primetoxinz.caravans.Caravans;
-import primetoxinz.caravans.api.CaravanAPI;
+import primetoxinz.caravans.CaravansMod;
 import primetoxinz.caravans.capability.ICaravaneer;
 
 /**
@@ -18,12 +17,12 @@ public class MessageCaravan extends NetworkMessage {
 
     public MessageCaravan(ICaravaneer caravaner) {
         id = caravaner.getID();
-        this.caravan = CaravanAPI.basic.getRegistryName().toString();
+        this.caravan = caravaner.getCaravan().toString();
     }
 
     @Override
     public IMessage handleMessage(MessageContext context) {
-        Caravans.proxy.syncCaravaner(id, caravan);
+        CaravansMod.proxy.syncCaravaneer(id, caravan);
         return null;
     }
 }

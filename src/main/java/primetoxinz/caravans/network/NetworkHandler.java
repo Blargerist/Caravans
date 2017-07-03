@@ -15,11 +15,11 @@ package primetoxinz.caravans.network;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
-import primetoxinz.caravans.Caravans;
+import primetoxinz.caravans.CaravansMod;
 
 public class NetworkHandler {
 
-    public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(Caravans.MODID);
+    public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(CaravansMod.MODID);
 
     private static int i = 0;
 

@@ -8,6 +8,10 @@ import primetoxinz.caravans.api.ICaravan;
  */
 public class EntityCaravaneerZombie extends EntityCaravaneer {
 
+    public EntityCaravaneerZombie(World world, ICaravan caravan) {
+        super(world, caravan);
+    }
+
     public EntityCaravaneerZombie(World world) {
         super(world);
     }
