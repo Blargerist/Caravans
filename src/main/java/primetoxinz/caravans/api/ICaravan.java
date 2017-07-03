@@ -1,4 +1,4 @@
-package primetoxinz.caravans.capability;
+package primetoxinz.caravans.api;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,6 +13,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
 import primetoxinz.caravans.CaravanHandler;
 import primetoxinz.caravans.Caravans;
+import primetoxinz.caravans.capability.ICaravaner;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;

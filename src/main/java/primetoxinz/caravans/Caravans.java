@@ -16,7 +16,8 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.RegistryBuilder;
 import net.minecraftforge.fml.relauncher.Side;
 import primetoxinz.caravans.api.CaravanAPI;
-import primetoxinz.caravans.capability.ICaravan;
+import primetoxinz.caravans.api.ICaravan;
+import primetoxinz.caravans.capability.CapabilityCaravaner;
 import primetoxinz.caravans.capability.ICaravaner;
 import primetoxinz.caravans.entity.EntityCaravanerDonkey;
 import primetoxinz.caravans.entity.EntityCaravanerTrader;
@@ -45,7 +46,7 @@ public class Caravans {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        CapabilityManager.INSTANCE.register(ICaravaner.class, new ICaravaner.Storage(), ICaravaner.Impl::new);
+        CapabilityCaravaner.register();
 
         proxy.preInit(event);
 

@@ -3,7 +3,6 @@ package primetoxinz.caravans.api;
 import com.google.common.collect.Lists;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.IForgeRegistry;
-import primetoxinz.caravans.capability.ICaravan;
 import primetoxinz.caravans.entity.EntityCaravanerDonkey;
 import primetoxinz.caravans.entity.EntityCaravanerTrader;
 

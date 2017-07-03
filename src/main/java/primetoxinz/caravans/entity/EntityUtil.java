@@ -1,16 +1,10 @@
 package primetoxinz.caravans.entity;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityBodyHelper;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import primetoxinz.caravans.capability.ICaravan;
-import primetoxinz.caravans.capability.ICaravaner;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * Created by primetoxinz on 7/2/17.

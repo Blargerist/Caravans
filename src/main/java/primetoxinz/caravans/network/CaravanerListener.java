@@ -8,6 +8,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorldEventListener;
 import net.minecraft.world.World;
+import primetoxinz.caravans.capability.CapabilityCaravaner;
 import primetoxinz.caravans.capability.ICaravaner;
 
 import javax.annotation.Nullable;
@@ -53,8 +54,8 @@ public class CaravanerListener implements IWorldEventListener {
 
     @Override
     public void onEntityAdded(Entity entityIn) {
-        if (entityIn != null && entityIn.hasCapability(ICaravaner.CARAVANER_CAPABILITY, null)) {
-            ICaravaner caravaner = entityIn.getCapability(ICaravaner.CARAVANER_CAPABILITY, null);
+        if (entityIn != null && entityIn.hasCapability(CapabilityCaravaner.CARAVANER_CAPABILITY, null)) {
+            ICaravaner caravaner = entityIn.getCapability(CapabilityCaravaner.CARAVANER_CAPABILITY, null);
             NetworkHandler.INSTANCE.sendToAll(new MessageCaravan(caravaner));
         }
     }

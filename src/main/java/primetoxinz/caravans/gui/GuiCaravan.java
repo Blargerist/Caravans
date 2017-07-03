@@ -3,7 +3,7 @@ package primetoxinz.caravans.gui;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandlerModifiable;
-import primetoxinz.caravans.capability.ICaravan;
+import primetoxinz.caravans.api.ICaravan;
 
 /**
  * Created by primetoxinz on 7/2/17.

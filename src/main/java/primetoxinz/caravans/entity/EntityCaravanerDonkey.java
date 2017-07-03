@@ -11,7 +11,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.capabilities.Capability;
-import primetoxinz.caravans.capability.ICaravan;
+import primetoxinz.caravans.api.ICaravan;
+import primetoxinz.caravans.capability.CapabilityCaravaner;
 import primetoxinz.caravans.capability.ICaravaner;
 import primetoxinz.caravans.entity.ai.AIGoToPlayer;
 
@@ -84,14 +85,14 @@ public class EntityCaravanerDonkey extends EntityDonkey implements ICaravaner {
 
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        return capability == ICaravaner.CARAVANER_CAPABILITY;
+        return capability == CapabilityCaravaner.CARAVANER_CAPABILITY;
     }
 
     @Nullable
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == ICaravaner.CARAVANER_CAPABILITY)
-            return ICaravaner.CARAVANER_CAPABILITY.cast(this);
+        if (capability == CapabilityCaravaner.CARAVANER_CAPABILITY)
+            return CapabilityCaravaner.CARAVANER_CAPABILITY.cast(this);
         return super.getCapability(capability, facing);
     }
 

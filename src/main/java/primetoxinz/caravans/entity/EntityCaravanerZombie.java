@@ -1,7 +1,7 @@
 package primetoxinz.caravans.entity;
 
 import net.minecraft.world.World;
-import primetoxinz.caravans.capability.ICaravan;
+import primetoxinz.caravans.api.ICaravan;
 
 /**
  * Created by primetoxinz on 7/2/17.

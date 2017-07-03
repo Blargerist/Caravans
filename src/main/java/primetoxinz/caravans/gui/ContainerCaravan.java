@@ -5,8 +5,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.SlotItemHandler;
-import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
-import primetoxinz.caravans.capability.ICaravan;
+import primetoxinz.caravans.api.ICaravan;
 
 /**
  * Created by primetoxinz on 7/2/17.

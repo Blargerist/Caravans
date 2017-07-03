@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import primetoxinz.caravans.api.CaravanAPI;
+import primetoxinz.caravans.capability.CapabilityCaravaner;
 import primetoxinz.caravans.capability.ICaravaner;
 import primetoxinz.caravans.client.RenderDonkey;
 import primetoxinz.caravans.client.RenderTrader;
@@ -37,8 +38,8 @@ public class ClientProxy extends CommonProxy {
     public void syncCaravaner(int id, String caravan) {
         World world = Minecraft.getMinecraft().world;
         Entity entity = world.getEntityByID(id);
-        if (entity != null && entity.hasCapability(ICaravaner.CARAVANER_CAPABILITY, null)) {
-            ICaravaner caravaner = entity.getCapability(ICaravaner.CARAVANER_CAPABILITY, null);
+        if (entity != null && entity.hasCapability(CapabilityCaravaner.CARAVANER_CAPABILITY, null)) {
+            ICaravaner caravaner = entity.getCapability(CapabilityCaravaner.CARAVANER_CAPABILITY, null);
             caravaner.setCaravan(CaravanAPI.CARAVANS.getValue(new ResourceLocation(caravan)));
         }
     }
