@@ -1,0 +1,16 @@
+[
+{
+  "modid": "carvans",
+  "name": "Villager Caravans",
+  "description": "Adds caravans",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["primetoxinz"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
