@@ -8,14 +8,14 @@ import primetoxinz.caravans.api.ICaravan;
 /**
  * Created by primetoxinz on 7/3/17.
  */
-public class Caravaner implements ICaravaner {
+public class Caravaneer implements ICaravaneer {
     ICaravan caravan;
 
-    public Caravaner() {
+    public Caravaneer() {
     }
 
     @Override
-    public ICaravaner setCaravan(ICaravan caravan) {
+    public ICaravaneer setCaravan(ICaravan caravan) {
         this.caravan = caravan;
         return this;
     }
@@ -31,13 +31,13 @@ public class Caravaner implements ICaravaner {
     }
 
     @Override
-    public ICaravaner spawn(World world, BlockPos pos, ICaravan caravan) {
+    public ICaravaneer spawn(World world, BlockPos pos, ICaravan caravan) {
 
         return this;
     }
 
     @Override
-    public ICaravaner setTarget(EntityPlayer player) {
+    public ICaravaneer setTarget(EntityPlayer player) {
         return this;
     }
 

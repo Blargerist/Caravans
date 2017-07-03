@@ -1,4 +1,4 @@
-package primetoxinz.caravans.entity.ai;
+package primetoxinz.caravans.common.entity.ai;
 
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;

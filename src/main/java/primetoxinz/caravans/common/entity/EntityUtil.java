@@ -1,4 +1,4 @@
-package primetoxinz.caravans.entity;
+package primetoxinz.caravans.common.entity;
 
 import net.minecraft.entity.EntityBodyHelper;
 import net.minecraft.entity.EntityLiving;

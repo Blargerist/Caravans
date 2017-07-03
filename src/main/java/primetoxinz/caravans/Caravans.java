@@ -2,7 +2,6 @@ package primetoxinz.caravans;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -17,12 +16,11 @@ import net.minecraftforge.fml.common.registry.RegistryBuilder;
 import net.minecraftforge.fml.relauncher.Side;
 import primetoxinz.caravans.api.CaravanAPI;
 import primetoxinz.caravans.api.ICaravan;
-import primetoxinz.caravans.capability.CapabilityCaravaner;
-import primetoxinz.caravans.capability.ICaravaner;
-import primetoxinz.caravans.entity.EntityCaravanerDonkey;
-import primetoxinz.caravans.entity.EntityCaravanerTrader;
-import primetoxinz.caravans.entity.EntityCaravanerZombie;
-import primetoxinz.caravans.gui.GuiHandler;
+import primetoxinz.caravans.capability.CapabilityCaravaneer;
+import primetoxinz.caravans.common.entity.EntityCaravaneerDonkey;
+import primetoxinz.caravans.common.entity.EntityCaravaneerTrader;
+import primetoxinz.caravans.common.entity.EntityCaravaneerZombie;
+import primetoxinz.caravans.client.gui.GuiHandler;
 import primetoxinz.caravans.network.MessageCaravan;
 import primetoxinz.caravans.network.NetworkHandler;
 import primetoxinz.caravans.proxy.CommonProxy;
@@ -46,13 +44,13 @@ public class Caravans {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        CapabilityCaravaner.register();
+        CapabilityCaravaneer.register();
 
         proxy.preInit(event);
 
-        registerEntity(EntityCaravanerZombie.class, "caravaner.zombie", 64, 1, true);
-        registerEntity(EntityCaravanerTrader.class, "caravaner.trader", 64, 1, true);
-        registerEntity(EntityCaravanerDonkey.class, "caravaner.donkey", 64, 1, true);
+        registerEntity(EntityCaravaneerZombie.class, "caravaner.zombie", 64, 1, true);
+        registerEntity(EntityCaravaneerTrader.class, "caravaner.trader", 64, 1, true);
+        registerEntity(EntityCaravaneerDonkey.class, "caravaner.donkey", 64, 1, true);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(Caravans.INSTANCE, new GuiHandler());
         NetworkHandler.register(MessageCaravan.class, Side.CLIENT);

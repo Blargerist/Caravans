@@ -8,17 +8,17 @@ import primetoxinz.caravans.api.ICaravan;
 /**
  * Created by primetoxinz on 7/1/17.
  */
-public interface ICaravaner {
+public interface ICaravaneer {
 
-    ICaravaner setCaravan(ICaravan caravan);
+    ICaravaneer setCaravan(ICaravan caravan);
 
     ICaravan getCaravan();
 
     BlockPos getPosition();
 
-    ICaravaner spawn(World world, BlockPos pos, ICaravan caravan);
+    ICaravaneer spawn(World world, BlockPos pos, ICaravan caravan);
 
-    ICaravaner setTarget(EntityPlayer player);
+    ICaravaneer setTarget(EntityPlayer player);
 
     int getID();
 

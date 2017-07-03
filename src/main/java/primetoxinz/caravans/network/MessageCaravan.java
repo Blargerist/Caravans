@@ -4,7 +4,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import primetoxinz.caravans.Caravans;
 import primetoxinz.caravans.api.CaravanAPI;
-import primetoxinz.caravans.capability.ICaravaner;
+import primetoxinz.caravans.capability.ICaravaneer;
 
 /**
  * Created by primetoxinz on 7/3/17.
@@ -16,7 +16,7 @@ public class MessageCaravan extends NetworkMessage {
     public MessageCaravan() {
     }
 
-    public MessageCaravan(ICaravaner caravaner) {
+    public MessageCaravan(ICaravaneer caravaner) {
         id = caravaner.getID();
         this.caravan = CaravanAPI.basic.getRegistryName().toString();
     }

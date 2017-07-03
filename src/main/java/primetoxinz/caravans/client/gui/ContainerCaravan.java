@@ -1,4 +1,4 @@
-package primetoxinz.caravans.gui;
+package primetoxinz.caravans.client.gui;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;

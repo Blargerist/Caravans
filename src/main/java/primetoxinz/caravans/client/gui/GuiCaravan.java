@@ -1,4 +1,4 @@
-package primetoxinz.caravans.gui;
+package primetoxinz.caravans.client.gui;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.world.World;

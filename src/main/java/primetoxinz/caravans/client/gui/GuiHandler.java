@@ -1,4 +1,4 @@
-package primetoxinz.caravans.gui;
+package primetoxinz.caravans.client.gui;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -7,8 +7,8 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import primetoxinz.caravans.api.ICaravan;
-import primetoxinz.caravans.capability.CapabilityCaravaner;
-import primetoxinz.caravans.capability.ICaravaner;
+import primetoxinz.caravans.capability.CapabilityCaravaneer;
+import primetoxinz.caravans.capability.ICaravaneer;
 
 import javax.annotation.Nullable;
 
@@ -24,8 +24,8 @@ public class GuiHandler implements IGuiHandler {
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         Entity entity = world.getEntityByID(ID);
-        if (entity.hasCapability(CapabilityCaravaner.CARAVANER_CAPABILITY, null)) {
-            ICaravaner caravaner = entity.getCapability(CapabilityCaravaner.CARAVANER_CAPABILITY, null);
+        if (entity.hasCapability(CapabilityCaravaneer.CARAVANER_CAPABILITY, null)) {
+            ICaravaneer caravaner = entity.getCapability(CapabilityCaravaneer.CARAVANER_CAPABILITY, null);
             ICaravan caravan = caravaner.getCaravan();
             if (caravan != null)
                 return new ContainerCaravan((IItemHandlerModifiable) player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, UP), caravan, world);
@@ -37,8 +37,8 @@ public class GuiHandler implements IGuiHandler {
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         Entity entity = world.getEntityByID(ID);
-        if (entity.hasCapability(CapabilityCaravaner.CARAVANER_CAPABILITY, null)) {
-            ICaravaner caravaner = entity.getCapability(CapabilityCaravaner.CARAVANER_CAPABILITY, null);
+        if (entity.hasCapability(CapabilityCaravaneer.CARAVANER_CAPABILITY, null)) {
+            ICaravaneer caravaner = entity.getCapability(CapabilityCaravaneer.CARAVANER_CAPABILITY, null);
             ICaravan caravan = caravaner.getCaravan();
             if (caravan != null)
                 return new GuiCaravan((IItemHandlerModifiable) player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, UP), caravan, world);

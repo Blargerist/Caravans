@@ -1,4 +1,4 @@
-package primetoxinz.caravans.entity;
+package primetoxinz.caravans.common.entity;
 
 import com.google.common.collect.Lists;
 import net.minecraft.entity.EntityCreature;
@@ -13,25 +13,25 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.capabilities.Capability;
 import primetoxinz.caravans.api.ICaravan;
-import primetoxinz.caravans.capability.CapabilityCaravaner;
-import primetoxinz.caravans.capability.ICaravaner;
-import primetoxinz.caravans.entity.ai.AIGoToPlayer;
-import primetoxinz.caravans.entity.ai.AILook;
-import primetoxinz.caravans.entity.ai.AISpreadOut;
-import primetoxinz.caravans.entity.ai.AIStatus;
+import primetoxinz.caravans.capability.CapabilityCaravaneer;
+import primetoxinz.caravans.capability.ICaravaneer;
+import primetoxinz.caravans.common.entity.ai.AIGoToPlayer;
+import primetoxinz.caravans.common.entity.ai.AILook;
+import primetoxinz.caravans.common.entity.ai.AISpreadOut;
+import primetoxinz.caravans.common.entity.ai.AIStatus;
 
 import javax.annotation.Nullable;
 
 /**
  * Created by primetoxinz on 7/1/17.
  */
-public class EntityCaravaner extends EntityCreature implements ICaravaner {
+public class EntityCaravaneer extends EntityCreature implements ICaravaneer {
 
 
     private ICaravan caravan;
     private AIStatus ai;
 
-    public EntityCaravaner(World world) {
+    public EntityCaravaneer(World world) {
         super(world);
         setHealth(0.1f);
     }
@@ -59,14 +59,14 @@ public class EntityCaravaner extends EntityCreature implements ICaravaner {
 
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        return capability == CapabilityCaravaner.CARAVANER_CAPABILITY;
+        return capability == CapabilityCaravaneer.CARAVANER_CAPABILITY;
     }
 
     @Nullable
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityCaravaner.CARAVANER_CAPABILITY)
-            return CapabilityCaravaner.CARAVANER_CAPABILITY.cast(this);
+        if (capability == CapabilityCaravaneer.CARAVANER_CAPABILITY)
+            return CapabilityCaravaneer.CARAVANER_CAPABILITY.cast(this);
         return super.getCapability(capability, facing);
     }
 
@@ -83,7 +83,7 @@ public class EntityCaravaner extends EntityCreature implements ICaravaner {
     }
 
     @Override
-    public ICaravaner setCaravan(ICaravan caravan) {
+    public ICaravaneer setCaravan(ICaravan caravan) {
         this.caravan = caravan;
         return this;
     }
@@ -94,7 +94,7 @@ public class EntityCaravaner extends EntityCreature implements ICaravaner {
     }
 
     @Override
-    public ICaravaner spawn(World world, BlockPos pos, ICaravan caravan) {
+    public ICaravaneer spawn(World world, BlockPos pos, ICaravan caravan) {
         this.setCaravan(caravan);
         this.setPosition(pos.getX(), pos.getY(), pos.getZ());
         world.spawnEntity(this);
@@ -102,7 +102,7 @@ public class EntityCaravaner extends EntityCreature implements ICaravaner {
     }
 
     @Override
-    public ICaravaner setTarget(EntityPlayer player) {
+    public ICaravaneer setTarget(EntityPlayer player) {
         setAttackTarget(player);
         return this;
     }

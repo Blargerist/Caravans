@@ -1,4 +1,4 @@
-package primetoxinz.caravans.gui;
+package primetoxinz.caravans.client.gui;
 
 import net.minecraftforge.items.ItemStackHandler;
 
