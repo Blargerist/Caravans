@@ -12,6 +12,8 @@ import primetoxinz.caravans.api.CaravanAPI;
 import primetoxinz.caravans.api.ICaravan;
 import primetoxinz.caravans.capability.CapabilityCaravaneer;
 import primetoxinz.caravans.capability.ICaravaneer;
+import primetoxinz.caravans.common.entity.ai.AIGoToPlayer;
+import primetoxinz.caravans.common.entity.ai.AIStatus;
 import primetoxinz.caravans.network.MessageCaravan;
 import primetoxinz.caravans.network.NetworkHandler;
 
@@ -31,6 +33,11 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer {
     public EntityCaravaneer(World worldIn, ICaravan caravan) {
         this(worldIn);
         this.caravan = caravan;
+    }
+
+    @Override
+    protected void initEntityAI() {
+        this.tasks.addTask(1,new AIStatus(new AIGoToPlayer(this)));
     }
 
     @Override

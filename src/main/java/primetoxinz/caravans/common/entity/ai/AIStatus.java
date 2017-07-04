@@ -1,5 +1,6 @@
 package primetoxinz.caravans.common.entity.ai;
 
+import com.google.common.collect.Lists;
 import net.minecraft.entity.ai.EntityAIBase;
 
 import java.util.List;
@@ -13,8 +14,8 @@ public class AIStatus extends EntityAIBase {
     private List<AIState> states;
     private AIState currentState;
 
-    public AIStatus(List<AIState> states) {
-        this.states = states;
+    public AIStatus(AIState... states) {
+        this.states = Lists.newArrayList(states);
         nextState();
     }
 
