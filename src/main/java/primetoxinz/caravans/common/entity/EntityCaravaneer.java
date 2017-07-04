@@ -74,7 +74,6 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer {
     @Override
     public void writeEntityToNBT(NBTTagCompound compound) {
         compound.setString("caravan", caravan.toString());
-        System.out.println("write:" + caravan.toString());
         super.writeEntityToNBT(compound);
     }
 
@@ -82,7 +81,6 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer {
     public void readFromNBT(NBTTagCompound compound) {
         if (compound.hasKey("caravan")) {
             String c = compound.getString("caravan");
-            System.out.println("read:" + c);
             setCaravan(CaravanAPI.getCaravan(c));
         }
         super.readFromNBT(compound);
@@ -93,7 +91,6 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer {
         if (isServerWorld()) {
             NetworkHandler.INSTANCE.sendToAll(new MessageCaravan(this));
         }
-        System.out.println((world.isRemote ? "client" : "server") + ":" + caravan);
         return super.processInteract(player, hand);
     }
 }
