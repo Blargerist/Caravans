@@ -28,8 +28,8 @@ public class CaravanHandler {
             return;
         EntityPlayer player = event.getEntityPlayer();
         if (event.getItemStack().getItem() == Items.STICK) {
-            BlockPos pos = generatePosition(world, player.getPosition(), 60);
-            CaravanAPI.donkey.spawn(world, pos, player);
+            BlockPos pos = generatePosition(world, player.getPosition(), 10);
+            CaravanAPI.test.spawn(world, pos, player);
             player.sendStatusMessage(new TextComponentString("A Caravan is arriving!"), true);
         }
     }

@@ -36,7 +36,7 @@ public class Caravan<C extends Entity & ICaravaneer> implements ICaravan {
     @Override
     public void spawn(World world, BlockPos pos, EntityPlayer player) {
         ICaravaneer leader = getLeader(world).setTarget(player);
-        leader.spawn(world, pos, this);
+        leader.spawn(world, pos);
 //        List<ICaravaneer> followers = getFollowers(world);
 //        int amount = followers.size();
 //        List<BlockPos> positions = CaravanHandler.generatePositions(world, pos, 5, amount);

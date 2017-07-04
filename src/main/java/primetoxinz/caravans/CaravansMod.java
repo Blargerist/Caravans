@@ -17,9 +17,7 @@ import primetoxinz.caravans.api.CaravanAPI;
 import primetoxinz.caravans.api.ICaravan;
 import primetoxinz.caravans.capability.CapabilityCaravaneer;
 import primetoxinz.caravans.client.gui.GuiHandler;
-import primetoxinz.caravans.common.entity.EntityCaravaneerDonkey;
-import primetoxinz.caravans.common.entity.EntityCaravaneerTrader;
-import primetoxinz.caravans.common.entity.EntityCaravaneerZombie;
+import primetoxinz.caravans.common.entity.EntityCaravaneer;
 import primetoxinz.caravans.network.MessageCaravan;
 import primetoxinz.caravans.network.NetworkHandler;
 import primetoxinz.caravans.proxy.CommonProxy;
@@ -45,9 +43,7 @@ public class CaravansMod {
     public void preInit(FMLPreInitializationEvent event) {
         CapabilityCaravaneer.register();
 
-        registerEntity(EntityCaravaneerZombie.class, "caravaner.zombie", 64, 1, true);
-        registerEntity(EntityCaravaneerTrader.class, "caravaner.trader", 64, 1, true);
-        registerEntity(EntityCaravaneerDonkey.class, "caravaner.donkey", 64, 1, true);
+        registerEntity(EntityCaravaneer.class, "caravaner.trader", 64, 1, true);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(CaravansMod.INSTANCE, new GuiHandler());
         NetworkHandler.register(MessageCaravan.class, Side.CLIENT);

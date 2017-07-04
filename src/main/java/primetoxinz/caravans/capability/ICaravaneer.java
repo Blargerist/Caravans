@@ -16,7 +16,7 @@ public interface ICaravaneer {
 
     BlockPos getPosition();
 
-    ICaravaneer spawn(World world, BlockPos pos, ICaravan caravan);
+    ICaravaneer spawn(World world, BlockPos pos);
 
     ICaravaneer setTarget(EntityPlayer player);
 

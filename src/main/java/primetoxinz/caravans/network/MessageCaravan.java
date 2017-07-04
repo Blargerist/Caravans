@@ -16,7 +16,7 @@ public class MessageCaravan extends NetworkMessage {
     }
 
     public MessageCaravan(ICaravaneer caravaner) {
-        id = caravaner.getID();
+        this.id = caravaner.getID();
         this.caravan = caravaner.getCaravan().toString();
     }
 

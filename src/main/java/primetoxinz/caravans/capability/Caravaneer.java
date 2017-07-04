@@ -31,7 +31,7 @@ public class Caravaneer implements ICaravaneer {
     }
 
     @Override
-    public ICaravaneer spawn(World world, BlockPos pos, ICaravan caravan) {
+    public ICaravaneer spawn(World world, BlockPos pos) {
 
         return this;
     }
