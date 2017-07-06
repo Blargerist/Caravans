@@ -1,5 +1,6 @@
 package primetoxinz.caravans.network;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import primetoxinz.caravans.CaravansMod;
@@ -9,7 +10,7 @@ import primetoxinz.caravans.capability.ICaravaneer;
  * Created by primetoxinz on 7/3/17.
  */
 public class MessageCaravan extends NetworkMessage {
-    public String caravan;
+    public NBTTagCompound caravan;
     public int id;
 
     public MessageCaravan() {
@@ -17,7 +18,7 @@ public class MessageCaravan extends NetworkMessage {
 
     public MessageCaravan(ICaravaneer caravaner) {
         this.id = caravaner.getID();
-        this.caravan = caravaner.getCaravan().toString();
+        this.caravan = caravaner.getCaravan().serializeNBT();
     }
 
     @Override

@@ -19,6 +19,8 @@ public class RenderCaravaneer<T extends EntityCaravaneer> extends RenderLiving<T
     @Nullable
     @Override
     protected ResourceLocation getEntityTexture(EntityCaravaneer entity) {
+        if(entity.isLeader())
+            return new ResourceLocation("minecraft:textures/entity/villager/priest.png");
         return new ResourceLocation("minecraft:textures/entity/villager/villager.png");
     }
 }

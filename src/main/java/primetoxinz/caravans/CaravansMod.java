@@ -2,21 +2,28 @@ package primetoxinz.caravans;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.IWorldEventListener;
+import net.minecraft.world.World;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.RegistryBuilder;
 import net.minecraftforge.fml.relauncher.Side;
 import primetoxinz.caravans.api.CaravanAPI;
-import primetoxinz.caravans.api.ICaravan;
-import primetoxinz.caravans.capability.CapabilityCaravaneer;
+import primetoxinz.caravans.api.CaravanBuilder;
+import primetoxinz.caravans.api.Merchant;
 import primetoxinz.caravans.client.gui.GuiHandler;
+import primetoxinz.caravans.common.CommandCaravan;
+import primetoxinz.caravans.common.WorldListener;
 import primetoxinz.caravans.common.entity.EntityCaravaneer;
 import primetoxinz.caravans.network.MessageCaravan;
 import primetoxinz.caravans.network.NetworkHandler;
@@ -41,14 +48,10 @@ public class CaravansMod {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        CapabilityCaravaneer.register();
-
-        registerEntity(EntityCaravaneer.class, "caravaner.trader", 64, 1, true);
-
+        registerEntity(EntityCaravaneer.class, "caravaner.trader", 256, 1, true);
         NetworkRegistry.INSTANCE.registerGuiHandler(CaravansMod.INSTANCE, new GuiHandler());
         NetworkHandler.register(MessageCaravan.class, Side.CLIENT);
         proxy.preInit(event);
-
     }
 
     @Mod.EventHandler
@@ -60,6 +63,11 @@ public class CaravansMod {
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         proxy.postInit(event);
+    }
+
+    @Mod.EventHandler
+    public void serverStarting(FMLServerStartingEvent event) {
+        event.registerServerCommand(new CommandCaravan());
     }
 
     private static int availableEntityId;
@@ -78,11 +86,28 @@ public class CaravansMod {
 
     @SubscribeEvent
     public static void onNewRegistry(RegistryEvent.NewRegistry event) {
-        new RegistryBuilder<ICaravan>()
-                .setType(ICaravan.class)
+        new RegistryBuilder<CaravanBuilder>()
+                .setType(CaravanBuilder.class)
                 .setIDRange(0, Integer.MAX_VALUE - 1)
                 .setName(new ResourceLocation(CaravansMod.MODID, "caravans")).create();
 
+        new RegistryBuilder<Merchant>()
+                .setType(Merchant.class)
+                .setIDRange(0, Integer.MAX_VALUE - 1)
+                .setName(new ResourceLocation(CaravansMod.MODID, "merchants")).create();
+    }
+
+    @SubscribeEvent
+    public static void onWorldLoad(WorldEvent.Load event) {
+        event.getWorld().addEventListener(new WorldListener());
+    }
+
+    @SubscribeEvent
+    public static void onEntityJoin(EntityJoinWorldEvent event) {
+        if(!event.getWorld().isRemote && event.getEntity() instanceof EntityCaravaneer) {
+            EntityCaravaneer c = (EntityCaravaneer) event.getEntity();
+            c.sync();
+        }
     }
 }
 

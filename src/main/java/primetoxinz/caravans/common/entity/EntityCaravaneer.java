@@ -1,60 +1,77 @@
 package primetoxinz.caravans.common.entity;
 
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import primetoxinz.caravans.api.CaravanAPI;
-import primetoxinz.caravans.api.ICaravan;
-import primetoxinz.caravans.capability.CapabilityCaravaneer;
+import primetoxinz.caravans.api.Caravan;
+import primetoxinz.caravans.api.IEntityListen;
 import primetoxinz.caravans.capability.ICaravaneer;
 import primetoxinz.caravans.common.entity.ai.AIGoToPlayer;
 import primetoxinz.caravans.common.entity.ai.AIStatus;
 import primetoxinz.caravans.network.MessageCaravan;
 import primetoxinz.caravans.network.NetworkHandler;
 
-import javax.annotation.Nullable;
-
 /**
  * Created by primetoxinz on 7/3/17.
  */
-public class EntityCaravaneer extends EntityCreature implements ICaravaneer {
+public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEntityListen {
 
-    private ICaravan caravan;
+    private Caravan caravan;
+    private boolean leader;
 
     public EntityCaravaneer(World worldIn) {
         super(worldIn);
     }
 
-    public EntityCaravaneer(World worldIn, ICaravan caravan) {
+    @SuppressWarnings("unused")
+    public EntityCaravaneer(World worldIn, Caravan caravan) {
         this(worldIn);
         this.caravan = caravan;
+        this.setHealth(0.0001f);
+    }
+
+    @Override
+    public void onEntityUpdate() {
+        super.onEntityUpdate();
     }
 
     @Override
     protected void initEntityAI() {
-        this.tasks.addTask(1,new AIStatus(new AIGoToPlayer(this)));
+        this.tasks.addTask(1, new AIStatus(new AIGoToPlayer(this)));
     }
 
     @Override
-    public ICaravaneer setCaravan(ICaravan caravan) {
+    protected void applyEntityAttributes() {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(1D);
+        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(256);
+    }
+
+    @Override
+    public ICaravaneer setCaravan(Caravan caravan) {
         this.caravan = caravan;
         return this;
     }
 
     @Override
-    public ICaravan getCaravan() {
+    public Caravan getCaravan() {
         return caravan;
     }
 
     @Override
     public ICaravaneer spawn(World world, BlockPos pos) {
-        this.setPosition(pos.getX(), pos.getY(), pos.getZ());
-        world.spawnEntity(this);
+        if (isServerWorld()) {
+            this.setPosition(pos.getX(), pos.getY(), pos.getZ());
+            this.forceSpawn = true;
+            world.spawnEntity(this);
+
+            sync();
+        }
         return this;
     }
 
@@ -69,35 +86,61 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer {
         return getEntityId();
     }
 
-    @Nullable
-    @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityCaravaneer.CARAVANEER_CAPABILITY)
-            return CapabilityCaravaneer.CARAVANEER_CAPABILITY.cast(this);
-        return super.getCapability(capability, facing);
+
+    public boolean isLeader() {
+        if (getCaravan() != null)
+            return getCaravan().isLeader(this);
+        return false;
     }
 
+    @Override
+    public void onDeath(DamageSource cause) {
+        sync();
+        if (caravan != null) {
+            if (isLeader()) {
+                this.caravan.setLeader(null);
+            } else {
+                this.caravan.removeFollower(this);
+            }
+        }
+        super.onDeath(cause);
+    }
 
     @Override
     public void writeEntityToNBT(NBTTagCompound compound) {
-        compound.setString("caravan", caravan.toString());
+        compound.setTag("caravan", caravan.serializeNBT());
+        compound.setBoolean("leader", leader);
         super.writeEntityToNBT(compound);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
-        if (compound.hasKey("caravan")) {
-            String c = compound.getString("caravan");
-            setCaravan(CaravanAPI.getCaravan(c));
+        if(compound.hasKey("caravan")) {
+            this.caravan = new Caravan(world, compound.getCompoundTag("caravan"));
         }
+        this.leader = compound.getBoolean("leader");
         super.readFromNBT(compound);
     }
 
     @Override
     protected boolean processInteract(EntityPlayer player, EnumHand hand) {
+        sync();
+        if (isLeader()) {
+            getCaravan().open(player, this);
+            return true;
+        }
+        return false;
+    }
+
+    public void sync() {
         if (isServerWorld()) {
             NetworkHandler.INSTANCE.sendToAll(new MessageCaravan(this));
         }
-        return super.processInteract(player, hand);
+    }
+
+    @Override
+    public void onAdded() {
+        sync();
+        System.out.println("syncing!");
     }
 }

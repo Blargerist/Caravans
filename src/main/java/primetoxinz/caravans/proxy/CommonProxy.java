@@ -1,5 +1,6 @@
 package primetoxinz.caravans.proxy;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -22,7 +23,7 @@ public class CommonProxy {
 
     }
 
-    public void syncCaravaneer(int id, String caravan) {
+    public void syncCaravaneer(int id, NBTTagCompound caravan) {
 
     }
 

@@ -1,10 +1,14 @@
 package primetoxinz.caravans.common.entity;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityBodyHelper;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import sun.misc.UUDecoder;
 
 import java.lang.reflect.Field;
+import java.util.UUID;
 
 /**
  * Created by primetoxinz on 7/2/17.
@@ -43,5 +47,17 @@ public class EntityUtil {
         }
     }
 
+    public static Entity fromUUID(World world, String uuid) {
+        return fromUUID(world, UUID.fromString(uuid));
+    }
 
+    public static Entity fromUUID(World world, UUID uuid) {
+        if (uuid != null) {
+            for (Entity entity : world.loadedEntityList) {
+                if (entity.getUniqueID().equals(uuid))
+                    return entity;
+            }
+        }
+        return null;
+    }
 }
