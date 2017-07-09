@@ -9,6 +9,7 @@ import primetoxinz.caravans.api.CaravanAPI;
 import primetoxinz.caravans.api.CaravanBuilder;
 import primetoxinz.caravans.api.Merchant;
 import primetoxinz.caravans.common.entity.EntityCaravaneer;
+import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -30,16 +31,19 @@ public class MTCaravan {
     }
 
     @ZenMethod
-    public static void registerCaravan(String name) {
-        MineTweakerAPI.apply(new RegisterCaravan(name));
+    public static void registerCaravan(String name, @Optional String gamestage) {
+        MineTweakerAPI.apply(new RegisterCaravan(name, gamestage));
     }
 
     public static class RegisterCaravan extends BaseUndoable {
-        private CaravanBuilder caravan;
+        private CaravanBuilder builder;
 
-        protected RegisterCaravan(String name) {
+        protected RegisterCaravan(String name, String gamestage) {
             super("registerCaravan");
-            this.caravan = new CaravanBuilder(new ResourceLocation(CaravansMod.MODID, name), EntityCaravaneer.class);
+            this.builder = new CaravanBuilder(new ResourceLocation(CaravansMod.MODID, name), EntityCaravaneer.class);
+            if (gamestage != null) {
+                builder.setStage(gamestage);
+            }
         }
 
         @Override
@@ -50,8 +54,8 @@ public class MTCaravan {
 
         @Override
         public void apply() {
-            if (!CaravanAPI.CARAVANS.containsKey(caravan.getRegistryName())) {
-                GameRegistry.register(caravan);
+            if (!CaravanAPI.CARAVANS.containsKey(builder.getRegistryName())) {
+                GameRegistry.register(builder);
             }
         }
 

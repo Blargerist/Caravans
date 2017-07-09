@@ -23,6 +23,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.RegistryBuilder;
 import net.minecraftforge.fml.relauncher.Side;
+import primetoxinz.caravans.api.Caravan;
 import primetoxinz.caravans.api.CaravanAPI;
 import primetoxinz.caravans.api.CaravanBuilder;
 import primetoxinz.caravans.api.Merchant;
@@ -31,6 +32,7 @@ import primetoxinz.caravans.common.CommandCaravan;
 import primetoxinz.caravans.common.entity.EntityCaravaneer;
 import primetoxinz.caravans.common.entity.EntityUtil;
 import primetoxinz.caravans.compat.MTCompat;
+import primetoxinz.caravans.compat.MTGameStages;
 import primetoxinz.caravans.network.MessageCaravan;
 import primetoxinz.caravans.network.NetworkHandler;
 import primetoxinz.caravans.proxy.CommonProxy;
@@ -127,9 +129,12 @@ public class CaravansMod {
             CaravanBuilder builder = CaravanAPI.getRandomCaravan(world);
             EntityPlayer player = EntityUtil.getRandomPlayer(world);
             if (builder != null || player != null) {
-                BlockPos pos = EntityUtil.generatePosition(world, player.getPosition(), ConfigHandler.maxRadius, ConfigHandler.minRadius);
-                builder.create(world).spawn(pos, player);
-                player.sendStatusMessage(new TextComponentTranslation("text.arriving"), true);
+                Caravan caravan = builder.create(world);
+                if (MTGameStages.canSpawnCaravan(player, caravan)) {
+                    BlockPos pos = EntityUtil.generatePosition(world, player.getPosition(), ConfigHandler.maxRadius, ConfigHandler.minRadius);
+                    caravan.spawn(pos, player);
+                    player.sendStatusMessage(new TextComponentTranslation("text.arriving"), true);
+                }
             }
         }
     }

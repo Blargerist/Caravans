@@ -9,9 +9,9 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "0.0.0"
+version = "0.0.1"
 group = "primetoxinz.caravans"
-archivesBaseName = "Villager Caravans"
+archivesBaseName = "Caravans"
 
 sourceCompatibility = targetCompatibility = "1.8"
 compileJava {
@@ -27,11 +27,13 @@ minecraft {
 
 repositories {
     maven { url "http://blamejared.com/maven" }
+    maven { url 'http://maven.epoxide.org' }
 }
 
 dependencies {
     deobfCompile "MineTweaker3:MineTweaker3-API:+"
     deobfCompile "com.blamejared:MTLib:2.+"
+    compile "net.darkhax.gamestages:GameStages-1.11.2:1.0.11"
 }
 
 

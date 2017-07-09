@@ -17,6 +17,7 @@ public class CaravanBuilder extends IForgeRegistryEntry.Impl<CaravanBuilder> {
 
     protected Class<? extends EntityCaravaneer> leaderClass;
     protected Map<Merchant, Class<? extends EntityCaravaneer>> followerClasses;
+    protected String stage;
 
     public CaravanBuilder(ResourceLocation name, Class<? extends EntityCaravaneer> leaderClass, Object... objects) {
         this.leaderClass = leaderClass;
@@ -34,7 +35,9 @@ public class CaravanBuilder extends IForgeRegistryEntry.Impl<CaravanBuilder> {
     }
 
     public Caravan create(World world) {
-        return new Caravan(this.getRegistryName(), world, leaderClass, followerClasses);
+        Caravan caravan = new Caravan(this.getRegistryName(), world, leaderClass, followerClasses);
+        caravan.setGameStage(getStage());
+        return caravan;
     }
 
     public class MerchantMap extends HashMap<Merchant, Class<? extends EntityCaravaneer>> {
@@ -50,5 +53,11 @@ public class CaravanBuilder extends IForgeRegistryEntry.Impl<CaravanBuilder> {
         }
     }
 
+    public void setStage(String stage) {
+        this.stage = stage;
+    }
 
+    public String getStage() {
+        return stage;
+    }
 }

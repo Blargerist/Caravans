@@ -3,6 +3,7 @@ package primetoxinz.caravans.api;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Lists;
+import net.darkhax.gamestages.capabilities.PlayerDataHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
@@ -37,6 +38,8 @@ public class Caravan implements INBTSerializable<NBTTagCompound> {
     protected EntityCaravaneer leader;
     protected Status status = Status.ARRIVING;
     public int open;
+
+    protected String stage;
 
     public Caravan(World world, NBTTagCompound tag) {
         this.world = world;
@@ -222,4 +225,11 @@ public class Caravan implements INBTSerializable<NBTTagCompound> {
         public static Status[] VALUES = values();
     }
 
+    public void setGameStage(String stage) {
+        this.stage = stage;
+    }
+
+    public String getGameStage() {
+        return stage;
+    }
 }
