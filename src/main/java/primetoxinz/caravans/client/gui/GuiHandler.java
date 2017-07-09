@@ -6,7 +6,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import primetoxinz.caravans.api.Caravan;
 import primetoxinz.caravans.api.Merchant;
-import primetoxinz.caravans.capability.ICaravaneer;
+import primetoxinz.caravans.api.ICaravaneer;
 
 import javax.annotation.Nullable;
 

@@ -2,11 +2,8 @@ package primetoxinz.caravans;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.event.RegistryEvent;
@@ -29,8 +26,10 @@ import primetoxinz.caravans.api.CaravanBuilder;
 import primetoxinz.caravans.api.Merchant;
 import primetoxinz.caravans.client.gui.GuiHandler;
 import primetoxinz.caravans.common.CommandCaravan;
-import primetoxinz.caravans.common.entity.EntityCaravaneer;
 import primetoxinz.caravans.common.entity.EntityUtil;
+import primetoxinz.caravans.common.entity.types.EntitySkeletonCaravaneer;
+import primetoxinz.caravans.common.entity.types.EntityVillagerCaravaneer;
+import primetoxinz.caravans.common.entity.types.EntityZombieCaravaneer;
 import primetoxinz.caravans.compat.MTCompat;
 import primetoxinz.caravans.compat.MTGameStages;
 import primetoxinz.caravans.network.MessageCaravan;
@@ -62,7 +61,9 @@ public class CaravansMod {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        registerEntity(EntityCaravaneer.class, "caravaner.trader", 256, 1, true);
+        registerEntity(EntityVillagerCaravaneer.class, "caravaner.villager", 256, 1, true);
+        registerEntity(EntityZombieCaravaneer.class, "caravaner.zombie", 256, 1, true);
+        registerEntity(EntitySkeletonCaravaneer.class, "caravaner.skeleton", 256, 1, true);
         NetworkRegistry.INSTANCE.registerGuiHandler(CaravansMod.INSTANCE, new GuiHandler());
         NetworkHandler.register(MessageCaravan.class, Side.CLIENT);
         proxy.preInit(event);

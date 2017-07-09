@@ -50,6 +50,8 @@ public class CommandCaravan extends CommandBase {
             BlockPos pos = generatePosition(world, player.getPosition(), maxRadius, minRadius);
             caravan.spawn(pos, player);
             player.sendStatusMessage(new TextComponentString("A Caravan is arriving"), true);
+        } else {
+            throw new CommandException("Player cannot spawn this caravan yet");
         }
     }
 

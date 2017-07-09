@@ -2,7 +2,6 @@ package primetoxinz.caravans.common.entity;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,9 +11,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import primetoxinz.caravans.api.Caravan;
-import primetoxinz.caravans.api.IEntityListen;
-import primetoxinz.caravans.capability.ICaravaneer;
-import primetoxinz.caravans.common.entity.ai.*;
+import primetoxinz.caravans.api.ICaravaneer;
+import primetoxinz.caravans.common.entity.ai.AISpreadOut;
+import primetoxinz.caravans.common.entity.ai.AIState;
 import primetoxinz.caravans.network.MessageCaravan;
 import primetoxinz.caravans.network.NetworkHandler;
 import primetoxinz.caravans.network.NetworkMessage;
@@ -24,7 +23,7 @@ import java.util.UUID;
 /**
  * Created by primetoxinz on 7/3/17.
  */
-public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEntityListen, IEntityAdditionalSpawnData {
+public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEntityAdditionalSpawnData {
 
     private AIState state;
     private Caravan caravan;
@@ -165,11 +164,6 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
         if (isServerWorld()) {
             NetworkHandler.INSTANCE.sendToAll(new MessageCaravan(this));
         }
-    }
-
-    @Override
-    public void onAdded() {
-        sync();
     }
 
     @Override

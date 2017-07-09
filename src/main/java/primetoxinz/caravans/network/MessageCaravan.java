@@ -4,7 +4,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import primetoxinz.caravans.CaravansMod;
-import primetoxinz.caravans.capability.ICaravaneer;
+import primetoxinz.caravans.api.ICaravaneer;
 
 /**
  * Created by primetoxinz on 7/3/17.

@@ -1,5 +1,6 @@
 package primetoxinz.caravans.client;
 
+import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelVillager;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -11,16 +12,20 @@ import javax.annotation.Nullable;
 /**
  * Created by primetoxinz on 7/1/17.
  */
-public class RenderCaravaneer<T extends EntityCaravaneer> extends RenderLiving<T> {
-    public RenderCaravaneer(RenderManager rendermanagerIn) {
-        super(rendermanagerIn, new ModelVillager(0.0F), 0.5f);
+public abstract class RenderCaravaneer<T extends EntityCaravaneer> extends RenderLiving<T> {
+
+    public RenderCaravaneer(RenderManager rendermanagerIn, ModelBase modelbaseIn, float shadowsizeIn) {
+        super(rendermanagerIn, modelbaseIn, shadowsizeIn);
     }
+
+    public abstract ResourceLocation getLeaderTexture(EntityCaravaneer leader);
+    public abstract ResourceLocation getBaseTexture(EntityCaravaneer caravaneer);
 
     @Nullable
     @Override
     protected ResourceLocation getEntityTexture(EntityCaravaneer entity) {
         if(entity.isLeader())
-            return new ResourceLocation("minecraft:textures/entity/villager/priest.png");
-        return new ResourceLocation("minecraft:textures/entity/villager/villager.png");
+            return getLeaderTexture(entity);
+        return getBaseTexture(entity);
     }
 }

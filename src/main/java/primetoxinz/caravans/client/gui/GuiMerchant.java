@@ -88,9 +88,6 @@ public class GuiMerchant extends GuiContainer {
         int x = i - 28, y = j + 30;
         for (TabMerchant tab : tabs) {
             tab.draw(x, y);
-            if (tab.isMouseOver(mouseX, mouseY)) {
-                drawHoveringText(tab.getName(), mouseX, mouseY);
-            }
             y += 28;
         }
     }
@@ -104,7 +101,7 @@ public class GuiMerchant extends GuiContainer {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
         for (TabMerchant tab : tabs) {
             if (tab.isMouseOver(mouseX, mouseY)) {
-                drawHoveringText(tab.getName(), mouseX, mouseY);
+                drawHoveringText(tab.getName(), mouseX-guiLeft, mouseY-guiTop);
             }
         }
     }

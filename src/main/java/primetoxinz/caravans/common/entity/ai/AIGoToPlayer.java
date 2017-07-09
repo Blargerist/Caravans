@@ -10,7 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 public class AIGoToPlayer extends AIAction {
 
-    private static final int STOP_RANGE = 10;
+    private static final int STOP_RANGE = 5;
     private EntityLivingBase target;
     private boolean finished;
 
