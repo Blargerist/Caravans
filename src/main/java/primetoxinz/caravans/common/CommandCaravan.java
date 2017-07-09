@@ -7,6 +7,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import primetoxinz.caravans.api.CaravanAPI;
 import primetoxinz.caravans.api.CaravanBuilder;
@@ -39,9 +40,9 @@ public class CommandCaravan extends CommandBase {
         int radius = 60;
         if (args.length > 2)
             radius = parseInt(args[2]);
-        BlockPos pos = generatePosition(world, player.getPosition(), radius);
+        BlockPos pos = generatePosition(world, player.getPosition(), radius, radius / 2);
+        player.sendStatusMessage(new TextComponentString("A Caravan is arriving"), true);
         builder.create(world).spawn(pos, player);
-
     }
 
     public static List<BlockPos> generatePositions(World world, BlockPos origin, int radius, int amount) {
@@ -50,7 +51,7 @@ public class CommandCaravan extends CommandBase {
         List<BlockPos> positions = Lists.newArrayList();
 
         while (positions.size() < amount) {
-            final BlockPos pos = generatePosition(world, origin, radius);
+            final BlockPos pos = generatePosition(world, origin, radius, radius / 2);
             if (!positions.stream().anyMatch(p -> p.equals(pos)))
                 positions.add(pos);
         }
@@ -58,11 +59,11 @@ public class CommandCaravan extends CommandBase {
     }
 
 
-    public static BlockPos generatePosition(World world, BlockPos origin, int radius) {
+    public static BlockPos generatePosition(World world, BlockPos origin, int radius, int innerRadius) {
         Random rand = world.rand;
         double angle = rand.nextDouble() * 360;
-        int x = (int) (origin.getX() + (radius(rand, radius, radius / 2) * Math.cos(Math.toRadians(angle))));
-        int z = (int) (origin.getZ() + (radius(rand, radius, radius / 2) * Math.sin(Math.toRadians(angle))));
+        int x = (int) (origin.getX() + (radius(rand, radius, innerRadius) * Math.cos(Math.toRadians(angle))));
+        int z = (int) (origin.getZ() + (radius(rand, radius, innerRadius) * Math.sin(Math.toRadians(angle))));
 
         return new BlockPos(x, world.getHeight(x, z), z);
     }

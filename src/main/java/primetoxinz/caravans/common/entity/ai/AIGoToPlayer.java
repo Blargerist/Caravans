@@ -1,5 +1,6 @@
 package primetoxinz.caravans.common.entity.ai;
 
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -7,13 +8,13 @@ import net.minecraft.entity.player.EntityPlayer;
 /**
  * Created by primetoxinz on 7/1/17.
  */
-public class AIGoToPlayer extends AIState {
+public class AIGoToPlayer extends AIAction {
 
     private static final int STOP_RANGE = 10;
     private EntityLivingBase target;
     private boolean finished;
 
-    public AIGoToPlayer(EntityLiving creature) {
+    public AIGoToPlayer(EntityCreature creature) {
         super(creature);
         this.setMutexBits(1);
     }

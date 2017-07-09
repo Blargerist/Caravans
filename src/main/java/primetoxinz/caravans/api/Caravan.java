@@ -66,6 +66,9 @@ public class Caravan implements INBTSerializable<NBTTagCompound> {
         this.leader = caravaneer;
     }
 
+    public BlockPos getPosition() {
+        return getLeader().isPresent() ? getLeader().get().getPosition() : null;
+    }
 
     public boolean isLeader(EntityCaravaneer caravaneer) {
         if (getLeader().isPresent())

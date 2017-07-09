@@ -13,8 +13,7 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import primetoxinz.caravans.api.Caravan;
 import primetoxinz.caravans.api.IEntityListen;
 import primetoxinz.caravans.capability.ICaravaneer;
-import primetoxinz.caravans.common.entity.ai.AIGoToPlayer;
-import primetoxinz.caravans.common.entity.ai.AIStatus;
+import primetoxinz.caravans.common.entity.ai.*;
 import primetoxinz.caravans.network.MessageCaravan;
 import primetoxinz.caravans.network.NetworkHandler;
 import primetoxinz.caravans.network.NetworkMessage;
@@ -26,6 +25,7 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
 
     private Caravan caravan;
     private boolean leader;
+    private BlockPos origins;
 
     public EntityCaravaneer(World worldIn) {
         super(worldIn);
@@ -45,13 +45,17 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
 
     @Override
     protected void initEntityAI() {
-        this.tasks.addTask(1, new AIStatus(new AIGoToPlayer(this)));
+        this.tasks.addTask(1,
+                new AIState(new AIGoToPlayer(this),
+                        new AIHangOut(this),
+                        new AIGoToPos(this),
+                        new AILeave(this)));
     }
 
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(1D);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.5D);
         this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(256);
     }
 
@@ -70,9 +74,9 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
     public ICaravaneer spawn(World world, BlockPos pos) {
         if (isServerWorld()) {
             this.setPosition(pos.getX(), pos.getY(), pos.getZ());
+            this.origins = pos;
             this.forceSpawn = true;
             world.spawnEntity(this);
-
             sync();
         }
         return this;
@@ -113,6 +117,8 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
     public void writeEntityToNBT(NBTTagCompound compound) {
         compound.setTag("caravan", caravan.serializeNBT());
         compound.setBoolean("leader", leader);
+        if (origins != null)
+            compound.setLong("origins", origins.toLong());
         super.writeEntityToNBT(compound);
     }
 
@@ -121,6 +127,8 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
         if (compound.hasKey("caravan")) {
             this.caravan = new Caravan(world, compound.getCompoundTag("caravan"));
         }
+        if (compound.hasKey("origins"))
+            this.origins = BlockPos.fromLong(compound.getLong("origins"));
         this.leader = compound.getBoolean("leader");
         super.readFromNBT(compound);
     }
@@ -151,13 +159,21 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
         if (getCaravan() != null) {
             NetworkMessage.writeNBT(getCaravan().serializeNBT(), buffer);
         }
+        if(origins != null)
+            NetworkMessage.writeBlockPos(origins, buffer);
     }
 
     @Override
-    public void readSpawnData(ByteBuf additionalData) {
+    public void readSpawnData(ByteBuf buffer) {
         if (getCaravan() == null) {
-            NBTTagCompound tag = NetworkMessage.readNBT(additionalData);
-            setCaravan(new Caravan(world, tag));
+            setCaravan(new Caravan(world, NetworkMessage.readNBT(buffer)));
         }
+        if(origins == null)
+            this.origins = NetworkMessage.readBlockPos(buffer);
+        System.out.println(origins);
+    }
+
+    public BlockPos getOrigins() {
+        return origins;
     }
 }

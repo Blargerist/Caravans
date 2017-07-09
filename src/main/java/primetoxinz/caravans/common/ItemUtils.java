@@ -26,6 +26,7 @@ public class ItemUtils {
             ItemStack s = inv.getStackInSlot(i);
             if (matches(s, stack)) {
                 inv.extractItem(i, count, false);
+                break;
             }
         }
     }

@@ -7,6 +7,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -69,7 +70,8 @@ public class ContainerMerchant extends Container {
 
     @Override
     public boolean canInteractWith(EntityPlayer playerIn) {
-        return merchant != null;
+        BlockPos pos = caravan.getPosition();
+        return merchant != null && (pos != null && playerIn.getDistanceSq(pos) < 16);
     }
 
     @Override
