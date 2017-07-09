@@ -1,4 +1,4 @@
-package primetoxinz.caravans.client.gui;
+package primetoxinz.caravans.client.gui.old.tab;
 
 import com.google.common.collect.Lists;
 import net.minecraft.entity.player.EntityPlayer;
@@ -7,31 +7,26 @@ import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.SlotItemHandler;
 import primetoxinz.caravans.api.Caravan;
+import primetoxinz.caravans.api.Merchant;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by primetoxinz on 7/2/17.
  */
 public class ContainerCaravan extends Container {
     private Caravan caravan;
+    private EntityPlayer player;
     private IItemHandlerModifiable playerInventory;
     private World world;
-    private List<MerchantTab> merchantTabs = Lists.newArrayList();
+    private List<TradeSlots> trades = Lists.newArrayList();
 
-    public ContainerCaravan(IItemHandlerModifiable playerInventory, Caravan caravan, World world) {
+    public ContainerCaravan(IItemHandlerModifiable playerInventory, Caravan caravan, EntityPlayer player, World world) {
         this.caravan = caravan;
         this.playerInventory = playerInventory;
+        this.player = player;
         this.world = world;
         setupPlayerInventory();
-        setupTradingInventory();
-    }
-
-    public MerchantTab getTab(int i) {
-        if (merchantTabs.isEmpty())
-            return null;
-        return merchantTabs.get(i);
     }
 
     public void setupPlayerInventory() {
@@ -49,18 +44,12 @@ public class ContainerCaravan extends Container {
 
     }
 
-
-    public void setupTradingInventory() {
-        merchantTabs.addAll(caravan.getMerchants().stream().map(m -> new MerchantTab(m,8,10)).collect(Collectors.toList()));
-    }
-
     @Override
     public boolean canInteractWith(EntityPlayer playerIn) {
         return true;
     }
 
-
-    public List<MerchantTab> getTabs() {
-        return merchantTabs;
+    public List<Merchant> getMerchants() {
+        return caravan.getMerchants();
     }
 }

@@ -2,8 +2,6 @@ package primetoxinz.caravans;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.IWorldEventListener;
-import net.minecraft.world.World;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -23,7 +21,6 @@ import primetoxinz.caravans.api.CaravanBuilder;
 import primetoxinz.caravans.api.Merchant;
 import primetoxinz.caravans.client.gui.GuiHandler;
 import primetoxinz.caravans.common.CommandCaravan;
-import primetoxinz.caravans.common.WorldListener;
 import primetoxinz.caravans.common.entity.EntityCaravaneer;
 import primetoxinz.caravans.network.MessageCaravan;
 import primetoxinz.caravans.network.NetworkHandler;
@@ -97,17 +94,5 @@ public class CaravansMod {
                 .setName(new ResourceLocation(CaravansMod.MODID, "merchants")).create();
     }
 
-    @SubscribeEvent
-    public static void onWorldLoad(WorldEvent.Load event) {
-        event.getWorld().addEventListener(new WorldListener());
-    }
-
-    @SubscribeEvent
-    public static void onEntityJoin(EntityJoinWorldEvent event) {
-        if(!event.getWorld().isRemote && event.getEntity() instanceof EntityCaravaneer) {
-            EntityCaravaneer c = (EntityCaravaneer) event.getEntity();
-            c.sync();
-        }
-    }
 }
 

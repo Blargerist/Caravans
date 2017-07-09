@@ -126,99 +126,99 @@ public abstract class NetworkMessage<REQ extends NetworkMessage> implements Seri
         handlers.put(type, Pair.of(reader, writer));
     }
 
-    private static byte readByte(ByteBuf buf) {
+    public static byte readByte(ByteBuf buf) {
         return buf.readByte();
     }
 
-    private static void writeByte(byte b, ByteBuf buf) {
+    public static void writeByte(byte b, ByteBuf buf) {
         buf.writeByte(b);
     }
 
-    private static short readShort(ByteBuf buf) {
+    public static short readShort(ByteBuf buf) {
         return buf.readShort();
     }
 
-    private static void writeShort(short s, ByteBuf buf) {
+    public static void writeShort(short s, ByteBuf buf) {
         buf.writeShort(s);
     }
 
-    private static int readInt(ByteBuf buf) {
+    public static int readInt(ByteBuf buf) {
         return buf.readInt();
     }
 
-    private static void writeInt(int i, ByteBuf buf) {
+    public static void writeInt(int i, ByteBuf buf) {
         buf.writeInt(i);
     }
 
-    private static long readLong(ByteBuf buf) {
+    public static long readLong(ByteBuf buf) {
         return buf.readLong();
     }
 
-    private static void writeLong(long l, ByteBuf buf) {
+    public static void writeLong(long l, ByteBuf buf) {
         buf.writeLong(l);
     }
 
-    private static float readFloat(ByteBuf buf) {
+    public static float readFloat(ByteBuf buf) {
         return buf.readFloat();
     }
 
-    private static void writeFloat(float f, ByteBuf buf) {
+    public static void writeFloat(float f, ByteBuf buf) {
         buf.writeFloat(f);
     }
 
-    private static double readDouble(ByteBuf buf) {
+    public static double readDouble(ByteBuf buf) {
         return buf.readDouble();
     }
 
-    private static void writeDouble(double d, ByteBuf buf) {
+    public static void writeDouble(double d, ByteBuf buf) {
         buf.writeDouble(d);
     }
 
-    private static boolean readBoolean(ByteBuf buf) {
+    public static boolean readBoolean(ByteBuf buf) {
         return buf.readBoolean();
     }
 
-    private static void writeBoolean(boolean b, ByteBuf buf) {
+    public static void writeBoolean(boolean b, ByteBuf buf) {
         buf.writeBoolean(b);
     }
 
-    private static char readChar(ByteBuf buf) {
+    public static char readChar(ByteBuf buf) {
         return buf.readChar();
     }
 
-    private static void writeChar(char c, ByteBuf buf) {
+    public static void writeChar(char c, ByteBuf buf) {
         buf.writeChar(c);
     }
 
-    private static String readString(ByteBuf buf) {
+    public static String readString(ByteBuf buf) {
         return ByteBufUtils.readUTF8String(buf);
     }
 
-    private static void writeString(String s, ByteBuf buf) {
+    public static void writeString(String s, ByteBuf buf) {
         ByteBufUtils.writeUTF8String(buf, s);
     }
 
-    private static NBTTagCompound readNBT(ByteBuf buf) {
+    public static NBTTagCompound readNBT(ByteBuf buf) {
         return ByteBufUtils.readTag(buf);
     }
 
-    private static void writeNBT(NBTTagCompound cmp, ByteBuf buf) {
+    public static void writeNBT(NBTTagCompound cmp, ByteBuf buf) {
         ByteBufUtils.writeTag(buf, cmp);
     }
 
-    private static ItemStack readItemStack(ByteBuf buf) {
+    public static ItemStack readItemStack(ByteBuf buf) {
         return ByteBufUtils.readItemStack(buf);
     }
 
-    private static void writeItemStack(ItemStack stack, ByteBuf buf) {
+    public static void writeItemStack(ItemStack stack, ByteBuf buf) {
         ByteBufUtils.writeItemStack(buf, stack);
     }
 
-    private static BlockPos readBlockPos(ByteBuf buf) {
+    public static BlockPos readBlockPos(ByteBuf buf) {
         return BlockPos.fromLong(buf.readLong());
     }
 
-    private static void writeBlockPos(BlockPos pos, ByteBuf buf) {
+    public static void writeBlockPos(BlockPos pos, ByteBuf buf) {
         buf.writeLong(pos.toLong());
     }
 

@@ -45,8 +45,8 @@ public class Merchant extends IForgeRegistryEntry.Impl<Merchant> {
     }
 
     @SideOnly(Side.CLIENT)
-    public String getLocalizedName() {
-        return I18n.format(String.format("merchant.%s.%s", getRegistryName().getResourceDomain(), getRegistryName().getResourcePath()));
+    public String getName() {
+        return String.format("merchant.%s.%s", getRegistryName().getResourceDomain(), getRegistryName().getResourcePath());
     }
 
     @Override

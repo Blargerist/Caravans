@@ -3,8 +3,13 @@ package primetoxinz.caravans.common.entity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityBodyHelper;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import sun.misc.UUDecoder;
 
 import java.lang.reflect.Field;
@@ -60,4 +65,7 @@ public class EntityUtil {
         }
         return null;
     }
+
+
+
 }

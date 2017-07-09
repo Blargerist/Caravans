@@ -36,6 +36,7 @@ public class Caravan implements INBTSerializable<NBTTagCompound> {
 
     protected List<EntityCaravaneer> entities = Lists.newArrayList();
     protected EntityCaravaneer leader;
+    public int open;
 
     public Caravan(World world, NBTTagCompound tag) {
         this.world = world;
@@ -84,7 +85,11 @@ public class Caravan implements INBTSerializable<NBTTagCompound> {
     }
 
     public void open(EntityPlayer player, Entity entity) {
-        player.openGui(CaravansMod.MODID, entity.getEntityId(), player.world, (int) entity.posX, (int) entity.posY, (int) entity.posZ);
+        List<EntityCaravaneer> entities = getEntities();
+        if (!entities.isEmpty()) {
+            int first = getEntities().get(open).getEntityId();
+            player.openGui(CaravansMod.MODID, first, player.world, (int) entity.posX, (int) entity.posY, (int) entity.posZ);
+        }
     }
 
     public ResourceLocation getName() {
@@ -107,6 +112,7 @@ public class Caravan implements INBTSerializable<NBTTagCompound> {
                 if (entity instanceof EntityCaravaneer)
                     entities.add((EntityCaravaneer) entity);
             }
+            entities.sort(Comparator.comparing(Entity::getUniqueID));
         }
         return entities;
     }
@@ -137,7 +143,7 @@ public class Caravan implements INBTSerializable<NBTTagCompound> {
     public NBTTagCompound serializeNBT() {
         NBTTagCompound caravan = new NBTTagCompound();
         caravan.setString("name", name.toString());
-        getLeader().ifPresent( e -> caravan.setString("leader", e.getUniqueID().toString()));
+        getLeader().ifPresent(e -> caravan.setString("leader", e.getUniqueID().toString()));
         if (!merchantMap.isEmpty()) {
             NBTTagList list = new NBTTagList();
             NBTTagCompound compound = new NBTTagCompound();
@@ -153,7 +159,7 @@ public class Caravan implements INBTSerializable<NBTTagCompound> {
 
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
-        if(nbt.hasKey("leader"))
+        if (nbt.hasKey("leader"))
             leaderUUID = UUID.fromString(nbt.getString("leader"));
 
         name = new ResourceLocation(nbt.getString("name"));
@@ -166,7 +172,6 @@ public class Caravan implements INBTSerializable<NBTTagCompound> {
             String uuid = compound.getString(merchant);
             merchantMap.put(CaravanAPI.getMerchant(merchant), UUID.fromString(uuid));
         }
-        System.out.println("Merchants:" + merchantMap);
     }
 
     public Merchant getMerchant(UUID uuid) {
@@ -177,8 +182,13 @@ public class Caravan implements INBTSerializable<NBTTagCompound> {
         return (EntityCaravaneer) EntityUtil.fromUUID(world, uuid);
     }
 
+    public EntityCaravaneer getEntity(Merchant merchant) {
+        return getEntity(merchantMap.get(merchant));
+    }
 
     public List<Merchant> getMerchants() {
-        return Lists.newArrayList(merchantMap.keySet());
+        List<Merchant> merchants = Lists.newArrayList(merchantMap.keySet());
+        merchants.sort(Comparator.comparing(Merchant::getName));
+        return merchants;
     }
 }

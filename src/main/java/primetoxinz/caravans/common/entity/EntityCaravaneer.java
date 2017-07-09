@@ -1,5 +1,6 @@
 package primetoxinz.caravans.common.entity;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,6 +9,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import primetoxinz.caravans.api.Caravan;
 import primetoxinz.caravans.api.IEntityListen;
 import primetoxinz.caravans.capability.ICaravaneer;
@@ -15,11 +17,12 @@ import primetoxinz.caravans.common.entity.ai.AIGoToPlayer;
 import primetoxinz.caravans.common.entity.ai.AIStatus;
 import primetoxinz.caravans.network.MessageCaravan;
 import primetoxinz.caravans.network.NetworkHandler;
+import primetoxinz.caravans.network.NetworkMessage;
 
 /**
  * Created by primetoxinz on 7/3/17.
  */
-public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEntityListen {
+public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEntityListen, IEntityAdditionalSpawnData {
 
     private Caravan caravan;
     private boolean leader;
@@ -115,7 +118,7 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
-        if(compound.hasKey("caravan")) {
+        if (compound.hasKey("caravan")) {
             this.caravan = new Caravan(world, compound.getCompoundTag("caravan"));
         }
         this.leader = compound.getBoolean("leader");
@@ -141,6 +144,20 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
     @Override
     public void onAdded() {
         sync();
-        System.out.println("syncing!");
+    }
+
+    @Override
+    public void writeSpawnData(ByteBuf buffer) {
+        if (getCaravan() != null) {
+            NetworkMessage.writeNBT(getCaravan().serializeNBT(), buffer);
+        }
+    }
+
+    @Override
+    public void readSpawnData(ByteBuf additionalData) {
+        if (getCaravan() == null) {
+            NBTTagCompound tag = NetworkMessage.readNBT(additionalData);
+            setCaravan(new Caravan(world, tag));
+        }
     }
 }

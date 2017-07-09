@@ -21,22 +21,30 @@ public class CaravanAPI {
 
         GameRegistry.register(new Merchant("caravans:test7",
                 new Trade(new ItemStack(Items.BREAD), new ItemStack(Items.DIAMOND)),
-                new Trade(new ItemStack(Items.FLINT_AND_STEEL), new ItemStack(Items.EMERALD)),
+                new Trade(new ItemStack(Items.FLINT_AND_STEEL), new ItemStack(Items.DIAMOND)),
                 new Trade(new ItemStack(Items.RABBIT_STEW), new ItemStack(Items.DIAMOND)),
-                new Trade(new ItemStack(Items.TNT_MINECART), new ItemStack(Items.SHIELD)),
+                new Trade(new ItemStack(Items.TNT_MINECART), new ItemStack(Items.DIAMOND)),
                 new Trade(new ItemStack(Items.BREAD), new ItemStack(Items.DIAMOND)),
                 new Trade(new ItemStack(Items.BREAD), new ItemStack(Items.DIAMOND)),
                 new Trade(new ItemStack(Items.BREAD), new ItemStack(Items.DIAMOND))
         ).setIcon(new ItemStack(Items.DIAMOND_PICKAXE)));
 
         GameRegistry.register(new Merchant("caravans:test8",
+                new Trade(new ItemStack(Items.WHEAT_SEEDS,10), new ItemStack(Items.WHEAT,2)),
+                new Trade(new ItemStack(Items.EMERALD), new ItemStack(Items.WHEAT)),
                 new Trade(new ItemStack(Items.WHEAT_SEEDS), new ItemStack(Items.WHEAT)),
-                new Trade(new ItemStack(Items.WHEAT_SEEDS), new ItemStack(Items.WHEAT)),
-                new Trade(new ItemStack(Items.WHEAT_SEEDS), new ItemStack(Items.WHEAT)),
-                new Trade(new ItemStack(Items.WHEAT_SEEDS), new ItemStack(Items.WHEAT)),
-                new Trade(new ItemStack(Items.WHEAT_SEEDS), new ItemStack(Items.WHEAT)),
-                new Trade(new ItemStack(Items.WHEAT_SEEDS), new ItemStack(Items.WHEAT)),
-                new Trade(new ItemStack(Items.WHEAT_SEEDS), new ItemStack(Items.WHEAT))
+                new Trade(new ItemStack(Items.RABBIT), new ItemStack(Items.WHEAT)),
+                new Trade(new ItemStack(Items.EMERALD), new ItemStack(Items.WHEAT)),
+                new Trade(new ItemStack(Items.FLINT_AND_STEEL), new ItemStack(Items.WHEAT)),
+                new Trade(new ItemStack(Items.CLOCK), new ItemStack(Items.WHEAT)),
+                new Trade(new ItemStack(Items.FLINT_AND_STEEL), new ItemStack(Items.WHEAT)),
+                new Trade(new ItemStack(Items.GOLD_INGOT), new ItemStack(Items.WHEAT)),
+                new Trade(new ItemStack(Items.IRON_INGOT), new ItemStack(Items.WHEAT)),
+                new Trade(new ItemStack(Items.BEETROOT), new ItemStack(Items.WHEAT)),
+                new Trade(new ItemStack(Items.COOKED_RABBIT), new ItemStack(Items.WHEAT))
+
+
+
         ).setIcon(new ItemStack(Items.DIAMOND_HOE)));
 
         GameRegistry.register(new Merchant("caravans:test").setIcon(new ItemStack(Items.TNT_MINECART)));
@@ -47,12 +55,12 @@ public class CaravanAPI {
         GameRegistry.register(new Merchant("caravans:test6").setIcon(new ItemStack(Items.BREAD)));
 
         GameRegistry.register(new CaravanBuilder("caravans:basic", EntityCaravaneer.class,
-                getMerchant("caravans:test"), EntityCaravaneer.class,
-                getMerchant("caravans:test2"), EntityCaravaneer.class,
-                getMerchant("caravans:test3"), EntityCaravaneer.class,
-                getMerchant("caravans:test4"), EntityCaravaneer.class,
-                getMerchant("caravans:test5"), EntityCaravaneer.class,
-                getMerchant("caravans:test6"), EntityCaravaneer.class,
+//                getTrade("caravans:test"), EntityCaravaneer.class,
+//                getTrade("caravans:test2"), EntityCaravaneer.class,
+//                getTrade("caravans:test3"), EntityCaravaneer.class,
+//                getTrade("caravans:test4"), EntityCaravaneer.class,
+//                getTrade("caravans:test5"), EntityCaravaneer.class,
+//                getTrade("caravans:test6"), EntityCaravaneer.class,
                 getMerchant("caravans:test7"), EntityCaravaneer.class,
                 getMerchant("caravans:test8"), EntityCaravaneer.class
 
@@ -64,7 +72,6 @@ public class CaravanAPI {
     }
 
     public static CaravanBuilder getCaravan(String loc) {
-        System.out.println("caravan?"+loc);
         if (!loc.contains(":"))
             loc = "caravans:" + loc;
         return getCaravan(new ResourceLocation(loc));
@@ -79,7 +86,6 @@ public class CaravanAPI {
             return null;
         if (!loc.contains(":"))
             loc = "caravans:" + loc;
-        System.out.println("Location " + loc);
         return getMerchant(new ResourceLocation(loc));
     }
 }
