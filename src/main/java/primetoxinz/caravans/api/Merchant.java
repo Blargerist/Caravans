@@ -21,18 +21,20 @@ public class Merchant extends IForgeRegistryEntry.Impl<Merchant> {
     private List<ITrade> trades = Lists.newArrayList();
     private ItemStack icon = ItemStack.EMPTY;
 
-    public Merchant(ResourceLocation registerName, ITrade... trades) {
-        this.trades = Lists.newArrayList(trades);
-
+    public Merchant(ResourceLocation registerName) {
         setRegistryName(registerName);
     }
 
-    public Merchant(String name, ITrade... trades) {
-        this(new ResourceLocation(processName(name)), trades);
+    public Merchant(String name) {
+        this(new ResourceLocation(processName(name)));
     }
 
     public void addTrade(ITrade trade) {
-        trades.add(trade);
+        this.trades.add(trade);
+    }
+
+    public void removeTrade(ITrade trade) {
+        this.trades.remove(trade);
     }
 
     public List<ITrade> getTrades() {

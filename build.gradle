@@ -9,7 +9,7 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "0.0.1"
+version = "0.0.2"
 group = "primetoxinz.caravans"
 archivesBaseName = "Caravans"
 
@@ -32,7 +32,7 @@ repositories {
 
 dependencies {
     deobfCompile "MineTweaker3:MineTweaker3-API:+"
-    deobfCompile "com.blamejared:MTLib:2.+"
+    deobfCompile "net.darkhax.bookshelf:Bookshelf:1.11.2-2.0.0.387"
     compile "net.darkhax.gamestages:GameStages-1.11.2:1.0.11"
 }
 

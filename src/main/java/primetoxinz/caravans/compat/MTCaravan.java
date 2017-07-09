@@ -1,6 +1,6 @@
 package primetoxinz.caravans.compat;
 
-import com.blamejared.mtlib.utils.BaseUndoable;
+import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -35,11 +35,10 @@ public class MTCaravan {
         MineTweakerAPI.apply(new RegisterCaravan(name, gamestage));
     }
 
-    public static class RegisterCaravan extends BaseUndoable {
+    public static class RegisterCaravan implements IUndoableAction {
         private CaravanBuilder builder;
 
         protected RegisterCaravan(String name, String gamestage) {
-            super("registerCaravan");
             this.builder = new CaravanBuilder(new ResourceLocation(CaravansMod.MODID, name), EntityCaravaneer.class);
             if (gamestage != null) {
                 builder.setStage(gamestage);
@@ -62,6 +61,21 @@ public class MTCaravan {
         @Override
         public void undo() {
 
+        }
+
+        @Override
+        public String describe() {
+            return String.format("Registering Caravan: %s ", builder);
+        }
+
+        @Override
+        public String describeUndo() {
+            return null;
+        }
+
+        @Override
+        public Object getOverrideKey() {
+            return null;
         }
     }
 
