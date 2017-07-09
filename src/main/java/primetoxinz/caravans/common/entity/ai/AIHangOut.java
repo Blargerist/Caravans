@@ -1,15 +1,13 @@
 package primetoxinz.caravans.common.entity.ai;
 
-import net.minecraft.entity.EntityCreature;
+import primetoxinz.caravans.ConfigHandler;
+import primetoxinz.caravans.common.entity.EntityCaravaneer;
 
 /**
  * Created by primetoxinz on 7/9/17.
  */
 public class AIHangOut extends AIAction {
-    private int MAX_HANGOUT_TICKS = 20*30;
-    private int ticks;
-
-    public AIHangOut(EntityCreature entity) {
+    public AIHangOut(EntityCaravaneer entity) {
         super(entity);
     }
 
@@ -21,12 +19,12 @@ public class AIHangOut extends AIAction {
     @Override
     public void updateTask() {
         super.updateTask();
-        ticks++;
-        System.out.println(ticks);
+        System.out.println(((EntityCaravaneer) entity).stay++);
+
     }
 
     @Override
     public boolean isFinished() {
-        return ticks >= MAX_HANGOUT_TICKS;
+        return ((EntityCaravaneer) entity).stay >= ConfigHandler.hangoutTicks;
     }
 }

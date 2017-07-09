@@ -2,6 +2,7 @@ package primetoxinz.caravans.client.gui;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
+import org.apache.commons.lang3.StringUtils;
 import primetoxinz.caravans.CaravansMod;
 import primetoxinz.caravans.api.Merchant;
 
@@ -21,7 +22,7 @@ public class TabMerchant {
     }
 
     public boolean mouseReleased(int mouseX, int mouseY, int state) {
-        if (isClicked(mouseX, mouseY) && state == 0) {
+        if (isMouseOver(mouseX, mouseY) && state == 0) {
             EntityPlayer player = parent.container.player;
             player.openGui(CaravansMod.MODID, parent.container.caravan.getEntity(merchant).getEntityId(), player.world, (int) player.posX, (int) player.posY, (int) player.posZ);
             return true;
@@ -47,7 +48,11 @@ public class TabMerchant {
     }
 
 
-    private boolean isClicked(int mouseX, int mouseY) {
+    public boolean isMouseOver(int mouseX, int mouseY) {
         return new Rectangle(x, y, w, h).contains(mouseX, mouseY);
+    }
+
+    public String getName() {
+        return StringUtils.capitalize(merchant.getRegistryName().getResourcePath());
     }
 }

@@ -22,16 +22,16 @@ minecraft {
     version = "1.11.2-13.20.0.2315"
     runDir = "run"
 
-    mappings = "snapshot_20170612"
+    mappings = "snapshot_20170601"
 }
 
 repositories {
-	maven {
-		url "http://www.ryanliptak.com/maven/"
-	}
+    maven { url "http://blamejared.com/maven" }
 }
 
 dependencies {
+    deobfCompile "MineTweaker3:MineTweaker3-API:+"
+    deobfCompile "com.blamejared:MTLib:2.+"
 }
 
 

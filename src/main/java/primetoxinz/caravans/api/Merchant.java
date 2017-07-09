@@ -7,8 +7,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import primetoxinz.caravans.CaravansMod;
 
 import java.util.List;
+
+import static primetoxinz.caravans.api.CaravanAPI.processName;
 
 /**
  * Created by primetoxinz on 7/4/17.
@@ -18,13 +21,14 @@ public class Merchant extends IForgeRegistryEntry.Impl<Merchant> {
     private List<ITrade> trades = Lists.newArrayList();
     private ItemStack icon = ItemStack.EMPTY;
 
-    public Merchant(ResourceLocation name, ITrade... trades) {
+    public Merchant(ResourceLocation registerName, ITrade... trades) {
         this.trades = Lists.newArrayList(trades);
-        setRegistryName(name);
+
+        setRegistryName(registerName);
     }
 
     public Merchant(String name, ITrade... trades) {
-        this(new ResourceLocation(name), trades);
+        this(new ResourceLocation(processName(name)), trades);
     }
 
     public void addTrade(ITrade trade) {
@@ -53,4 +57,6 @@ public class Merchant extends IForgeRegistryEntry.Impl<Merchant> {
     public String toString() {
         return getRegistryName().toString();
     }
+
+
 }

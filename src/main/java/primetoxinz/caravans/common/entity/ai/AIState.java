@@ -1,61 +1,70 @@
 package primetoxinz.caravans.common.entity.ai;
 
-import com.google.common.collect.Lists;
 import net.minecraft.entity.ai.EntityAIBase;
-
-import java.util.List;
+import primetoxinz.caravans.api.Caravan;
+import primetoxinz.caravans.common.entity.EntityCaravaneer;
 
 /**
  * Created by primetoxinz on 7/2/17.
  */
 public class AIState extends EntityAIBase {
 
-
-    private List<AIAction> states;
+    private EntityCaravaneer caravaneer;
     private AIAction action;
 
-    public AIState(AIAction... states) {
-        this.states = Lists.newArrayList(states);
-        nextState();
+    public AIState(EntityCaravaneer caravaneer) {
+        this.caravaneer = caravaneer;
     }
 
-
-    public void nextState() {
-        if (states.isEmpty())
-            return;
-        this.action = states.remove(0);
-        this.setMutexBits(action.getMutexBits());
+    public void setAction(Caravan.Status status) {
+        switch (status) {
+            case ARRIVING:
+                this.action = new AIGoToPlayer(caravaneer);
+                break;
+            case TRADING:
+                this.action = new AIHangOut(caravaneer);
+                break;
+            case LEAVING:
+                this.action = new AIGoToPos(caravaneer);
+                break;
+            case GONE:
+                this.action = new AILeave(caravaneer);
+                break;
+        }
     }
 
     @Override
     public boolean shouldExecute() {
-        if (action != null)
+        if (hasAction())
             return action.shouldExecute();
         return false;
     }
 
     @Override
     public void startExecuting() {
-        if (action != null)
+        if (hasAction())
             action.startExecuting();
     }
 
     @Override
     public void updateTask() {
-        if (action != null) {
+        if (hasAction()) {
             action.updateTask();
-            if (action.isFinished())
-                nextState();
+            if (action.isFinished()) {
+                if(caravaneer.isLeader())
+                    caravaneer.getCaravan().onFinish(caravaneer);
+            }
         }
-
     }
 
     @Override
     public boolean shouldContinueExecuting() {
-        if (action != null)
+        if (hasAction())
             return action.shouldContinueExecuting();
         return false;
     }
 
-
+    public boolean hasAction() {
+        return action != null;
+    }
 }

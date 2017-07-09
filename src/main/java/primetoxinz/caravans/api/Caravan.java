@@ -20,9 +20,8 @@ import primetoxinz.caravans.common.entity.EntityUtil;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.stream.Collectors;
 
-import static primetoxinz.caravans.common.CommandCaravan.generatePositions;
+import static primetoxinz.caravans.common.entity.EntityUtil.generatePositions;
 
 /**
  * Created by primetoxinz on 7/3/17.
@@ -36,6 +35,7 @@ public class Caravan implements INBTSerializable<NBTTagCompound> {
 
     protected List<EntityCaravaneer> entities = Lists.newArrayList();
     protected EntityCaravaneer leader;
+    protected Status status = Status.ARRIVING;
     public int open;
 
     public Caravan(World world, NBTTagCompound tag) {
@@ -78,12 +78,13 @@ public class Caravan implements INBTSerializable<NBTTagCompound> {
 
     public void spawn(BlockPos pos, EntityPlayer player) {
         getLeader().ifPresent(e -> e.setTarget(player));
-        getLeader().ifPresent(e -> e.spawn(world, pos));
+        getLeader().ifPresent(e -> e.spawn(world, pos, Status.ARRIVING));
         List<EntityCaravaneer> entities = getEntities();
         int amount = entities.size();
         List<BlockPos> positions = generatePositions(world, pos, 5, amount);
+
         for (int i = 0; i < amount; i++) {
-            entities.get(i).spawn(world, positions.get(i)).setTarget(player);
+            entities.get(i).spawn(world, positions.get(i), Status.ARRIVING).setTarget(player);
         }
     }
 
@@ -157,6 +158,7 @@ public class Caravan implements INBTSerializable<NBTTagCompound> {
             caravan.setTag("merchants", list);
             caravan.setTag("entities", compound);
         }
+        caravan.setInteger("status", status.ordinal());
         return caravan;
     }
 
@@ -175,6 +177,7 @@ public class Caravan implements INBTSerializable<NBTTagCompound> {
             String uuid = compound.getString(merchant);
             merchantMap.put(CaravanAPI.getMerchant(merchant), UUID.fromString(uuid));
         }
+        status = Status.VALUES[nbt.getInteger("status")];
     }
 
     public Merchant getMerchant(UUID uuid) {
@@ -194,4 +197,29 @@ public class Caravan implements INBTSerializable<NBTTagCompound> {
         merchants.sort(Comparator.comparing(Merchant::getName));
         return merchants;
     }
+
+    public void nextStatus() {
+        this.status = Status.VALUES[(status.ordinal() + 1) % (Status.VALUES.length + 1)];
+    }
+
+    public void onFinish(EntityCaravaneer caravaneer) {
+        nextStatus();
+        caravaneer.getState().setAction(this.status);
+        for(EntityCaravaneer follower: getEntities()) {
+            follower.getState().setAction(this.status);
+        }
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public enum Status {
+        ARRIVING,
+        TRADING,
+        LEAVING,
+        GONE;
+        public static Status[] VALUES = values();
+    }
+
 }

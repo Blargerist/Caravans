@@ -23,7 +23,7 @@ public class AISpreadOut extends EntityAIBase {
         if (entity == null)
             return false;
         World world = entity.world;
-        List<EntityLiving> list = world.getEntitiesWithinAABB(EntityLiving.class, entity.getEntityBoundingBox().grow(0.5f));
+        List<EntityLiving> list = world.getEntitiesWithinAABB(EntityLiving.class, entity.getEntityBoundingBox().expandXyz(0.5f));
         return !list.isEmpty();
     }
 

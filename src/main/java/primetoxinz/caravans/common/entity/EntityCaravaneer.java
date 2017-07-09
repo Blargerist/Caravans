@@ -2,6 +2,7 @@ package primetoxinz.caravans.common.entity;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,14 +19,19 @@ import primetoxinz.caravans.network.MessageCaravan;
 import primetoxinz.caravans.network.NetworkHandler;
 import primetoxinz.caravans.network.NetworkMessage;
 
+import java.util.UUID;
+
 /**
  * Created by primetoxinz on 7/3/17.
  */
 public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEntityListen, IEntityAdditionalSpawnData {
 
+    private AIState state;
     private Caravan caravan;
     private boolean leader;
     private BlockPos origins;
+    public int stay;
+    private UUID target;
 
     public EntityCaravaneer(World worldIn) {
         super(worldIn);
@@ -40,16 +46,18 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
 
     @Override
     public void onEntityUpdate() {
+        if (getState() != null && !getState().hasAction())
+            getState().setAction(getCaravan().getStatus());
+        if (getCaravan().getStatus() == Caravan.Status.ARRIVING && target != null) {
+            setTarget( EntityUtil.playerFromUUID(world,target));
+        }
         super.onEntityUpdate();
     }
 
     @Override
     protected void initEntityAI() {
-        this.tasks.addTask(1,
-                new AIState(new AIGoToPlayer(this),
-                        new AIHangOut(this),
-                        new AIGoToPos(this),
-                        new AILeave(this)));
+        this.tasks.addTask(1, state = new AIState(this));
+        this.tasks.addTask(2, new AISpreadOut(this));
     }
 
     @Override
@@ -71,8 +79,9 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
     }
 
     @Override
-    public ICaravaneer spawn(World world, BlockPos pos) {
+    public ICaravaneer spawn(World world, BlockPos pos, Caravan.Status status) {
         if (isServerWorld()) {
+            this.getState().setAction(status);
             this.setPosition(pos.getX(), pos.getY(), pos.getZ());
             this.origins = pos;
             this.forceSpawn = true;
@@ -116,9 +125,14 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
     @Override
     public void writeEntityToNBT(NBTTagCompound compound) {
         compound.setTag("caravan", caravan.serializeNBT());
+        if (getAttackTarget() instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) getAttackTarget();
+            compound.setString("player", player.getGameProfile().getId().toString());
+        }
         compound.setBoolean("leader", leader);
         if (origins != null)
             compound.setLong("origins", origins.toLong());
+        compound.setInteger("stay", stay);
         super.writeEntityToNBT(compound);
     }
 
@@ -129,7 +143,11 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
         }
         if (compound.hasKey("origins"))
             this.origins = BlockPos.fromLong(compound.getLong("origins"));
+        if (compound.hasKey("player")) {
+            this.target = UUID.fromString(compound.getString("player"));
+        }
         this.leader = compound.getBoolean("leader");
+        this.stay = compound.getInteger("stay");
         super.readFromNBT(compound);
     }
 
@@ -159,7 +177,7 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
         if (getCaravan() != null) {
             NetworkMessage.writeNBT(getCaravan().serializeNBT(), buffer);
         }
-        if(origins != null)
+        if (origins != null)
             NetworkMessage.writeBlockPos(origins, buffer);
     }
 
@@ -168,12 +186,16 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
         if (getCaravan() == null) {
             setCaravan(new Caravan(world, NetworkMessage.readNBT(buffer)));
         }
-        if(origins == null)
+        if (origins == null)
             this.origins = NetworkMessage.readBlockPos(buffer);
         System.out.println(origins);
     }
 
     public BlockPos getOrigins() {
         return origins;
+    }
+
+    public AIState getState() {
+        return state;
     }
 }

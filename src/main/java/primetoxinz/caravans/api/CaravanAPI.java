@@ -1,12 +1,13 @@
 package primetoxinz.caravans.api;
 
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.IForgeRegistry;
-import primetoxinz.caravans.common.Trade;
-import primetoxinz.caravans.common.entity.EntityCaravaneer;
+import primetoxinz.caravans.ConfigHandler;
+
+import java.util.List;
+import java.util.Random;
 
 /**
  * Created by primetoxinz on 7/1/17.
@@ -17,63 +18,11 @@ public class CaravanAPI {
 
     public final static IForgeRegistry<Merchant> MERCHANTS = GameRegistry.findRegistry(Merchant.class);
 
-    public static void init() {
-
-        GameRegistry.register(new Merchant("caravans:test7",
-                new Trade(new ItemStack(Items.BREAD), new ItemStack(Items.DIAMOND)),
-                new Trade(new ItemStack(Items.FLINT_AND_STEEL), new ItemStack(Items.DIAMOND)),
-                new Trade(new ItemStack(Items.RABBIT_STEW), new ItemStack(Items.DIAMOND)),
-                new Trade(new ItemStack(Items.TNT_MINECART), new ItemStack(Items.DIAMOND)),
-                new Trade(new ItemStack(Items.BREAD), new ItemStack(Items.DIAMOND)),
-                new Trade(new ItemStack(Items.BREAD), new ItemStack(Items.DIAMOND)),
-                new Trade(new ItemStack(Items.BREAD), new ItemStack(Items.DIAMOND))
-        ).setIcon(new ItemStack(Items.DIAMOND_PICKAXE)));
-
-        GameRegistry.register(new Merchant("caravans:test8",
-                new Trade(new ItemStack(Items.WHEAT_SEEDS,10), new ItemStack(Items.WHEAT,2)),
-                new Trade(new ItemStack(Items.EMERALD), new ItemStack(Items.WHEAT)),
-                new Trade(new ItemStack(Items.WHEAT_SEEDS), new ItemStack(Items.WHEAT)),
-                new Trade(new ItemStack(Items.RABBIT), new ItemStack(Items.WHEAT)),
-                new Trade(new ItemStack(Items.EMERALD), new ItemStack(Items.WHEAT)),
-                new Trade(new ItemStack(Items.FLINT_AND_STEEL), new ItemStack(Items.WHEAT)),
-                new Trade(new ItemStack(Items.CLOCK), new ItemStack(Items.WHEAT)),
-                new Trade(new ItemStack(Items.FLINT_AND_STEEL), new ItemStack(Items.WHEAT)),
-                new Trade(new ItemStack(Items.GOLD_INGOT), new ItemStack(Items.WHEAT)),
-                new Trade(new ItemStack(Items.IRON_INGOT), new ItemStack(Items.WHEAT)),
-                new Trade(new ItemStack(Items.BEETROOT), new ItemStack(Items.WHEAT)),
-                new Trade(new ItemStack(Items.COOKED_RABBIT), new ItemStack(Items.WHEAT))
-
-
-
-        ).setIcon(new ItemStack(Items.DIAMOND_HOE)));
-
-        GameRegistry.register(new Merchant("caravans:test").setIcon(new ItemStack(Items.TNT_MINECART)));
-        GameRegistry.register(new Merchant("caravans:test2").setIcon(new ItemStack(Items.FLINT)));
-        GameRegistry.register(new Merchant("caravans:test3").setIcon(new ItemStack(Items.RABBIT)));
-        GameRegistry.register(new Merchant("caravans:test4").setIcon(new ItemStack(Items.SHIELD)));
-        GameRegistry.register(new Merchant("caravans:test5").setIcon(new ItemStack(Items.EMERALD)));
-        GameRegistry.register(new Merchant("caravans:test6").setIcon(new ItemStack(Items.BREAD)));
-
-        GameRegistry.register(new CaravanBuilder("caravans:basic", EntityCaravaneer.class,
-//                getTrade("caravans:test"), EntityCaravaneer.class,
-//                getTrade("caravans:test2"), EntityCaravaneer.class,
-//                getTrade("caravans:test3"), EntityCaravaneer.class,
-//                getTrade("caravans:test4"), EntityCaravaneer.class,
-//                getTrade("caravans:test5"), EntityCaravaneer.class,
-//                getTrade("caravans:test6"), EntityCaravaneer.class,
-                getMerchant("caravans:test7"), EntityCaravaneer.class,
-                getMerchant("caravans:test8"), EntityCaravaneer.class
-
-        ));
-    }
-
     public static CaravanBuilder getCaravan(ResourceLocation loc) {
         return CARAVANS.getValue(loc);
     }
 
     public static CaravanBuilder getCaravan(String loc) {
-        if (!loc.contains(":"))
-            loc = "caravans:" + loc;
         return getCaravan(new ResourceLocation(loc));
     }
 
@@ -82,10 +31,18 @@ public class CaravanAPI {
     }
 
     public static Merchant getMerchant(String loc) {
-        if(loc == null)
+        if (loc == null)
             return null;
-        if (!loc.contains(":"))
-            loc = "caravans:" + loc;
         return getMerchant(new ResourceLocation(loc));
+    }
+
+    public static String processName(String name) {
+        return name;
+    }
+
+    public static CaravanBuilder getRandomCaravan(World world) {
+        List<CaravanBuilder> builders = CARAVANS.getValues();
+        int i = world.rand.nextInt(builders.size());
+        return builders.get(i);
     }
 }

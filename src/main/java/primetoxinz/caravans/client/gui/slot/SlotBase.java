@@ -14,9 +14,8 @@ public class SlotBase extends SlotItemHandler {
         setEnabled(false);
     }
 
-
     @Override
-    public boolean isEnabled() {
+    public boolean canBeHovered() {
         return enabled;
     }
 
