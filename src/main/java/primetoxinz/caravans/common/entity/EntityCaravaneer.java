@@ -1,24 +1,27 @@
 package primetoxinz.caravans.common.entity;
 
+import com.google.common.collect.Lists;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.*;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-import primetoxinz.caravans.api.Caravan;
-import primetoxinz.caravans.api.ICaravaneer;
+import primetoxinz.caravans.api.*;
 import primetoxinz.caravans.common.entity.ai.AISpreadOut;
 import primetoxinz.caravans.common.entity.ai.AIState;
+import primetoxinz.caravans.common.entity.ai.AIWanderNear;
 import primetoxinz.caravans.network.MessageCaravan;
 import primetoxinz.caravans.network.NetworkHandler;
 import primetoxinz.caravans.network.NetworkMessage;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Created by primetoxinz on 7/3/17.
@@ -31,6 +34,8 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
     private BlockPos origins;
     public int stay;
     private UUID target;
+    private List<EntityLiving> tradeEntities = Lists.newArrayList();
+    private List<UUID> tradeUUIDs = Lists.newArrayList();
 
     public EntityCaravaneer(World worldIn) {
         super(worldIn);
@@ -48,7 +53,7 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
         if (getState() != null && !getState().hasAction())
             getState().setAction(getCaravan().getStatus());
         if (getCaravan().getStatus() == Caravan.Status.ARRIVING && target != null) {
-            setTarget( EntityUtil.playerFromUUID(world,target));
+            setTarget(EntityUtil.playerFromUUID(world, target));
         }
         super.onEntityUpdate();
     }
@@ -57,12 +62,13 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
     protected void initEntityAI() {
         this.tasks.addTask(1, state = new AIState(this));
         this.tasks.addTask(2, new AISpreadOut(this));
+        this.tasks.addTask(3, new AIWanderNear(this, 100));
     }
 
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.5D);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
         this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(256);
     }
 
@@ -77,6 +83,10 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
         return caravan;
     }
 
+    public Merchant getMerchant() {
+        return getCaravan().getMerchant(this.getUniqueID());
+    }
+
     @Override
     public ICaravaneer spawn(World world, BlockPos pos, Caravan.Status status) {
         if (isServerWorld()) {
@@ -86,6 +96,19 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
             this.forceSpawn = true;
             world.spawnEntity(this);
             sync();
+            if (!isLeader()) {
+                for (ITrade trade : getMerchant().getTrades()) {
+                    if (trade instanceof IEntityTrade) {
+                        Class<? extends EntityLiving> entity = ((IEntityTrade) trade).getOutput();
+                        EntityLiving living = EntityUtil.createEntity(entity, world);
+                        living.setPosition(pos.getX(), pos.getY(), pos.getZ());
+                        living.setLeashedToEntity(this, true);
+                        living.setEntityInvulnerable(true);
+                        tradeEntities.add(living);
+                        world.spawnEntity(living);
+                    }
+                }
+            }
         }
         return this;
     }
@@ -109,7 +132,8 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
     }
 
     @Override
-    public void onDeath(DamageSource cause) {
+    public void setDead() {
+        super.setDead();
         sync();
         if (caravan != null) {
             if (isLeader()) {
@@ -117,9 +141,17 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
             } else {
                 this.caravan.removeFollower(this);
             }
+            List<EntityLiving> trades = getTradeEntities();
+            if (!trades.isEmpty()) {
+                for (EntityLiving living : trades) {
+//                    EntityUtil.setLeashed(living, false);
+                    living.setDead();
+                }
+            }
         }
-        super.onDeath(cause);
+
     }
+
 
     @Override
     public void writeEntityToNBT(NBTTagCompound compound) {
@@ -132,6 +164,14 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
         if (origins != null)
             compound.setLong("origins", origins.toLong());
         compound.setInteger("stay", stay);
+
+        if (!tradeEntities.isEmpty()) {
+            NBTTagList tradeEntities = new NBTTagList();
+            for (EntityLiving e : this.tradeEntities) {
+                tradeEntities.appendTag(new NBTTagString(e.getUniqueID().toString()));
+            }
+            compound.setTag("tradeEntities", tradeEntities);
+        }
         super.writeEntityToNBT(compound);
     }
 
@@ -147,6 +187,14 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
         }
         this.leader = compound.getBoolean("leader");
         this.stay = compound.getInteger("stay");
+
+        if (compound.hasKey("tradeEntities")) {
+            NBTTagList trades = compound.getTagList("tradeEntities", 8);
+            for (Iterator<NBTBase> it = trades.iterator(); it.hasNext(); ) {
+                NBTTagString uuid = (NBTTagString) it.next();
+                tradeUUIDs.add(UUID.fromString(uuid.getString()));
+            }
+        }
         super.readFromNBT(compound);
     }
 
@@ -191,5 +239,12 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
 
     public AIState getState() {
         return state;
+    }
+
+    public List<EntityLiving> getTradeEntities() {
+        if (tradeEntities.isEmpty()) {
+            tradeEntities = tradeUUIDs.stream().map(u -> (EntityLiving) EntityUtil.fromUUID(world, u)).collect(Collectors.toList());
+        }
+        return tradeEntities;
     }
 }

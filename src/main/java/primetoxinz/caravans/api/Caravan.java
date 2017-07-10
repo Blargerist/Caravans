@@ -37,7 +37,7 @@ public class Caravan implements INBTSerializable<NBTTagCompound> {
     protected List<EntityCaravaneer> entities = Lists.newArrayList();
     protected EntityCaravaneer leader;
     protected Status status = Status.ARRIVING;
-    public int open;
+
 
     protected String stage;
 
@@ -94,7 +94,7 @@ public class Caravan implements INBTSerializable<NBTTagCompound> {
     public void open(EntityPlayer player, Entity entity) {
         List<EntityCaravaneer> entities = getEntities();
         if (!entities.isEmpty()) {
-            int first = getEntities().get(open).getEntityId();
+            int first = getEntities().get(0).getEntityId();
             player.openGui(CaravansMod.MODID, first, player.world, (int) entity.posX, (int) entity.posY, (int) entity.posZ);
         }
     }

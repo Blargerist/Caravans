@@ -5,17 +5,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityBodyHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import sun.misc.UUDecoder;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -113,6 +109,17 @@ public class EntityUtil {
 
     private static double radius(Random random, int max, int min) {
         return (double) (random.nextInt((max - min) + 1) + min);
+    }
+
+    public static EntityLiving createEntity(Class<? extends EntityLiving> clazz, World world) {
+        try {
+            Constructor constructor = clazz.getConstructor(World.class);
+            EntityLiving entity = (EntityLiving) constructor.newInstance(world);
+            return entity;
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 

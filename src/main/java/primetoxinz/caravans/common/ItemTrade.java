@@ -6,10 +6,10 @@ import primetoxinz.caravans.api.ITrade;
 /**
  * Created by primetoxinz on 7/4/17.
  */
-public class Trade implements ITrade {
+public class ItemTrade implements ITrade {
     ItemStack input, output;
 
-    public Trade(ItemStack input, ItemStack output) {
+    public ItemTrade(ItemStack input, ItemStack output) {
         this.input = input;
         this.output = output;
     }

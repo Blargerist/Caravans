@@ -8,8 +8,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import primetoxinz.caravans.CaravansMod;
 import primetoxinz.caravans.api.CaravanAPI;
+import primetoxinz.caravans.api.ITrade;
 import primetoxinz.caravans.api.Merchant;
-import primetoxinz.caravans.common.Trade;
+import primetoxinz.caravans.common.ItemEntityTrade;
+import primetoxinz.caravans.common.ItemTrade;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -68,11 +70,31 @@ public class MTMerchant {
     }
 
     @ZenMethod
+    public static void addItemEntityTrade(String merchant, IItemStack input, String entityClass) {
+        Merchant m = MTCompat.getMerchant(merchant);
+        ItemStack in = toStack(input);
+        Class clazz;
+        try {
+            clazz = Class.forName(entityClass);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            MineTweakerAPI.logError(entityClass + " cannot be found!");
+            return;
+        }
+
+        ItemEntityTrade trade = new ItemEntityTrade(in, clazz);
+        if (m != null) {
+            MineTweakerAPI.apply(new AddTrade(m, trade));
+        }
+
+    }
+
+    @ZenMethod
     public static void addTrade(String merchant, IItemStack input, IItemStack output) {
         Merchant m = MTCompat.getMerchant(merchant);
         ItemStack in = toStack(input);
         ItemStack out = toStack(output);
-        Trade trade = new Trade(in, out);
+        ItemTrade trade = new ItemTrade(in, out);
         if (m != null) {
             MineTweakerAPI.apply(new AddTrade(m, trade));
         }
@@ -81,9 +103,9 @@ public class MTMerchant {
     public static class AddTrade implements IUndoableAction {
 
         private final Merchant merchant;
-        private final Trade trade;
+        private final ITrade trade;
 
-        public AddTrade(Merchant merchant, Trade trade) {
+        public AddTrade(Merchant merchant, ITrade trade) {
             this.merchant = merchant;
             this.trade = trade;
         }
@@ -105,12 +127,12 @@ public class MTMerchant {
 
         @Override
         public String describe() {
-            return String.format("Adding Trade: %s to Merchant: %s ", trade, merchant);
+            return String.format("Adding ItemTrade: %s to Merchant: %s ", trade, merchant);
         }
 
         @Override
         public String describeUndo() {
-            return String.format("Remove Trade: %s from Merchant: %s ", trade, merchant);
+            return String.format("Remove ItemTrade: %s from Merchant: %s ", trade, merchant);
         }
 
         @Override

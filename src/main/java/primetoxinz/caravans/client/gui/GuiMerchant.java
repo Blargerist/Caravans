@@ -45,13 +45,6 @@ public class GuiMerchant extends GuiContainer {
         tabs = container.caravan.getMerchants().stream().map(m -> new TabMerchant(this, m)).collect(Collectors.toList());
     }
 
-    @Override
-    public void onGuiClosed() {
-        Caravan c = container.caravan;
-        int i = c.getMerchants().indexOf(container.merchant);
-        c.open = i;
-        super.onGuiClosed();
-    }
 
     @SideOnly(Side.CLIENT)
     public void update() {

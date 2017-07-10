@@ -12,14 +12,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import primetoxinz.caravans.api.Caravan;
 import primetoxinz.caravans.api.CaravanAPI;
-import primetoxinz.caravans.client.RenderCaravaneer;
-import primetoxinz.caravans.client.RenderSkeleton;
-import primetoxinz.caravans.client.RenderVillager;
-import primetoxinz.caravans.client.RenderZombie;
+import primetoxinz.caravans.client.*;
 import primetoxinz.caravans.common.entity.EntityCaravaneer;
-import primetoxinz.caravans.common.entity.types.EntitySkeletonCaravaneer;
-import primetoxinz.caravans.common.entity.types.EntityVillagerCaravaneer;
-import primetoxinz.caravans.common.entity.types.EntityZombieCaravaneer;
+import primetoxinz.caravans.common.entity.types.*;
 
 /**
  * Created by primetoxinz on 7/1/17.
@@ -32,6 +27,8 @@ public class ClientProxy extends CommonProxy {
         RenderingRegistry.registerEntityRenderingHandler(EntityVillagerCaravaneer.class, RenderVillager::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityZombieCaravaneer.class, RenderZombie::new);
         RenderingRegistry.registerEntityRenderingHandler(EntitySkeletonCaravaneer.class, RenderSkeleton::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityCreeperCaravaneer.class, RenderCreeper::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntitySpiderCaravaneer.class, RenderSpider::new);
     }
 
     @SideOnly(Side.CLIENT)

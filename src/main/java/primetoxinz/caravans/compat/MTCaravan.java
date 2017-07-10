@@ -11,9 +11,7 @@ import primetoxinz.caravans.api.CaravanAPI;
 import primetoxinz.caravans.api.CaravanBuilder;
 import primetoxinz.caravans.api.Merchant;
 import primetoxinz.caravans.common.entity.EntityCaravaneer;
-import primetoxinz.caravans.common.entity.types.EntitySkeletonCaravaneer;
-import primetoxinz.caravans.common.entity.types.EntityVillagerCaravaneer;
-import primetoxinz.caravans.common.entity.types.EntityZombieCaravaneer;
+import primetoxinz.caravans.common.entity.types.*;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -32,6 +30,9 @@ public class MTCaravan {
         MODEL_TYPES.put("villager", EntityVillagerCaravaneer.class);
         MODEL_TYPES.put("zombie", EntityZombieCaravaneer.class);
         MODEL_TYPES.put("skeleton", EntitySkeletonCaravaneer.class);
+        MODEL_TYPES.put("creeper", EntityCreeperCaravaneer.class);
+        MODEL_TYPES.put("spider", EntitySpiderCaravaneer.class);
+
     }
 
     public static Class<? extends EntityCaravaneer> getModel(String model) {
