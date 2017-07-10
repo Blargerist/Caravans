@@ -1,20 +1,24 @@
 package primetoxinz.caravans.client.gui;
 
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.math.MathHelper;
+
+import static primetoxinz.caravans.client.gui.GuiMerchant.CARAVAN_LOC;
 
 /**
  * Created by primetoxinz on 7/6/17.
  */
 public class ScrollBar {
 
-    private GuiMerchant parent;
+    private GuiBase parent;
 
     protected double max;
     protected int current;
 
     private int UI_HEIGHT = 108, BAR_HEIGHT = 15;
 
-    public ScrollBar(int max, GuiMerchant parent) {
+    public ScrollBar(int max, GuiBase parent) {
         this.parent = parent;
         this.current = 0;
         this.max = max;
@@ -22,7 +26,10 @@ public class ScrollBar {
 
     public void draw(int x, int y, int mouseX, int mouseY) {
         int texX = needed() ? 232 : 244;
-        parent.drawTexturedModalRect(x + parent.getGuiLeft(), parent.getGuiTop() + y + getPosition(), texX, 0, 12, BAR_HEIGHT);
+        RenderHelper.enableGUIStandardItemLighting();
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        parent.parent.mc.getTextureManager().bindTexture(CARAVAN_LOC);
+        parent.parent.drawTexturedModalRect(x + parent.getGuiLeft(), parent.getGuiTop() + y + getPosition(), texX, 0, 12, BAR_HEIGHT);
     }
 
 

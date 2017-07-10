@@ -10,6 +10,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import primetoxinz.caravans.CaravansMod;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static primetoxinz.caravans.api.CaravanAPI.processName;
 
@@ -41,6 +42,9 @@ public class Merchant extends IForgeRegistryEntry.Impl<Merchant> {
         return trades;
     }
 
+    public List<IEntityTrade> getEntityTrades() {
+        return getTrades().stream().filter( t -> t instanceof IEntityTrade).map(t -> (IEntityTrade)t).collect(Collectors.toList());
+    }
     public ItemStack getIcon() {
         return icon;
     }

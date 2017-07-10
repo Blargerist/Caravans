@@ -144,7 +144,8 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
             List<EntityLiving> trades = getTradeEntities();
             if (!trades.isEmpty()) {
                 for (EntityLiving living : trades) {
-                    living.setDead();
+                    if(living != null)
+                        living.setDead();
                 }
             }
         }

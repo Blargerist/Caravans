@@ -25,6 +25,8 @@ public class AIHangOut extends AIAction {
 
     @Override
     public boolean isFinished() {
+        if(ConfigHandler.hangoutTicks == -1)
+            return false;
         return ((EntityCaravaneer) entity).stay >= ConfigHandler.hangoutTicks;
     }
 }

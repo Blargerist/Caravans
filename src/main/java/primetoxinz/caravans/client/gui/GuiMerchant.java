@@ -1,25 +1,21 @@
 package primetoxinz.caravans.client.gui;
 
 import com.google.common.collect.Lists;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.inventory.Slot;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Mouse;
 import primetoxinz.caravans.CaravansMod;
-import primetoxinz.caravans.api.Caravan;
 import primetoxinz.caravans.client.gui.slot.SlotBase;
-import primetoxinz.caravans.client.gui.slot.SlotInput;
-import primetoxinz.caravans.client.gui.slot.SlotOutput;
-import primetoxinz.caravans.common.entity.EntityCaravaneer;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -30,43 +26,22 @@ public class GuiMerchant extends GuiContainer {
     public static final ResourceLocation CARAVAN_LOC = new ResourceLocation(CaravansMod.MODID, "textures/gui/caravan.png");
 
     protected ContainerMerchant container;
-    protected ScrollBar scrollBar;
+
     protected List<TabMerchant> tabs = Lists.newArrayList();
-    private static final int SHOW_COUNT = 6;
+    protected List<GuiBase> GUIs = Lists.newArrayList();
 
     public GuiMerchant(ContainerMerchant container) {
         super(container);
         this.container = container;
-        if (container.merchant != null) {
-            this.scrollBar = new ScrollBar(container.getSize(), this);
-        }
-        update();
+        this.GUIs.add(new SellItem(this));
+        this.GUIs.add(new SellEntity(this));
+
         this.ySize = 256;
         tabs = container.caravan.getMerchants().stream().map(m -> new TabMerchant(this, m)).collect(Collectors.toList());
     }
 
-
-    @SideOnly(Side.CLIENT)
-    public void update() {
-        int c = scrollBar.getCurrent();
-        int x = 8, y = 28;
-        for (Slot slot : container.inventorySlots) {
-            if (slot instanceof SlotBase)
-                ((SlotBase) slot).setEnabled(false);
-        }
-        for (int i = c; i < Math.min(container.inputs.size(), c + SHOW_COUNT); i++) {
-            SlotInput in = container.inputs.get(i);
-            SlotOutput out = container.outputs.get(i);
-            drawSlot(out, x + 36, y);
-            drawSlot(in, x, y);
-            y += 18;
-        }
-    }
-
-
-    @Override
-    public void initGui() {
-        super.initGui();
+    public GuiButton addButton(GuiButton button) {
+        return super.addButton(button);
     }
 
     @Override
@@ -77,26 +52,26 @@ public class GuiMerchant extends GuiContainer {
         int i = this.guiLeft;
         int j = this.guiTop;
         this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
-        scrollBar.draw(68, 28, mouseX, mouseY);
+
         int x = i - 28, y = j + 30;
         for (TabMerchant tab : tabs) {
             tab.draw(x, y);
             y += 28;
         }
+        for (GuiBase g : GUIs)
+            g.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        EntityCaravaneer entity = container.caravan.getEntity(container.merchant);
-        if (entity != null) {
-//            mc.fontRenderer.drawString(Integer.toString(entity.stay), 0, 0, 0x000000);
-        }
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
         for (TabMerchant tab : tabs) {
             if (tab.isMouseOver(mouseX, mouseY)) {
-                drawHoveringText(tab.getName(), mouseX-guiLeft, mouseY-guiTop);
+                drawHoveringText(tab.getName(), mouseX - guiLeft, mouseY - guiTop);
             }
         }
+        for (GuiBase g : GUIs)
+            g.drawGuiContainerForegroundLayer(mouseX, mouseY);
     }
 
     @Override
@@ -106,23 +81,22 @@ public class GuiMerchant extends GuiContainer {
             if (tab.mouseReleased(mouseX, mouseY, state))
                 break;
         }
+        for (GuiBase g : GUIs)
+            g.mouseReleased(mouseX, mouseY, state);
     }
 
     @Override
     public void handleMouseInput() throws IOException {
         super.handleMouseInput();
-        int i = Mouse.getDWheel();
-        if (i != 0 && scrollBar != null && scrollBar.needed()) {
-            i = i > 0 ? -1 : 1;
-            scrollBar.move(i);
-            update();
-        }
+        for (GuiBase g : GUIs)
+            g.handleMouseInput();
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        for (GuiBase g : GUIs)
+            g.drawScreen(mouseX, mouseY, partialTicks);
         super.drawScreen(mouseX, mouseY, partialTicks);
-        update();
     }
 
     public void drawSlot(SlotBase slotIn, int x, int y) {
@@ -145,6 +119,46 @@ public class GuiMerchant extends GuiContainer {
         this.itemRender.zLevel = 0.0F;
         this.zLevel = 0.0F;
     }
+
+    public static void drawEntityOnScreen(int posX, int posY, int scale, float mouseX, float mouseY, EntityLivingBase ent) {
+        GlStateManager.enableColorMaterial();
+        GlStateManager.pushMatrix();
+        GlStateManager.translate((float) posX, (float) posY, 50.0F);
+        GlStateManager.scale((float) (-scale), (float) scale, (float) scale);
+        GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+        float f = ent.renderYawOffset;
+        float f1 = ent.rotationYaw;
+        float f2 = ent.rotationPitch;
+        float f3 = ent.prevRotationYawHead;
+        float f4 = ent.rotationYawHead;
+        GlStateManager.rotate(135.0F, 0.0F, 1.0F, 0.0F);
+        RenderHelper.enableStandardItemLighting();
+        GlStateManager.rotate(-135.0F, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotate(-((float) Math.atan((double) (mouseY / 40.0F))) * 20.0F, 1.0F, 0.0F, 0.0F);
+        ent.renderYawOffset = (float) Math.atan((double) (mouseX / 40.0F)) * 20.0F;
+        ent.rotationYaw = (float) Math.atan((double) (mouseX / 40.0F)) * 40.0F;
+        ent.rotationPitch = -((float) Math.atan((double) (mouseY / 40.0F))) * 20.0F;
+        ent.rotationYawHead = ent.rotationYaw;
+        ent.prevRotationYawHead = ent.rotationYaw;
+        GlStateManager.translate(0.0F, 0.0F, 0.0F);
+        RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
+        rendermanager.setPlayerViewY(180.0F);
+        rendermanager.setRenderShadow(false);
+        rendermanager.doRenderEntity(ent, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
+        rendermanager.setRenderShadow(true);
+        ent.renderYawOffset = f;
+        ent.rotationYaw = f1;
+        ent.rotationPitch = f2;
+        ent.prevRotationYawHead = f3;
+        ent.rotationYawHead = f4;
+        GlStateManager.popMatrix();
+        RenderHelper.disableStandardItemLighting();
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+        GlStateManager.disableTexture2D();
+        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+    }
+
 
 }
 
