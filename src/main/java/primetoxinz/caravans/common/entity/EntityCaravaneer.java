@@ -4,9 +4,11 @@ import com.google.common.collect.Lists;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.*;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
@@ -18,6 +20,7 @@ import primetoxinz.caravans.network.MessageCaravan;
 import primetoxinz.caravans.network.NetworkHandler;
 import primetoxinz.caravans.network.NetworkMessage;
 
+import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -26,7 +29,7 @@ import java.util.stream.Collectors;
 /**
  * Created by primetoxinz on 7/3/17.
  */
-public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEntityAdditionalSpawnData {
+public abstract class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEntityAdditionalSpawnData {
 
     private AIState state;
     private Caravan caravan;
@@ -144,7 +147,7 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
             List<EntityLiving> trades = getTradeEntities();
             if (!trades.isEmpty()) {
                 for (EntityLiving living : trades) {
-                    if(living != null)
+                    if (living != null)
                         living.setDead();
                 }
             }
@@ -202,7 +205,7 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
     protected boolean processInteract(EntityPlayer player, EnumHand hand) {
         sync();
         if (isLeader() && getCaravan().getStatus() == Caravan.Status.TRADING) {
-            getCaravan().open(player, this);
+            getCaravan().openFirst(player);
             return true;
         }
         return false;
@@ -252,4 +255,20 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
     public boolean canBeLeashedTo(EntityPlayer player) {
         return false;
     }
+
+    @Nullable
+    @Override
+    protected abstract SoundEvent getHurtSound();
+
+    @Nullable
+    @Override
+    protected abstract SoundEvent getDeathSound();
+
+    @Nullable
+    @Override
+    protected abstract SoundEvent getAmbientSound();
+
+    public abstract SoundEvent getTradeSound();
+
 }
+

@@ -3,7 +3,6 @@ package primetoxinz.caravans.api;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Lists;
-import net.darkhax.gamestages.capabilities.PlayerDataHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
@@ -11,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -91,12 +91,16 @@ public class Caravan implements INBTSerializable<NBTTagCompound> {
         }
     }
 
-    public void open(EntityPlayer player, Entity entity) {
-        List<EntityCaravaneer> entities = getEntities();
-        if (!entities.isEmpty()) {
-            int first = getEntities().get(0).getEntityId();
-            player.openGui(CaravansMod.MODID, first, player.world, (int) entity.posX, (int) entity.posY, (int) entity.posZ);
+    public void openFirst(EntityPlayer player) {
+        if (!getEntities().isEmpty()) {
+            open(player,getEntities().get(0));
         }
+    }
+
+    public void open(EntityPlayer player, EntityCaravaneer caravaneer) {
+        player.openGui(CaravansMod.MODID, caravaneer.getEntityId(), player.world, (int) caravaneer.posX, (int) caravaneer.posY, (int) caravaneer.posZ);
+        world.playSound(player, player.getPosition(),caravaneer.getTradeSound(), SoundCategory.NEUTRAL, 0.5f, 1.0f);
+
     }
 
     public ResourceLocation getName() {
@@ -208,7 +212,7 @@ public class Caravan implements INBTSerializable<NBTTagCompound> {
     public void onFinish(EntityCaravaneer caravaneer) {
         nextStatus();
         caravaneer.getState().setAction(this.status);
-        for(EntityCaravaneer follower: getEntities()) {
+        for (EntityCaravaneer follower : getEntities()) {
             follower.getState().setAction(this.status);
         }
     }

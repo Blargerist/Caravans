@@ -31,7 +31,7 @@ public class AIWanderNear extends EntityAIBase {
     public boolean shouldExecute() {
         if(entity.isLeader())
             return false;
-        if (entity.getRNG().nextInt(chance) == 0) {
+        if (entity.isEntityAlive() && entity.getCaravan() != null && entity.getRNG().nextInt(chance) == 0) {
             BlockPos pos = getPosition();
             if (pos != null && pos.distanceSq(entity.getCaravan().getPosition()) < 16) {
                 this.pos = pos;

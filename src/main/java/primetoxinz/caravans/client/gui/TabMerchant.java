@@ -16,6 +16,7 @@ public class TabMerchant {
     private GuiMerchant parent;
     private Merchant merchant;
     private int x, y, w = 32, h = 28;
+
     public TabMerchant(GuiMerchant parent, Merchant merchant) {
         this.parent = parent;
         this.merchant = merchant;
@@ -24,7 +25,7 @@ public class TabMerchant {
     public boolean mouseReleased(int mouseX, int mouseY, int state) {
         if (isMouseOver(mouseX, mouseY) && state == 0) {
             EntityPlayer player = parent.container.player;
-            player.openGui(CaravansMod.MODID, parent.container.caravan.getEntity(merchant).getEntityId(), player.world, (int) player.posX, (int) player.posY, (int) player.posZ);
+            parent.container.caravan.open(player, parent.container.caravan.getEntity(merchant));
             return true;
         }
         return false;
@@ -44,7 +45,7 @@ public class TabMerchant {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         parent.mc.getTextureManager().bindTexture(parent.CARAVAN_LOC);
         parent.drawTexturedModalRect(x, y, 224, 15 + offsetY, w, h);
-        parent.drawItem(merchant.getIcon(),x+8,y+6);
+        parent.drawItem(merchant.getIcon(), x + 8, y + 6);
     }
 
 
