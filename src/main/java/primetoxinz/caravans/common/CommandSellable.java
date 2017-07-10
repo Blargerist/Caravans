@@ -17,7 +17,7 @@ public class CommandSellable implements ICommandFunction {
     @Override
     public void execute(String[] strings, IPlayer player) {
         Iterator<EntityEntry> iter = ForgeRegistries.ENTITIES.iterator();
-        MineTweakerAPI.logCommand("Sellable Entitie:");
+        MineTweakerAPI.logCommand("Sellable Entities:");
         while (iter.hasNext()) {
             EntityEntry e = iter.next();
             Class clazz = e.getEntityClass();
