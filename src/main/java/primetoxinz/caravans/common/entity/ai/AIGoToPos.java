@@ -1,6 +1,5 @@
 package primetoxinz.caravans.common.entity.ai;
 
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.util.math.BlockPos;
 import primetoxinz.caravans.common.entity.EntityCaravaneer;
 
@@ -8,10 +7,11 @@ import primetoxinz.caravans.common.entity.EntityCaravaneer;
  * Created by primetoxinz on 7/9/17.
  */
 public class AIGoToPos extends AIAction {
-
+    private static final int TIMEOUT = 2400;
     private static final int STOP_RANGE = 10;
     private BlockPos pos;
     private boolean finished;
+    private int tick;
     public AIGoToPos(EntityCaravaneer entity) {
         super(entity);
 
@@ -20,14 +20,15 @@ public class AIGoToPos extends AIAction {
 
     @Override
     public boolean shouldExecute() {
-        this.pos = ((EntityCaravaneer)entity).getOrigins();
+        this.pos = ((EntityCaravaneer) entity).getOrigins();
         return pos != null;
     }
 
 
     @Override
     public void updateTask() {
-        if (this.pos != null && entity.getDistance(pos.getX(), pos.getY(), pos.getZ()) < STOP_RANGE) {
+        tick++;
+        if (tick >= TIMEOUT || (this.pos != null && entity.getDistance(pos.getX(), pos.getY(), pos.getZ()) < STOP_RANGE)) {
             this.entity.getNavigator().clearPathEntity();
             this.finished = true;
         }

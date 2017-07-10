@@ -144,7 +144,6 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
             List<EntityLiving> trades = getTradeEntities();
             if (!trades.isEmpty()) {
                 for (EntityLiving living : trades) {
-//                    EntityUtil.setLeashed(living, false);
                     living.setDead();
                 }
             }
@@ -201,7 +200,7 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
     @Override
     protected boolean processInteract(EntityPlayer player, EnumHand hand) {
         sync();
-        if (isLeader()) {
+        if (isLeader() && getCaravan().getStatus() == Caravan.Status.TRADING) {
             getCaravan().open(player, this);
             return true;
         }
@@ -246,5 +245,10 @@ public class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEn
             tradeEntities = tradeUUIDs.stream().map(u -> (EntityLiving) EntityUtil.fromUUID(world, u)).collect(Collectors.toList());
         }
         return tradeEntities;
+    }
+
+    @Override
+    public boolean canBeLeashedTo(EntityPlayer player) {
+        return false;
     }
 }
