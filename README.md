@@ -1,4 +1,4 @@
-#Caravans
+# Caravans
 
 Caravans are a group of entities that will come to a player, trade with them and then vanish into the distance.
 
