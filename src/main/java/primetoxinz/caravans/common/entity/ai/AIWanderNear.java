@@ -24,16 +24,17 @@ public class AIWanderNear extends EntityAIBase {
 
     @Nullable
     protected BlockPos getPosition() {
-        return EntityUtil.generatePosition(entity.world, entity.getPosition(),5,5);
+        return EntityUtil.generatePosition(entity.world, entity.getPosition(), 5, 5);
     }
 
     @Override
     public boolean shouldExecute() {
-        if(entity.isLeader())
+        if (entity.isLeader())
             return false;
         if (entity.isEntityAlive() && entity.getCaravan() != null && entity.getRNG().nextInt(chance) == 0) {
             BlockPos pos = getPosition();
-            if (pos != null && pos.distanceSq(entity.getCaravan().getPosition()) < 16) {
+            BlockPos entityPos = entity.getCaravan().getPosition();
+            if (pos != null && entityPos != null && pos.distanceSq(entityPos) < 16) {
                 this.pos = pos;
                 return true;
             }
@@ -41,13 +42,11 @@ public class AIWanderNear extends EntityAIBase {
         return false;
     }
 
-    public boolean shouldContinueExecuting()
-    {
+    public boolean shouldContinueExecuting() {
         return !this.entity.getNavigator().noPath();
     }
 
-    public void startExecuting()
-    {
-        this.entity.getNavigator().tryMoveToXYZ(pos.getX(),pos.getY(),pos.getZ(),0.5f);
+    public void startExecuting() {
+        this.entity.getNavigator().tryMoveToXYZ(pos.getX(), pos.getY(), pos.getZ(), 0.5f);
     }
 }
