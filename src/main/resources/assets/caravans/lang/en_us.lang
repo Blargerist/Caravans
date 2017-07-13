@@ -1,1 +1,3 @@
 text.arriving=A caravan is arriving!
+entity.caravans.caravan.villager.name=Caravaneer
+entity.caravans.leader.name=Leader

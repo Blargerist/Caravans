@@ -35,13 +35,21 @@ public class GuiMerchant extends GuiContainer {
         this.container = container;
         this.GUIs.add(new SellItem(this));
         this.GUIs.add(new SellEntity(this));
-
         this.ySize = 256;
         tabs = container.caravan.getMerchants().stream().map(m -> new TabMerchant(this, m)).collect(Collectors.toList());
     }
 
-    public GuiButton addButton(GuiButton button) {
-        return super.addButton(button);
+    @Override
+    public void initGui() {
+        super.initGui();
+        for (GuiBase gui : GUIs)
+            if (gui.isEnabled())
+                gui.init();
+    }
+
+    public <T extends GuiButton> T addButton(T button) {
+        this.buttonList.add(button);
+        return button;
     }
 
     @Override
@@ -59,7 +67,10 @@ public class GuiMerchant extends GuiContainer {
             y += 28;
         }
         for (GuiBase g : GUIs)
-            g.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+            if (g.isEnabled())
+                g.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+        RenderHelper.disableStandardItemLighting();
+
     }
 
     @Override
@@ -82,21 +93,24 @@ public class GuiMerchant extends GuiContainer {
                 break;
         }
         for (GuiBase g : GUIs)
-            g.mouseReleased(mouseX, mouseY, state);
+            if (g.isEnabled())
+                g.mouseReleased(mouseX, mouseY, state);
     }
 
     @Override
     public void handleMouseInput() throws IOException {
         super.handleMouseInput();
         for (GuiBase g : GUIs)
-            g.handleMouseInput();
+            if (g.isEnabled())
+                g.handleMouseInput();
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        for (GuiBase g : GUIs)
-            g.drawScreen(mouseX, mouseY, partialTicks);
         super.drawScreen(mouseX, mouseY, partialTicks);
+        for (GuiBase g : GUIs)
+            if (g.isEnabled())
+                g.drawScreen(mouseX, mouseY, partialTicks);
     }
 
     public void drawSlot(SlotBase slotIn, int x, int y) {
@@ -109,7 +123,7 @@ public class GuiMerchant extends GuiContainer {
     public void drawItem(ItemStack stack, int x, int y) {
         GlStateManager.color(1F, 1F, 1F); //Forge: Reset color in case Items change it.
         GlStateManager.enableBlend(); //Forge: Make sure blend is enabled else tabs show a white border.
-        zLevel = 100.0F;
+        zLevel = 400.0F;
         itemRender.zLevel = 100.0F;
         GlStateManager.enableLighting();
         GlStateManager.enableRescaleNormal();
@@ -159,6 +173,9 @@ public class GuiMerchant extends GuiContainer {
         GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
     }
 
-
+    @Override
+    public void drawHoveringText(String text, int x, int y) {
+        super.drawHoveringText(text, x, y);
+    }
 }
 

@@ -54,6 +54,6 @@ public class TabMerchant {
     }
 
     public String getName() {
-        return StringUtils.capitalize(merchant.getRegistryName().getResourcePath());
+        return merchant.getRealName();
     }
 }

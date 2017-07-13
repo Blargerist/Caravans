@@ -31,8 +31,10 @@ import primetoxinz.caravans.common.entity.types.*;
 import primetoxinz.caravans.compat.MTCompat;
 import primetoxinz.caravans.compat.MTGameStages;
 import primetoxinz.caravans.network.MessageCaravan;
+import primetoxinz.caravans.network.MessageEntityTrade;
 import primetoxinz.caravans.network.NetworkHandler;
 import primetoxinz.caravans.proxy.CommonProxy;
+import sun.security.krb5.Config;
 
 import java.io.File;
 import java.util.Random;
@@ -66,6 +68,7 @@ public class CaravansMod {
         registerEntity(EntityCreeperCaravaneer.class, "caravaner.creeper", 256, 1, true);
         NetworkRegistry.INSTANCE.registerGuiHandler(CaravansMod.INSTANCE, new GuiHandler());
         NetworkHandler.register(MessageCaravan.class, Side.CLIENT);
+        NetworkHandler.register(MessageEntityTrade.class, Side.SERVER);
         proxy.preInit(event);
         caravansFolder = new File(event.getModConfigurationDirectory(), CaravansMod.MODID);
         if (!caravansFolder.exists())
@@ -126,17 +129,22 @@ public class CaravansMod {
         Random rand = world.rand;
         if (world.playerEntities.isEmpty())
             return;
-        if (event.phase == TickEvent.Phase.END && rand.nextInt(ConfigHandler.spawnChance) == 0) {
-            CaravanBuilder builder = CaravanAPI.getRandomCaravan(world);
-            EntityPlayer player = EntityUtil.getRandomPlayer(world);
-            if (builder != null || player != null) {
-                Caravan caravan = builder.create(world);
-                if (MTGameStages.canSpawnCaravan(player, caravan)) {
-                    BlockPos pos = EntityUtil.generatePosition(world, player.getPosition(), ConfigHandler.maxRadius, ConfigHandler.minRadius);
-                    caravan.spawn(pos, player);
-                    player.sendStatusMessage(new TextComponentTranslation("text.arriving"), true);
+        if (event.phase == TickEvent.Phase.END && world.getWorldTime() == 2000) {
+            double d = rand.nextDouble();
+            double c = ConfigHandler.spawnPercent / 100;
+            if (Math.abs((d - c) - 1.0) <= 0.01) {
+                CaravanBuilder builder = CaravanAPI.getRandomCaravan(world);
+                EntityPlayer player = EntityUtil.getRandomPlayer(world);
+                if (builder != null || player != null) {
+                    Caravan caravan = builder.create(world);
+                    if (MTGameStages.canSpawnCaravan(player, caravan)) {
+                        BlockPos pos = EntityUtil.generatePosition(world, player.getPosition(), ConfigHandler.maxRadius, ConfigHandler.minRadius);
+                        caravan.spawn(pos, player);
+                        player.sendStatusMessage(new TextComponentTranslation("text.arriving"), true);
+                    }
                 }
             }
+
         }
     }
 }

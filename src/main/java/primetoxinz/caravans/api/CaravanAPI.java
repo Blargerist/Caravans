@@ -23,7 +23,7 @@ public class CaravanAPI {
     }
 
     public static CaravanBuilder getCaravan(String loc) {
-        return getCaravan(new ResourceLocation(loc));
+        return getCaravan(new ResourceLocation(processName(loc)));
     }
 
     public static Merchant getMerchant(ResourceLocation loc) {
@@ -37,7 +37,10 @@ public class CaravanAPI {
     }
 
     public static String processName(String name) {
-        return name;
+        name = name.replaceAll("_", " ");
+        if (name.contains(":"))
+            return name;
+        return "caravans:" + name;
     }
 
     public static CaravanBuilder getRandomCaravan(World world) {

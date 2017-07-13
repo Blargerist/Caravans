@@ -16,8 +16,8 @@ public class ConfigHandler {
     @Config.Comment("Allow Caravans to randomly spawn")
     public static boolean randomlySpawn = true;
 
-    @Config.Comment("Chance to randomly spawn. 1 in X chance.")
-    public static int spawnChance = 3000;
+    @Config.Comment("Percent chance to spawn a Caravan each day ")
+    public static double spawnPercent = 10;
 
     @Config.Comment("Maximum radius from player to spawn caravan")
     public static int maxRadius = 100;

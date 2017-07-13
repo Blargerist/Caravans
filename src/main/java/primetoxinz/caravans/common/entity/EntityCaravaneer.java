@@ -10,6 +10,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import primetoxinz.caravans.api.*;
@@ -99,18 +100,27 @@ public abstract class EntityCaravaneer extends EntityCreature implements ICarava
             this.forceSpawn = true;
             world.spawnEntity(this);
             sync();
+
             if (!isLeader()) {
+
+                setCustomNameTag(getMerchant().getRealName());
+
                 for (ITrade trade : getMerchant().getTrades()) {
                     if (trade instanceof IEntityTrade) {
                         Class<? extends EntityLiving> entity = ((IEntityTrade) trade).getOutput();
                         EntityLiving living = EntityUtil.createEntity(entity, world);
+
+
                         living.setPosition(pos.getX(), pos.getY(), pos.getZ());
                         living.setLeashedToEntity(this, true);
                         living.setEntityInvulnerable(true);
+                        living.setCustomNameTag(living.getName());
                         tradeEntities.add(living);
                         world.spawnEntity(living);
                     }
                 }
+            } else {
+                setCustomNameTag(getCaravan().getRealName());
             }
         }
         return this;

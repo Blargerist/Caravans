@@ -19,8 +19,6 @@ public class AIHangOut extends AIAction {
     @Override
     public void updateTask() {
         super.updateTask();
-        System.out.println(((EntityCaravaneer) entity).stay++);
-
     }
 
     @Override

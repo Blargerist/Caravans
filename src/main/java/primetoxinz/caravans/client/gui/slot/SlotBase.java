@@ -11,7 +11,6 @@ public class SlotBase extends SlotItemHandler {
 
     public SlotBase(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
         super(itemHandler, index, xPosition, yPosition);
-        setEnabled(false);
     }
 
     @Override
@@ -19,7 +18,8 @@ public class SlotBase extends SlotItemHandler {
         return enabled;
     }
 
-    public void setEnabled(boolean enabled) {
+    public SlotBase setEnabled(boolean enabled) {
         this.enabled = enabled;
+        return this;
     }
 }

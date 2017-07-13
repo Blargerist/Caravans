@@ -29,7 +29,7 @@ public class ScrollBar {
         RenderHelper.enableGUIStandardItemLighting();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         parent.parent.mc.getTextureManager().bindTexture(CARAVAN_LOC);
-        parent.parent.drawTexturedModalRect(x + parent.getGuiLeft(), parent.getGuiTop() + y + getPosition(), texX, 0, 12, BAR_HEIGHT);
+        parent.parent.drawTexturedModalRect(x + parent.left(), parent.top() + y + getPosition(), texX, 0, 12, BAR_HEIGHT);
     }
 
 

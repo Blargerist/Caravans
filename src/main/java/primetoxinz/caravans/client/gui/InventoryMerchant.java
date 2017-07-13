@@ -2,36 +2,32 @@ package primetoxinz.caravans.client.gui;
 
 import net.minecraftforge.items.ItemStackHandler;
 import primetoxinz.caravans.api.ITrade;
-import primetoxinz.caravans.api.Merchant;
-import primetoxinz.caravans.common.ItemTrade;
+
+import java.util.List;
 
 /**
  * Created by primetoxinz on 7/6/17.
  */
-public class InventoryMerchant {
-    private ItemStackHandler input, output;
+public class InventoryMerchant<T extends ITrade> {
 
-    public InventoryMerchant(Merchant merchant) {
-        if (merchant != null) {
-            int size = merchant.getTrades().size();
-            this.input = new ItemStackHandler(size);
-            this.output = new ItemStackHandler(size);
-            for (int i = 0; i < size; i++) {
-                ITrade itrade = merchant.getTrades().get(i);
-                if(itrade instanceof ItemTrade) {
-                    ItemTrade trade = (ItemTrade) itrade;
-                    input.setStackInSlot(i, trade.getInput().copy());
-                    output.setStackInSlot(i, trade.getOutput().copy());
-                }
-            }
-        }
+    protected List<T> trades;
+
+    public InventoryMerchant(List<T> trades) {
+        this.trades = trades;
     }
 
-    public ItemStackHandler getInput() {
-        return input;
+
+    public int getSize() {
+        return trades.size();
     }
 
-    public ItemStackHandler getOutput() {
-        return output;
+    public interface IInput {
+        ItemStackHandler getInput();
     }
+
+
+    public interface IOutput {
+        ItemStackHandler getOutput();
+    }
+
 }

@@ -14,6 +14,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.INBTSerializable;
+import org.apache.commons.lang3.StringUtils;
 import primetoxinz.caravans.CaravansMod;
 import primetoxinz.caravans.common.entity.EntityCaravaneer;
 import primetoxinz.caravans.common.entity.EntityUtil;
@@ -107,6 +108,9 @@ public class Caravan implements INBTSerializable<NBTTagCompound> {
         return name;
     }
 
+    public String getRealName() {
+        return StringUtils.capitalize(getName().getResourcePath());
+    }
     public void sync() {
         for (EntityCaravaneer caravaneer : getEntities()) {
             if (caravaneer != null)

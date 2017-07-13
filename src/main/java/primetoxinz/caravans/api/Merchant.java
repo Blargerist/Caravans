@@ -7,7 +7,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.StringUtils;
 import primetoxinz.caravans.CaravansMod;
+import primetoxinz.caravans.common.ItemEntityTrade;
+import primetoxinz.caravans.common.ItemTrade;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,9 +45,18 @@ public class Merchant extends IForgeRegistryEntry.Impl<Merchant> {
         return trades;
     }
 
-    public List<IEntityTrade> getEntityTrades() {
-        return getTrades().stream().filter( t -> t instanceof IEntityTrade).map(t -> (IEntityTrade)t).collect(Collectors.toList());
+    public List<ItemEntityTrade> getItemEntityTrades() {
+        return getTrades().stream().filter(t -> t instanceof ItemEntityTrade).map(t -> (ItemEntityTrade) t).collect(Collectors.toList());
     }
+
+    public List<IEntityTrade> getEntityTrades() {
+        return getTrades().stream().filter(t -> t instanceof IEntityTrade).map(t -> (IEntityTrade) t).collect(Collectors.toList());
+    }
+
+    public List<ItemTrade> getItemTrades() {
+        return getTrades().stream().filter(t -> t instanceof ItemTrade).map(t -> (ItemTrade) t).collect(Collectors.toList());
+    }
+
     public ItemStack getIcon() {
         return icon;
     }
@@ -65,6 +77,8 @@ public class Merchant extends IForgeRegistryEntry.Impl<Merchant> {
     }
 
 
-
+    public String getRealName() {
+        return StringUtils.capitalize(getRegistryName().getResourcePath());
+    }
 
 }

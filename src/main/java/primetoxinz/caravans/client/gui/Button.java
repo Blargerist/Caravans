@@ -15,6 +15,11 @@ public class Button extends GuiButton {
 
     }
 
+    @Override
+    public boolean isMouseOver() {
+        return super.isMouseOver();
+    }
+
     public void clicked() {
         runnable.run();
     }

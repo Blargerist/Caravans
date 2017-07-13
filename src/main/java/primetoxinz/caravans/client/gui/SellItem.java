@@ -20,28 +20,17 @@ public class SellItem extends GuiBase {
     private static final int SHOW_COUNT = 6;
     public SellItem(GuiMerchant parent) {
         super(parent);
-        if (getContainer().merchant != null) {
-            this.scrollBar = new ScrollBar(getContainer().getSize(), this);
+        if (container.merchant != null) {
+            this.scrollBar = new ScrollBar(container.inventoryMerchantItem.getSize(), this);
         }
         update();
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+    public void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         scrollBar.draw(68, 28, mouseX, mouseY);
     }
 
-    @Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-
-    }
-
-    @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        update();
-    }
-
-    @Override
     public void handleMouseInput() throws IOException {
         int i = Mouse.getDWheel();
         if (i != 0 && scrollBar != null && scrollBar.needed()) {
@@ -56,13 +45,13 @@ public class SellItem extends GuiBase {
     public void update() {
         int c = scrollBar.getCurrent();
         int x = 8, y = 28;
-        for (Slot slot : getContainer().inventorySlots) {
+        for (Slot slot : container.inventorySlots) {
             if (slot instanceof SlotBase)
                 ((SlotBase) slot).setEnabled(false);
         }
-        for (int i = c; i < Math.min(getContainer().inputs.size(), c + SHOW_COUNT); i++) {
-            SlotInput in = getContainer().inputs.get(i);
-            SlotOutput out = getContainer().outputs.get(i);
+        for (int i = c; i < Math.min(container.inputs.size(), c + SHOW_COUNT); i++) {
+            SlotInput in = container.inputs.get(i);
+            SlotOutput out = container.outputs.get(i);
             parent.drawSlot(out, x + 36, y);
             parent.drawSlot(in, x, y);
             y += 18;

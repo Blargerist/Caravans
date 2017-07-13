@@ -9,7 +9,7 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "0.0.3"
+version = "0.0.4"
 group = "primetoxinz.caravans"
 archivesBaseName = "Caravans"
 
@@ -28,9 +28,11 @@ minecraft {
 repositories {
     maven { url "http://blamejared.com/maven" }
     maven { url 'http://maven.epoxide.org' }
+    maven { url 'http://dvs1.progwml6.com/files/maven' }
 }
 
 dependencies {
+    deobfCompile "mezz.jei:jei_1.11.2:+"
     deobfCompile "MineTweaker3:MineTweaker3-API:+"
     deobfCompile "net.darkhax.bookshelf:Bookshelf:1.11.2-2.0.0.387"
     compile "net.darkhax.gamestages:GameStages-1.11.2:1.0.11"

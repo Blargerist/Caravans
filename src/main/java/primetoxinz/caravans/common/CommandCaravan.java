@@ -8,11 +8,17 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.StringUtils;
 import primetoxinz.caravans.ConfigHandler;
 import primetoxinz.caravans.api.Caravan;
 import primetoxinz.caravans.api.CaravanAPI;
 import primetoxinz.caravans.api.CaravanBuilder;
 import primetoxinz.caravans.compat.MTGameStages;
+
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static primetoxinz.caravans.common.entity.EntityUtil.generatePosition;
 
@@ -59,5 +65,22 @@ public class CommandCaravan extends CommandBase {
     @Override
     public int getRequiredPermissionLevel() {
         return 2;
+    }
+
+    @Override
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
+        switch(args.length) {
+            case 1:
+                return getListOfStringsMatchingLastWord(args, server.getOnlinePlayerNames());
+            case 2:
+                return getListOfStringsMatchingLastWord(args, getCaravans());
+        }
+        return super.getTabCompletions(server, sender, args, targetPos);
+    }
+
+
+
+    public List<String> getCaravans() {
+        return StreamSupport.stream(CaravanAPI.CARAVANS.spliterator(),false).map( c -> c.getRegistryName().getResourcePath()).map( s -> s.replaceAll(" ","_")).collect(Collectors.toList());
     }
 }

@@ -8,8 +8,6 @@ import primetoxinz.caravans.common.entity.EntityCaravaneer;
 import java.util.HashMap;
 import java.util.Map;
 
-import static primetoxinz.caravans.api.CaravanAPI.processName;
-
 /**
  * Created by primetoxinz on 7/4/17.
  */
@@ -26,7 +24,7 @@ public class CaravanBuilder extends IForgeRegistryEntry.Impl<CaravanBuilder> {
     }
 
     public CaravanBuilder(String name, Class<? extends EntityCaravaneer> leaderClass, Object... objects) {
-        this(new ResourceLocation(processName(name)), leaderClass, objects);
+        this(new ResourceLocation(name), leaderClass, objects);
     }
 
     public CaravanBuilder addFollower(Class<? extends EntityCaravaneer> follower, Merchant merchant) {

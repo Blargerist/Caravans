@@ -1,10 +1,12 @@
 package primetoxinz.caravans.common.entity;
 
 import com.google.common.collect.Lists;
+import minetweaker.MineTweakerAPI;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityBodyHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
@@ -21,6 +23,17 @@ import java.util.UUID;
  */
 public class EntityUtil {
     public static Field isLeashed = ReflectionHelper.findField(EntityLiving.class, "isLeashed", "field_110169_bv");
+
+    public static Field leashedToEntity = ReflectionHelper.findField(EntityLiving.class, "leashedToEntity", "field_110168_bw");
+
+    public static Entity getLeashedTo(EntityLiving living) {
+        try {
+            return (Entity) leashedToEntity.get(living);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public static boolean isLeashed(EntityLiving living) {
         try {
@@ -118,6 +131,37 @@ public class EntityUtil {
             return entity;
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Class<? extends EntityLiving> getEntity(String entity) {
+        Class<? extends EntityLiving> clazz;
+        try {
+            clazz = (Class<? extends EntityLiving>) Class.forName(entity);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            MineTweakerAPI.logError(entity + " cannot be found!");
+            return null;
+        }
+        return clazz;
+    }
+
+    public static EntityLiving setPosition(EntityLiving entityLiving, BlockPos pos) {
+        entityLiving.setPosition(pos.getX(), pos.getY(), pos.getZ());
+        return entityLiving;
+    }
+
+
+    public static EntityLiving getLeashed(Class<? extends EntityLiving> clazz, World world, EntityPlayer player) {
+        for (Entity e : world.loadedEntityList) {
+            if (clazz.isAssignableFrom(e.getClass())) {
+                EntityLiving living = (EntityLiving) e;
+                Entity leashed = getLeashedTo(living);
+                if (leashed != null && leashed.getUniqueID().equals(player.getUniqueID())) {
+                    return living;
+                }
+            }
         }
         return null;
     }

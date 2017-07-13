@@ -1,35 +1,53 @@
 package primetoxinz.caravans.client.gui;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiButton;
+
 import java.io.IOException;
 
 /**
  * Created by primetoxinz on 7/9/17.
  */
-public class GuiBase {
+public class GuiBase extends Gui {
 
     protected GuiMerchant parent;
+    protected ContainerMerchant container;
 
     public GuiBase(GuiMerchant parent) {
         this.parent = parent;
+        this.container = parent.container;
     }
 
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+    public boolean isEnabled() {
+        return true;
+    }
+
+    public void init() {
 
     }
 
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-
+    public int left() {
+        return parent.getGuiLeft();
     }
 
-    public void handleMouseInput() throws IOException {
+    public int top() {
+        return parent.getGuiTop();
+    }
 
+    public Minecraft mc() {
+        return parent.mc;
+    }
+
+    public <T extends GuiButton> T addButton(T button) {
+        return parent.addButton(button);
     }
 
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-
+        update();
     }
 
-    public void mouseReleased(int mouseX, int mouseY, int state) {
+    public void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 
     }
 
@@ -37,15 +55,15 @@ public class GuiBase {
 
     }
 
-    public ContainerMerchant getContainer() {
-        return parent.container;
+    public void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+
     }
 
-    public int getGuiLeft() {
-        return parent.getGuiLeft();
+    public void mouseReleased(int mouseX, int mouseY, int state) {
+
     }
 
-    public int getGuiTop() {
-        return parent.getGuiTop();
+    public void handleMouseInput() throws IOException {
+
     }
 }
