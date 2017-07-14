@@ -74,7 +74,7 @@ public class CaravansMod {
         caravansFolder = new File(event.getModConfigurationDirectory(), CaravansMod.MODID);
         if (!caravansFolder.exists())
             caravansFolder.mkdirs();
-        MTCompat.preInit();
+
     }
 
     @Mod.EventHandler
@@ -85,6 +85,7 @@ public class CaravansMod {
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         proxy.postInit(event);
+        MTCompat.preInit();
     }
 
     @Mod.EventHandler

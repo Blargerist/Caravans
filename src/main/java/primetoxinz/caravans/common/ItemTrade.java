@@ -27,8 +27,14 @@ public class ItemTrade implements ITrade {
 
 
     public ItemTrade(NBTTagCompound tag) {
-        this.input = new ItemStack((NBTTagCompound) tag.getTag("input"));
-        this.output = new ItemStack((NBTTagCompound) tag.getTag("output"));
+        if (tag.hasKey("input"))
+            this.input = new ItemStack((NBTTagCompound) tag.getTag("input"));
+        else
+            this.input = ItemStack.EMPTY;
+        if (tag.hasKey("output"))
+            this.output = new ItemStack((NBTTagCompound) tag.getTag("output"));
+        else
+            this.output = ItemStack.EMPTY;
         this.stock = tag.getInteger("stock");
     }
 
@@ -61,8 +67,10 @@ public class ItemTrade implements ITrade {
     public NBTTagCompound serializeNBT() {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setString("type", "item");
-        tag.setTag("input", input.serializeNBT());
-        tag.setTag("output", output.serializeNBT());
+        if (!input.isEmpty())
+            tag.setTag("input", input.serializeNBT());
+        if (!output.isEmpty())
+            tag.setTag("output", output.serializeNBT());
         tag.setInteger("stock", stock);
         return tag;
     }

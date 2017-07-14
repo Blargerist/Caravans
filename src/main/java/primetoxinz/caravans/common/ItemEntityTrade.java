@@ -22,7 +22,8 @@ public class ItemEntityTrade implements IEntityTrade {
 
     public ItemEntityTrade(NBTTagCompound tag) {
         try {
-            input = new ItemStack(tag.getCompoundTag("input"));
+            if(tag.hasKey("input"))
+                input = new ItemStack(tag.getCompoundTag("input"));
             output = (Class<? extends EntityLiving>) getClass().forName(tag.getString("output"));
             stock = tag.getInteger("stock");
         } catch (ClassNotFoundException e) {
@@ -59,7 +60,8 @@ public class ItemEntityTrade implements IEntityTrade {
     public NBTTagCompound serializeNBT() {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setString("type", "item_entity");
-        tag.setTag("input", input.serializeNBT());
+        if(!input.isEmpty())
+            tag.setTag("input", input.serializeNBT());
         tag.setString("output", output.getCanonicalName());
         tag.setInteger("stock", stock);
         return tag;
