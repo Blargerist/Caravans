@@ -33,7 +33,7 @@ public class CommandCaravan extends CommandBase {
 
     @Override
     public String getUsage(ICommandSender sender) {
-        return "/caravan <player> <caravan name> [max radius] [min radius]";
+        return "/caravan <player> <caravan name>|random [max radius] [min radius]";
     }
 
     @Override
@@ -42,7 +42,12 @@ public class CommandCaravan extends CommandBase {
             throw new CommandException(getUsage(sender));
         World world = sender.getEntityWorld();
         EntityPlayer player = getPlayer(server, sender, args[0]);
-        CaravanBuilder builder = CaravanAPI.getCaravan(args[1]);
+        CaravanBuilder builder;
+        System.out.println(args[1]);
+        if (args[1].equalsIgnoreCase("random"))
+            builder = CaravanAPI.getRandomCaravan(world);
+        else
+            builder = CaravanAPI.getCaravan(args[1]);
         if (builder == null)
             throw new CommandException("Caravan " + args[1] + " was not found");
         int maxRadius = ConfigHandler.maxRadius;
@@ -69,7 +74,7 @@ public class CommandCaravan extends CommandBase {
 
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
-        switch(args.length) {
+        switch (args.length) {
             case 1:
                 return getListOfStringsMatchingLastWord(args, server.getOnlinePlayerNames());
             case 2:
@@ -79,8 +84,7 @@ public class CommandCaravan extends CommandBase {
     }
 
 
-
     public List<String> getCaravans() {
-        return StreamSupport.stream(CaravanAPI.CARAVANS.spliterator(),false).map( c -> c.getRegistryName().getResourcePath()).map( s -> s.replaceAll(" ","_")).collect(Collectors.toList());
+        return StreamSupport.stream(CaravanAPI.CARAVANS.spliterator(), false).map(c -> c.getRegistryName().getResourcePath()).map(s -> s.replaceAll(" ", "_")).collect(Collectors.toList());
     }
 }

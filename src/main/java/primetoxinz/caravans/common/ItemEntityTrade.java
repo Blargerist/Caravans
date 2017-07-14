@@ -4,13 +4,14 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.items.ItemStackHandler;
 import primetoxinz.caravans.api.IEntityTrade;
 
 /**
  * Created by primetoxinz on 7/9/17.
  */
 public class ItemEntityTrade implements IEntityTrade {
-    private ItemStack input;
+    private ItemStack input = ItemStack.EMPTY;
     private Class<? extends EntityLiving> output;
     private int stock;
 

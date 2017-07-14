@@ -5,6 +5,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.items.ItemStackHandler;
 import org.apache.commons.lang3.Range;
 import primetoxinz.caravans.api.ITrade;
 import stanhebben.zenscript.value.IntRange;
@@ -13,8 +14,8 @@ import stanhebben.zenscript.value.IntRange;
  * Created by primetoxinz on 7/4/17.
  */
 public class ItemTrade implements ITrade {
-    private ItemStack input;
-    private ItemStack output;
+    private ItemStack input = ItemStack.EMPTY;
+    private ItemStack output = ItemStack.EMPTY;
     private int stock;
     private IntegerRange range;
 
