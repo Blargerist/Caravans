@@ -2,7 +2,11 @@ package primetoxinz.caravans.proxy;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -15,6 +19,8 @@ import primetoxinz.caravans.api.CaravanAPI;
 import primetoxinz.caravans.client.*;
 import primetoxinz.caravans.common.entity.EntityCaravaneer;
 import primetoxinz.caravans.common.entity.types.*;
+
+import java.util.UUID;
 
 /**
  * Created by primetoxinz on 7/1/17.
@@ -42,5 +48,23 @@ public class ClientProxy extends CommonProxy {
         }
     }
 
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void syncLeashEntity(int id, int attachID) {
+        World world = Minecraft.getMinecraft().world;
+        EntityLivingBase attach = (EntityLivingBase) world.getEntityByID(attachID);
+        EntityLiving livingBase = (EntityLiving) world.getEntityByID(id);
+        livingBase.setLeashedToEntity(attach, true);
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void syncLeashPlayer(int id, String uuid) {
+        World world = Minecraft.getMinecraft().world;
+        EntityPlayer player = world.getPlayerEntityByUUID(UUID.fromString(uuid));
+        EntityLiving livingBase = (EntityLiving) world.getEntityByID(id);
+        livingBase.setLeashedToEntity(player, true);
+    }
 
 }

@@ -6,7 +6,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import primetoxinz.caravans.api.Caravan;
 import primetoxinz.caravans.api.Merchant;
-import primetoxinz.caravans.api.ICaravaneer;
+import primetoxinz.caravans.api.MerchantBuilder;
+import primetoxinz.caravans.common.entity.EntityCaravaneer;
 
 import javax.annotation.Nullable;
 
@@ -18,11 +19,12 @@ public class GuiHandler implements IGuiHandler {
     @Nullable
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        Entity entity = world.getEntityByID(ID);
-        if (entity instanceof ICaravaneer) {
-            Caravan caravan = ((ICaravaneer) entity).getCaravan();
-            Merchant merchant = caravan.getMerchant(entity.getUniqueID());
-            ContainerMerchant container = new ContainerMerchant(caravan, merchant, player);
+        Entity caravaneer = world.getEntityByID(ID);
+        if (caravaneer instanceof EntityCaravaneer) {
+
+            Caravan caravan = ((EntityCaravaneer) caravaneer).getCaravan();
+            Merchant merchant = caravan.getMerchant(caravaneer.getUniqueID());
+            ContainerMerchant container = new ContainerMerchant(caravan, merchant, player, (EntityCaravaneer) caravaneer);
             return container;
         }
         return null;
@@ -31,11 +33,11 @@ public class GuiHandler implements IGuiHandler {
     @Nullable
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        Entity entity = world.getEntityByID(ID);
-        if (entity instanceof ICaravaneer) {
-            Caravan caravan = ((ICaravaneer) entity).getCaravan();
-            Merchant merchant = caravan.getMerchant(entity.getUniqueID());
-            return new GuiMerchant(new ContainerMerchant(caravan, merchant, player));
+        Entity caravaneer = world.getEntityByID(ID);
+        if (caravaneer instanceof EntityCaravaneer) {
+            Caravan caravan = ((EntityCaravaneer) caravaneer).getCaravan();
+            Merchant merchant = caravan.getMerchant(caravaneer.getUniqueID());
+            return new GuiMerchant(new ContainerMerchant(caravan, merchant, player, (EntityCaravaneer) caravaneer));
         }
         return null;
     }

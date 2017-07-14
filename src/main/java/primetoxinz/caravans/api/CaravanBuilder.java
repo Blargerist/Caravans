@@ -14,7 +14,7 @@ import java.util.Map;
 public class CaravanBuilder extends IForgeRegistryEntry.Impl<CaravanBuilder> {
 
     protected Class<? extends EntityCaravaneer> leaderClass;
-    protected Map<Merchant, Class<? extends EntityCaravaneer>> followerClasses;
+    protected Map<MerchantBuilder, Class<? extends EntityCaravaneer>> followerClasses;
     protected String stage;
 
     public CaravanBuilder(ResourceLocation name, Class<? extends EntityCaravaneer> leaderClass, Object... objects) {
@@ -27,7 +27,7 @@ public class CaravanBuilder extends IForgeRegistryEntry.Impl<CaravanBuilder> {
         this(new ResourceLocation(name), leaderClass, objects);
     }
 
-    public CaravanBuilder addFollower(Class<? extends EntityCaravaneer> follower, Merchant merchant) {
+    public CaravanBuilder addFollower(Class<? extends EntityCaravaneer> follower, MerchantBuilder merchant) {
         this.followerClasses.put(merchant, follower);
         return this;
     }
@@ -38,15 +38,15 @@ public class CaravanBuilder extends IForgeRegistryEntry.Impl<CaravanBuilder> {
         return caravan;
     }
 
-    public class MerchantMap extends HashMap<Merchant, Class<? extends EntityCaravaneer>> {
+    public class MerchantMap extends HashMap<MerchantBuilder, Class<? extends EntityCaravaneer>> {
 
         public MerchantMap(Object... objects) {
             for (int i = 0; i < objects.length / 2; i++)
-                put((Merchant) objects[i * 2], (Class<? extends EntityCaravaneer>) objects[i * 2 + 1]);
+                put((MerchantBuilder) objects[i * 2], (Class<? extends EntityCaravaneer>) objects[i * 2 + 1]);
         }
 
         @Override
-        public Class<? extends EntityCaravaneer> put(Merchant merchant, Class<? extends EntityCaravaneer> aClass) {
+        public Class<? extends EntityCaravaneer> put(MerchantBuilder merchant, Class<? extends EntityCaravaneer> aClass) {
             return super.put(merchant, aClass);
         }
     }

@@ -29,6 +29,5 @@ public class CommandSellable implements ICommandFunction {
         if (player != null) {
             player.sendChat("List generated; see minetweaker.log in your minecraft dir");
         }
-
     }
 }

@@ -2,9 +2,8 @@ package primetoxinz.caravans.client.gui;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
-import org.apache.commons.lang3.StringUtils;
-import primetoxinz.caravans.CaravansMod;
 import primetoxinz.caravans.api.Merchant;
+import primetoxinz.caravans.api.MerchantBuilder;
 
 import java.awt.*;
 

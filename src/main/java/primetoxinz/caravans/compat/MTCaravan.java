@@ -3,13 +3,12 @@ package primetoxinz.caravans.compat;
 import com.google.common.collect.Maps;
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
-import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import primetoxinz.caravans.CaravansMod;
 import primetoxinz.caravans.api.CaravanAPI;
 import primetoxinz.caravans.api.CaravanBuilder;
-import primetoxinz.caravans.api.Merchant;
+import primetoxinz.caravans.api.MerchantBuilder;
 import primetoxinz.caravans.common.entity.EntityCaravaneer;
 import primetoxinz.caravans.common.entity.types.*;
 import stanhebben.zenscript.annotations.Optional;
@@ -44,9 +43,53 @@ public class MTCaravan {
     @ZenMethod
     public static void addFollower(String caravan, String merchant, @Optional String modelType) {
         CaravanBuilder builder = MTCompat.getCaravan(caravan);
-        Merchant follower = MTCompat.getMerchant(merchant);
+        MerchantBuilder follower = MTCompat.getMerchant(merchant);
         if (builder != null && follower != null) {
-            builder.addFollower(getModel(modelType), follower);
+            MineTweakerAPI.apply(new AddFollower(builder, follower, modelType));
+        }
+    }
+
+
+    public static class AddFollower implements IUndoableAction {
+
+        private CaravanBuilder builder;
+        private MerchantBuilder merchant;
+        private String model;
+
+        public AddFollower(CaravanBuilder builder, MerchantBuilder merchant, String model) {
+            this.builder = builder;
+            this.merchant = merchant;
+            this.model = model;
+        }
+
+        @Override
+        public void apply() {
+            builder.addFollower(getModel(model), merchant);
+        }
+
+        @Override
+        public boolean canUndo() {
+            return false;
+        }
+
+        @Override
+        public void undo() {
+
+        }
+
+        @Override
+        public String describe() {
+                return String.format("Adding Caravan Follower: %s > %s ", builder,merchant);
+        }
+
+        @Override
+        public String describeUndo() {
+            return null;
+        }
+
+        @Override
+        public Object getOverrideKey() {
+            return null;
         }
     }
 
@@ -67,7 +110,7 @@ public class MTCaravan {
 
         @Override
         public boolean canUndo() {
-            return false;
+            return true;
         }
 
 

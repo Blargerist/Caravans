@@ -1,7 +1,7 @@
 [
 {
   "modid": "carvans",
-  "name": "Villager Caravans",
+  "name": "Caravans",
   "description": "Adds caravans",
   "version": "${version}",
   "mcversion": "${mcversion}",

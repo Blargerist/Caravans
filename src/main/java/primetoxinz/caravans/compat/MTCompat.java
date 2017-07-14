@@ -8,7 +8,7 @@ import net.minecraft.util.ResourceLocation;
 import primetoxinz.caravans.CaravansMod;
 import primetoxinz.caravans.api.CaravanAPI;
 import primetoxinz.caravans.api.CaravanBuilder;
-import primetoxinz.caravans.api.Merchant;
+import primetoxinz.caravans.api.MerchantBuilder;
 import primetoxinz.caravans.common.CommandSellable;
 
 import java.io.File;
@@ -26,15 +26,13 @@ public class MTCompat {
             scriptDirectory.mkdirs();
         MineTweakerAPI.registerBracketHandler(new ItemBracketHandler());
         ItemBracketHandler.rebuildItemRegistry();
-
         MineTweakerImplementationAPI.setScriptProvider(new ScriptProviderDirectory(scriptDirectory));
         MineTweakerImplementationAPI.addMineTweakerCommand("sellableEntities",new String[]{"List of Entity Classes which can be sold by a merchant"}, new CommandSellable());
         MineTweakerImplementationAPI.reload();
 
-
     }
 
-    public static Merchant getMerchant(String name) {
+    public static MerchantBuilder getMerchant(String name) {
         if(name.contains(":"))
             return CaravanAPI.getMerchant(name);
         return CaravanAPI.getMerchant(new ResourceLocation(CaravansMod.MODID, name));

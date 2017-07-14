@@ -1,12 +1,27 @@
 package primetoxinz.caravans.client.gui.slot;
 
+import primetoxinz.caravans.api.Merchant;
 import primetoxinz.caravans.client.gui.InventoryMerchant;
+import primetoxinz.caravans.common.ItemTrade;
 
 /**
  * Created by primetoxinz on 7/6/17.
  */
 public class SlotOutput extends SlotBase {
-    public SlotOutput(InventoryMerchant.IOutput merchant, int index, int xPosition, int yPosition) {
-        super(merchant.getOutput(), index, xPosition, yPosition);
+    private int index;
+    private final Merchant merchant;
+
+    public SlotOutput(InventoryMerchant.IOutput inv, int index, int xPosition, int yPosition, Merchant merchant) {
+        super(inv.getOutput(), index, xPosition, yPosition);
+        this.index = index;
+        this.merchant = merchant;
+    }
+
+    public ItemTrade getTrade() {
+        return merchant.getItemTrades().get(index);
+    }
+
+    public int getStock() {
+        return getTrade().getStock();
     }
 }

@@ -24,5 +24,7 @@ public class Button extends GuiButton {
         runnable.run();
     }
 
-
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 }

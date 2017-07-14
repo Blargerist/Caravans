@@ -4,7 +4,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import primetoxinz.caravans.CaravansMod;
-import primetoxinz.caravans.api.ICaravaneer;
+import primetoxinz.caravans.common.entity.EntityCaravaneer;
 
 /**
  * Created by primetoxinz on 7/3/17.
@@ -16,8 +16,8 @@ public class MessageCaravan extends NetworkMessage {
     public MessageCaravan() {
     }
 
-    public MessageCaravan(ICaravaneer caravaner) {
-        this.id = caravaner.getID();
+    public MessageCaravan(EntityCaravaneer caravaner) {
+        this.id = caravaner.getEntityId();
         this.caravan = caravaner.getCaravan().serializeNBT();
     }
 

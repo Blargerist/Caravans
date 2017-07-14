@@ -1,3 +1,5 @@
 text.arriving=A caravan is arriving!
+text.buy_entity=Buying:
+text.sell_entity=Selling:
 entity.caravans.caravan.villager.name=Caravaneer
 entity.caravans.leader.name=Leader

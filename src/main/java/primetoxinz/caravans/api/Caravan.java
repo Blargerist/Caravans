@@ -8,7 +8,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -39,7 +38,6 @@ public class Caravan implements INBTSerializable<NBTTagCompound> {
     protected EntityCaravaneer leader;
     protected Status status = Status.ARRIVING;
 
-
     protected String stage;
 
     public Caravan(World world, NBTTagCompound tag) {
@@ -47,14 +45,14 @@ public class Caravan implements INBTSerializable<NBTTagCompound> {
         deserializeNBT(tag);
     }
 
-    public Caravan(ResourceLocation name, World world, Class<? extends EntityCaravaneer> leaderClass, Map<Merchant, Class<? extends EntityCaravaneer>> followerClasses) {
+    public Caravan(ResourceLocation name, World world, Class<? extends EntityCaravaneer> leaderClass, Map<MerchantBuilder, Class<? extends EntityCaravaneer>> followerClasses) {
         this.name = name;
         this.world = world;
         this.leader = newInstance(leaderClass, world, this);
 
-        for (Merchant merchant : followerClasses.keySet()) {
+        for (MerchantBuilder merchant : followerClasses.keySet()) {
             EntityCaravaneer caravaneer = newInstance(followerClasses.get(merchant), world, this);
-            merchantMap.put(merchant, caravaneer.getUniqueID());
+            merchantMap.put(merchant.create(), caravaneer.getUniqueID());
             entities.add(caravaneer);
         }
     }
@@ -94,13 +92,13 @@ public class Caravan implements INBTSerializable<NBTTagCompound> {
 
     public void openFirst(EntityPlayer player) {
         if (!getEntities().isEmpty()) {
-            open(player,getEntities().get(0));
+            open(player, getEntities().get(0));
         }
     }
 
     public void open(EntityPlayer player, EntityCaravaneer caravaneer) {
         player.openGui(CaravansMod.MODID, caravaneer.getEntityId(), player.world, (int) caravaneer.posX, (int) caravaneer.posY, (int) caravaneer.posZ);
-        world.playSound(player, player.getPosition(),caravaneer.getTradeSound(), SoundCategory.NEUTRAL, 0.5f, 1.0f);
+        world.playSound(player, player.getPosition(), caravaneer.getTradeSound(), SoundCategory.NEUTRAL, 0.5f, 1.0f);
 
     }
 
@@ -111,6 +109,7 @@ public class Caravan implements INBTSerializable<NBTTagCompound> {
     public String getRealName() {
         return StringUtils.capitalize(getName().getResourcePath());
     }
+
     public void sync() {
         for (EntityCaravaneer caravaneer : getEntities()) {
             if (caravaneer != null)
@@ -157,38 +156,38 @@ public class Caravan implements INBTSerializable<NBTTagCompound> {
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound caravan = new NBTTagCompound();
-        caravan.setString("name", name.toString());
+
         getLeader().ifPresent(e -> caravan.setString("leader", e.getUniqueID().toString()));
-        if (!merchantMap.isEmpty()) {
-            NBTTagList list = new NBTTagList();
-            NBTTagCompound compound = new NBTTagCompound();
-            for (Merchant merchant : merchantMap.keySet()) {
-                list.appendTag(new NBTTagString(merchant.toString()));
-                compound.setString(merchant.toString(), merchantMap.get(merchant).toString());
-            }
-            caravan.setTag("merchants", list);
-            caravan.setTag("entities", compound);
-        }
+        caravan.setString("name", name.toString());
         caravan.setInteger("status", status.ordinal());
+        if (!merchantMap.isEmpty()) {
+            NBTTagList merchants = new NBTTagList();
+            for (Merchant m : merchantMap.keySet()) {
+                NBTTagCompound tag = new NBTTagCompound();
+                tag.setString("entity", merchantMap.get(m).toString());
+                tag.setTag("merchant", m.serializeNBT());
+                merchants.appendTag(tag);
+            }
+            caravan.setTag("merchants", merchants);
+        }
         return caravan;
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
-        if (nbt.hasKey("leader"))
+        if (nbt.hasKey("leader")) {
             leaderUUID = UUID.fromString(nbt.getString("leader"));
-
-        name = new ResourceLocation(nbt.getString("name"));
-
-        NBTTagList list = nbt.getTagList("merchants", 8);
-        NBTTagCompound compound = nbt.getCompoundTag("entities");
-        for (Iterator<NBTBase> it = list.iterator(); it.hasNext(); ) {
-            NBTTagString tag = (NBTTagString) it.next();
-            String merchant = tag.getString();
-            String uuid = compound.getString(merchant);
-            merchantMap.put(CaravanAPI.getMerchant(merchant), UUID.fromString(uuid));
         }
+        name = new ResourceLocation(nbt.getString("name"));
         status = Status.VALUES[nbt.getInteger("status")];
+
+        NBTTagList merchants = nbt.getTagList("merchants", 10);
+        for (Iterator<NBTBase> i = merchants.iterator(); i.hasNext(); ) {
+            NBTTagCompound tag = (NBTTagCompound) i.next();
+            UUID uuid = UUID.fromString(tag.getString("entity"));
+            merchantMap.put(new Merchant((NBTTagCompound) tag.getTag("merchant")), uuid);
+        }
+
     }
 
     public Merchant getMerchant(UUID uuid) {

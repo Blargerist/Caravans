@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import primetoxinz.caravans.CaravansMod;
 import primetoxinz.caravans.client.gui.slot.SlotBase;
+import primetoxinz.caravans.client.gui.slot.SlotOutput;
 
 import java.io.IOException;
 import java.util.List;
@@ -113,10 +114,10 @@ public class GuiMerchant extends GuiContainer {
                 g.drawScreen(mouseX, mouseY, partialTicks);
     }
 
-    public void drawSlot(SlotBase slotIn, int x, int y) {
-        slotIn.xPos = x;
-        slotIn.yPos = y;
-        slotIn.setEnabled(true);
+    public void drawSlot(SlotBase slot, int x, int y) {
+        slot.xPos = x;
+        slot.yPos = y;
+        slot.setEnabled(true);
     }
 
 

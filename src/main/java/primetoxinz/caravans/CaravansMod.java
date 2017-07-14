@@ -7,7 +7,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -23,7 +22,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import primetoxinz.caravans.api.Caravan;
 import primetoxinz.caravans.api.CaravanAPI;
 import primetoxinz.caravans.api.CaravanBuilder;
-import primetoxinz.caravans.api.Merchant;
+import primetoxinz.caravans.api.MerchantBuilder;
 import primetoxinz.caravans.client.gui.GuiHandler;
 import primetoxinz.caravans.common.CommandCaravan;
 import primetoxinz.caravans.common.entity.EntityUtil;
@@ -32,9 +31,9 @@ import primetoxinz.caravans.compat.MTCompat;
 import primetoxinz.caravans.compat.MTGameStages;
 import primetoxinz.caravans.network.MessageCaravan;
 import primetoxinz.caravans.network.MessageEntityTrade;
+import primetoxinz.caravans.network.MessageSyncLeash;
 import primetoxinz.caravans.network.NetworkHandler;
 import primetoxinz.caravans.proxy.CommonProxy;
-import sun.security.krb5.Config;
 
 import java.io.File;
 import java.util.Random;
@@ -43,11 +42,12 @@ import java.util.Random;
  * Created by primetoxinz on 7/1/17.
  */
 @Mod.EventBusSubscriber(modid = CaravansMod.MODID)
-@Mod(modid = CaravansMod.MODID, name = CaravansMod.NAME, version = CaravansMod.VERSION)
+@Mod(modid = CaravansMod.MODID, name = CaravansMod.NAME, version = CaravansMod.VERSION, dependencies = CaravansMod.DEP)
 public class CaravansMod {
     public static final String MODID = "caravans";
     public static final String NAME = "Caravans";
     public static final String VERSION = "{version}";
+    public static final String DEP = "after:crafttweaker";
 
 
     @SidedProxy(modId = MODID, clientSide = "primetoxinz.caravans.proxy.ClientProxy", serverSide = "primetoxinz.caravans.proxy.ServerProxy")
@@ -68,14 +68,13 @@ public class CaravansMod {
         registerEntity(EntityCreeperCaravaneer.class, "caravaner.creeper", 256, 1, true);
         NetworkRegistry.INSTANCE.registerGuiHandler(CaravansMod.INSTANCE, new GuiHandler());
         NetworkHandler.register(MessageCaravan.class, Side.CLIENT);
+        NetworkHandler.register(MessageSyncLeash.class, Side.CLIENT);
         NetworkHandler.register(MessageEntityTrade.class, Side.SERVER);
         proxy.preInit(event);
         caravansFolder = new File(event.getModConfigurationDirectory(), CaravansMod.MODID);
         if (!caravansFolder.exists())
             caravansFolder.mkdirs();
-        if (Loader.isModLoaded("crafttweaker")) {
-            MTCompat.preInit();
-        }
+        MTCompat.preInit();
     }
 
     @Mod.EventHandler
@@ -114,8 +113,8 @@ public class CaravansMod {
                 .setIDRange(0, Integer.MAX_VALUE - 1)
                 .setName(new ResourceLocation(CaravansMod.MODID, "caravans")).create();
 
-        new RegistryBuilder<Merchant>()
-                .setType(Merchant.class)
+        new RegistryBuilder<MerchantBuilder>()
+                .setType(MerchantBuilder.class)
                 .setIDRange(0, Integer.MAX_VALUE - 1)
                 .setName(new ResourceLocation(CaravansMod.MODID, "merchants")).create();
     }

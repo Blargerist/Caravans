@@ -12,7 +12,10 @@ package primetoxinz.caravans.network;
  */
 
 
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import primetoxinz.caravans.CaravansMod;
@@ -25,6 +28,10 @@ public class NetworkHandler {
 
     public static void register(Class clazz, Side handlerSide) {
         INSTANCE.registerMessage(clazz, clazz, i++, handlerSide);
+    }
+
+    public static void sendToAllAround(IMessage message, World world, BlockPos pos, double range) {
+        INSTANCE.sendToAllAround(message, new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), range));
     }
 
 }

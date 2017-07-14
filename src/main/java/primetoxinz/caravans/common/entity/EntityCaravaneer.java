@@ -2,15 +2,17 @@ package primetoxinz.caravans.common.entity;
 
 import com.google.common.collect.Lists;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.*;
+import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.nbt.*;
-import net.minecraft.util.DamageSource;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import primetoxinz.caravans.api.*;
@@ -30,7 +32,7 @@ import java.util.stream.Collectors;
 /**
  * Created by primetoxinz on 7/3/17.
  */
-public abstract class EntityCaravaneer extends EntityCreature implements ICaravaneer, IEntityAdditionalSpawnData {
+public abstract class EntityCaravaneer extends EntityCreature implements IEntityAdditionalSpawnData {
 
     private AIState state;
     private Caravan caravan;
@@ -76,13 +78,11 @@ public abstract class EntityCaravaneer extends EntityCreature implements ICarava
         this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(256);
     }
 
-    @Override
-    public ICaravaneer setCaravan(Caravan caravan) {
+    public EntityCaravaneer setCaravan(Caravan caravan) {
         this.caravan = caravan;
         return this;
     }
 
-    @Override
     public Caravan getCaravan() {
         return caravan;
     }
@@ -91,8 +91,8 @@ public abstract class EntityCaravaneer extends EntityCreature implements ICarava
         return getCaravan().getMerchant(this.getUniqueID());
     }
 
-    @Override
-    public ICaravaneer spawn(World world, BlockPos pos, Caravan.Status status) {
+
+    public EntityCaravaneer spawn(World world, BlockPos pos, Caravan.Status status) {
         if (isServerWorld()) {
             this.getState().setAction(status);
             this.setPosition(pos.getX(), pos.getY(), pos.getZ());
@@ -109,8 +109,6 @@ public abstract class EntityCaravaneer extends EntityCreature implements ICarava
                     if (trade instanceof IEntityTrade) {
                         Class<? extends EntityLiving> entity = ((IEntityTrade) trade).getOutput();
                         EntityLiving living = EntityUtil.createEntity(entity, world);
-
-
                         living.setPosition(pos.getX(), pos.getY(), pos.getZ());
                         living.setLeashedToEntity(this, true);
                         living.setEntityInvulnerable(true);
@@ -126,17 +124,11 @@ public abstract class EntityCaravaneer extends EntityCreature implements ICarava
         return this;
     }
 
-    @Override
-    public ICaravaneer setTarget(EntityPlayer player) {
+
+    public EntityCaravaneer setTarget(EntityPlayer player) {
         setAttackTarget(player);
         return this;
     }
-
-    @Override
-    public int getID() {
-        return getEntityId();
-    }
-
 
     public boolean isLeader() {
         if (getCaravan() != null)
@@ -243,7 +235,6 @@ public abstract class EntityCaravaneer extends EntityCreature implements ICarava
         }
         if (origins == null)
             this.origins = NetworkMessage.readBlockPos(buffer);
-        System.out.println(origins);
     }
 
     public BlockPos getOrigins() {

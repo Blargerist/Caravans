@@ -1,5 +1,6 @@
 package primetoxinz.caravans.client.gui;
 
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 import primetoxinz.caravans.common.ItemTrade;
 

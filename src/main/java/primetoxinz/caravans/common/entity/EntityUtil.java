@@ -5,8 +5,8 @@ import minetweaker.MineTweakerAPI;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityBodyHelper;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
@@ -26,7 +26,7 @@ public class EntityUtil {
 
     public static Field leashedToEntity = ReflectionHelper.findField(EntityLiving.class, "leashedToEntity", "field_110168_bw");
 
-    public static Entity getLeashedTo(EntityLiving living) {
+    public static Entity getLeashedTo(EntityLivingBase living) {
         try {
             return (Entity) leashedToEntity.get(living);
         } catch (IllegalAccessException e) {
@@ -45,12 +45,9 @@ public class EntityUtil {
         return false;
     }
 
-    public static void setLeashed(EntityLiving living, boolean value) {
-        try {
-            isLeashed.set(living, value);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
+    public static void setLeashed(EntityLivingBase attach, EntityLiving living, boolean value) {
+        living.setLeashedToEntity(attach, value);
+//        NetworkHandler.sendToAllAround(new MessageSyncLeash(living, attach), attach.world, attach.getPosition(), 100);
     }
 
     public static Field bodyHelper = ReflectionHelper.findField(EntityLiving.class, "bodyHelper", "field_70762_j");
@@ -153,18 +150,35 @@ public class EntityUtil {
     }
 
 
-    public static EntityLiving getLeashed(Class<? extends EntityLiving> clazz, World world, EntityPlayer player) {
+    public static EntityLiving getLeashed(Class<? extends EntityLiving> clazz, World world, EntityLivingBase living) {
         for (Entity e : world.loadedEntityList) {
             if (clazz.isAssignableFrom(e.getClass())) {
-                EntityLiving living = (EntityLiving) e;
-                Entity leashed = getLeashedTo(living);
-                if (leashed != null && leashed.getUniqueID().equals(player.getUniqueID())) {
-                    return living;
+                EntityLiving leashed = (EntityLiving) e;
+                Entity leashedTo = getLeashedTo(leashed);
+                if (leashedTo != null && leashedTo.getUniqueID().equals(living.getUniqueID())) {
+                    return leashed;
                 }
             }
         }
         return null;
     }
 
+    public static boolean takeLeashed(Class<? extends EntityLiving> clazz, EntityLivingBase living) {
+        EntityLiving leashed = EntityUtil.getLeashed(clazz, living.world, living);
+        if (leashed != null) {
+            leashed.setDead();
+            return true;
+        }
+        return false;
+    }
 
+    public static boolean giveLeashed(Class<? extends EntityLiving> clazz, EntityLivingBase attach) {
+        EntityLiving entity = EntityUtil.setPosition(EntityUtil.createEntity(clazz, attach.world), attach.getPosition());
+        entity.setHealth(0.01f);
+        if (attach instanceof EntityLivingBase)
+            entity.setEntityInvulnerable(true);
+        boolean spawned = attach.world.spawnEntity(entity);
+        setLeashed(attach, entity, true);
+        return spawned;
+    }
 }
