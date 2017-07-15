@@ -174,9 +174,11 @@ public class EntityUtil {
 
     public static boolean giveLeashed(Class<? extends EntityLiving> clazz, EntityLivingBase attach) {
         EntityLiving entity = EntityUtil.setPosition(EntityUtil.createEntity(clazz, attach.world), attach.getPosition());
-        entity.setHealth(0.01f);
-        if (attach instanceof EntityLivingBase)
+        if (attach instanceof EntityCaravaneer) {
+            EntityCaravaneer c = (EntityCaravaneer) attach;
             entity.setEntityInvulnerable(true);
+            c.getTradeEntities().add(entity);
+        }
         boolean spawned = attach.world.spawnEntity(entity);
         setLeashed(attach, entity, true);
         return spawned;

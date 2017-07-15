@@ -3,6 +3,7 @@ package primetoxinz.caravans;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
@@ -17,6 +18,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.RegistryBuilder;
 import net.minecraftforge.fml.relauncher.Side;
 import primetoxinz.caravans.api.Caravan;
@@ -59,6 +61,7 @@ public class CaravansMod {
 
     public File caravansFolder;
 
+    public static SoundEvent SPECIAL;
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         registerEntity(EntityVillagerCaravaneer.class, "caravaner.villager", 256, 1, true);
@@ -74,7 +77,7 @@ public class CaravansMod {
         caravansFolder = new File(event.getModConfigurationDirectory(), CaravansMod.MODID);
         if (!caravansFolder.exists())
             caravansFolder.mkdirs();
-
+        SPECIAL = registerSound("special.sounds");
     }
 
     @Mod.EventHandler
@@ -91,6 +94,11 @@ public class CaravansMod {
     @Mod.EventHandler
     public void serverStarting(FMLServerStartingEvent event) {
         event.registerServerCommand(new CommandCaravan());
+    }
+
+    public static SoundEvent registerSound(String soundName) {
+        ResourceLocation soundID = new ResourceLocation(MODID, soundName);
+        return GameRegistry.register(new SoundEvent(soundID).setRegistryName(soundID));
     }
 
     private static int availableEntityId;

@@ -1,7 +1,5 @@
 package primetoxinz.caravans.common.entity.ai;
 
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import primetoxinz.caravans.common.entity.EntityCaravaneer;
@@ -32,7 +30,7 @@ public class AIGoToPlayer extends AIAction {
 
     @Override
     public void updateTask() {
-        int range = ((EntityCaravaneer)entity).isLeader() ? 5 : 10;
+        int range = (entity).isLeader() ? 5 : 10;
         if (this.target != null && entity.getDistanceToEntity(this.target) < range) {
             this.entity.setAttackTarget(null);
             this.entity.getNavigator().clearPathEntity();
@@ -48,7 +46,6 @@ public class AIGoToPlayer extends AIAction {
 
     public void resetTask() {
         this.target = null;
-
     }
 
 

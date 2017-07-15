@@ -39,7 +39,7 @@ public abstract class EntityCaravaneer extends EntityCreature implements IEntity
     private boolean leader;
     private BlockPos origins;
     public int stay;
-    private UUID target;
+    public UUID target;
     private List<EntityLiving> tradeEntities = Lists.newArrayList();
     private List<UUID> tradeUUIDs = Lists.newArrayList();
 
@@ -51,7 +51,6 @@ public abstract class EntityCaravaneer extends EntityCreature implements IEntity
     public EntityCaravaneer(World worldIn, Caravan caravan) {
         this(worldIn);
         this.caravan = caravan;
-        this.setHealth(0.0001f);
     }
 
     @Override
@@ -127,6 +126,7 @@ public abstract class EntityCaravaneer extends EntityCreature implements IEntity
 
     public EntityCaravaneer setTarget(EntityPlayer player) {
         setAttackTarget(player);
+        target = player.getGameProfile().getId();
         return this;
     }
 

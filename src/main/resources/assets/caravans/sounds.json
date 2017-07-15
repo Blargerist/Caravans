@@ -1,0 +1,9 @@
+{
+  "block.wood.creak": {
+    "category": "passive",
+    "sounds": [
+      "caravans:yay"
+    ],
+    "subtitle": "subtitles.caravans.yay"
+  }
+}

@@ -1,16 +1,15 @@
 package primetoxinz.caravans.common.entity.ai;
 
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
+import primetoxinz.caravans.common.entity.EntityCaravaneer;
 
 /**
  * Created by primetoxinz on 7/2/17.
  */
 public abstract class AIAction extends EntityAIBase {
-    protected EntityCreature entity;
+    protected EntityCaravaneer entity;
 
-    public AIAction(EntityCreature entity) {
+    public AIAction(EntityCaravaneer entity) {
         this.entity = entity;
     }
 
