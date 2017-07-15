@@ -77,7 +77,7 @@ public class CaravansMod {
         caravansFolder = new File(event.getModConfigurationDirectory(), CaravansMod.MODID);
         if (!caravansFolder.exists())
             caravansFolder.mkdirs();
-        SPECIAL = registerSound("special.sounds");
+        SPECIAL = registerSound("caravans.special");
     }
 
     @Mod.EventHandler

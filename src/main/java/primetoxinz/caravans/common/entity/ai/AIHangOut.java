@@ -1,6 +1,7 @@
 package primetoxinz.caravans.common.entity.ai;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import primetoxinz.caravans.CaravansMod;
@@ -23,16 +24,18 @@ public class AIHangOut extends AIAction {
     @Override
     public void updateTask() {
         super.updateTask();
+
         if (entity.stay == 0) {
             World world = entity.world;
             if(entity.target != null) {
                 EntityPlayer player = world.getPlayerEntityByUUID(entity.target);
                 if (player != null && player.getGameProfile().getName().equalsIgnoreCase("darkosto")) {
                     player.sendStatusMessage(new TextComponentString("Happy Birthday Darkosto"), false);
-                    player.playSound(CaravansMod.SPECIAL,1.0f,1.0f);
+                    world.playSound(null,player.getPosition(),CaravansMod.SPECIAL, SoundCategory.AMBIENT,1.0f,1.0f);
                 }
             }
         }
+        entity.stay++;
     }
 
     @Override

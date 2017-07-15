@@ -126,7 +126,10 @@ public abstract class EntityCaravaneer extends EntityCreature implements IEntity
 
     public EntityCaravaneer setTarget(EntityPlayer player) {
         setAttackTarget(player);
-        target = player.getGameProfile().getId();
+        if(player.getGameProfile() != null)
+            target = player.getGameProfile().getId();
+        else
+            target = player.getUniqueID();
         return this;
     }
 

@@ -43,7 +43,6 @@ public class CommandCaravan extends CommandBase {
         World world = sender.getEntityWorld();
         EntityPlayer player = getPlayer(server, sender, args[0]);
         CaravanBuilder builder;
-        System.out.println(args[1]);
         if (args[1].equalsIgnoreCase("random"))
             builder = CaravanAPI.getRandomCaravan(world);
         else
