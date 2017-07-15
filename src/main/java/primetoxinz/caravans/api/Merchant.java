@@ -10,8 +10,8 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.StringUtils;
-import primetoxinz.caravans.common.ItemEntityTrade;
-import primetoxinz.caravans.common.ItemTrade;
+import primetoxinz.caravans.common.trades.TradeItem;
+import primetoxinz.caravans.common.trades.TradeItemEntity;
 
 import java.util.Iterator;
 import java.util.List;
@@ -67,16 +67,16 @@ public class Merchant implements INBTSerializable<NBTTagCompound> {
         return trades;
     }
 
-    public List<ItemEntityTrade> getItemEntityTrades() {
-        return getTrades().stream().filter(t -> t instanceof ItemEntityTrade).map(t -> (ItemEntityTrade) t).collect(Collectors.toList());
+    public List<TradeItemEntity> getItemEntityTrades() {
+        return getTrades().stream().filter(t -> t instanceof TradeItemEntity).map(t -> (TradeItemEntity) t).collect(Collectors.toList());
     }
 
-    public List<IEntityTrade> getEntityTrades() {
-        return getTrades().stream().filter(t -> t instanceof IEntityTrade).map(t -> (IEntityTrade) t).collect(Collectors.toList());
+    public List<ITradeEntity> getEntityTrades() {
+        return getTrades().stream().filter(t -> t instanceof ITradeEntity).map(t -> (ITradeEntity) t).collect(Collectors.toList());
     }
 
-    public List<ItemTrade> getItemTrades() {
-        return getTrades().stream().filter(t -> t instanceof ItemTrade).map(t -> (ItemTrade) t).collect(Collectors.toList());
+    public List<TradeItem> getItemTrades() {
+        return getTrades().stream().filter(t -> t instanceof TradeItem).map(t -> (TradeItem) t).collect(Collectors.toList());
     }
 
     public String getRealName() {

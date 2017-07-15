@@ -25,13 +25,13 @@ public class AIHangOut extends AIAction {
     public void updateTask() {
         super.updateTask();
 
-        if (entity.stay == 0) {
+        if (ConfigHandler.surprise && entity.stay == 0) {
             World world = entity.world;
             if(entity.target != null) {
                 EntityPlayer player = world.getPlayerEntityByUUID(entity.target);
                 if (player != null && player.getGameProfile().getName().equalsIgnoreCase("darkosto")) {
-                    player.sendStatusMessage(new TextComponentString("Happy Birthday Darkosto"), false);
-                    world.playSound(null,player.getPosition(),CaravansMod.SPECIAL, SoundCategory.AMBIENT,1.0f,1.0f);
+                    player.sendStatusMessage(new TextComponentString("Happy Birthday Darkosto!!!!"), false);
+                    world.playSound(null,player.getPosition(),CaravansMod.SPECIAL, SoundCategory.AMBIENT,0.5f,1.0f);
                 }
             }
         }

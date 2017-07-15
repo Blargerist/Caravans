@@ -3,7 +3,6 @@ package primetoxinz.caravans.compat;
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.IItemStack;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -11,13 +10,12 @@ import primetoxinz.caravans.CaravansMod;
 import primetoxinz.caravans.api.CaravanAPI;
 import primetoxinz.caravans.api.ITrade;
 import primetoxinz.caravans.api.MerchantBuilder;
-import primetoxinz.caravans.common.EntityTrade;
-import primetoxinz.caravans.common.ItemEntityTrade;
-import primetoxinz.caravans.common.ItemTrade;
+import primetoxinz.caravans.common.trades.TradeEntity;
+import primetoxinz.caravans.common.trades.TradeItemEntity;
+import primetoxinz.caravans.common.trades.TradeItem;
+import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
-
-import static primetoxinz.caravans.common.entity.EntityUtil.getEntity;
 
 /**
  * Created by primetoxinz on 7/9/17.
@@ -25,7 +23,15 @@ import static primetoxinz.caravans.common.entity.EntityUtil.getEntity;
 @ZenClass("mod.caravans.Merchant")
 public class MTMerchant {
 
-    @ZenMethod()
+    @ZenMethod
+    public static IEntity createEntity(String classPath, @Optional String customInfo) {
+        EntityTradeable entity = new EntityTradeable();
+        entity.setEntityClassPath(classPath);
+        entity.setCustomInfo(customInfo);
+        return entity;
+    }
+
+    @ZenMethod
     public static void registerMerchant(String name, IItemStack icon) {
         ItemStack i = toStack(icon);
         MineTweakerAPI.apply(new RegisterMerchant(name, i));
@@ -74,22 +80,19 @@ public class MTMerchant {
 
 
     @ZenMethod
-    public static void addEntityTrade(String merchant, String inputEntityClass, String outputEntityClass) {
+    public static void addEntityTrade(String merchant, IEntity input, IEntity output) {
         MerchantBuilder m = MTCompat.getMerchant(merchant);
-        Class<? extends EntityLiving> input = getEntity(inputEntityClass);
-        Class<? extends EntityLiving> output = getEntity(outputEntityClass);
-        EntityTrade trade = new EntityTrade(input, output);
+        TradeEntity trade = new TradeEntity(input, output);
         if (m != null) {
             MineTweakerAPI.apply(new AddTrade(m, trade));
         }
     }
 
     @ZenMethod
-    public static void addItemEntityTrade(String merchant, IItemStack input, String entityClass) {
+    public static void addItemEntityTrade(String merchant, IItemStack input, IEntity output) {
         MerchantBuilder m = MTCompat.getMerchant(merchant);
         ItemStack in = toStack(input);
-        Class<? extends EntityLiving> output = getEntity(entityClass);
-        ItemEntityTrade trade = new ItemEntityTrade(in, output);
+        TradeItemEntity trade = new TradeItemEntity(in, output);
         if (m != null) {
             MineTweakerAPI.apply(new AddTrade(m, trade));
         }
@@ -100,7 +103,7 @@ public class MTMerchant {
         MerchantBuilder m = MTCompat.getMerchant(merchant);
         ItemStack in = toStack(input);
         ItemStack out = toStack(output);
-        ItemTrade trade = new ItemTrade(in, out, min, max);
+        TradeItem trade = new TradeItem(in, out, min, max);
         if (m != null) {
             MineTweakerAPI.apply(new AddTrade(m, trade));
         }
@@ -133,7 +136,7 @@ public class MTMerchant {
 
         @Override
         public String describe() {
-            return String.format("Adding ItemTrade: %s to MerchantBuilder: %s ", trade, merchant);
+            return String.format("Adding TradeItem: %s to MerchantBuilder: %s ", trade, merchant);
         }
 
         @Override

@@ -4,7 +4,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import primetoxinz.caravans.CaravansMod;
-import primetoxinz.caravans.api.IEntityTrade;
+import primetoxinz.caravans.api.ITradeEntity;
 import primetoxinz.caravans.common.entity.EntityCaravaneer;
 
 /**
@@ -18,7 +18,7 @@ public class MessageEntityTrade extends NetworkMessage {
     public MessageEntityTrade() {
     }
 
-    public MessageEntityTrade(IEntityTrade trade, EntityCaravaneer caravaneer) {
+    public MessageEntityTrade(ITradeEntity trade, EntityCaravaneer caravaneer) {
         this.trade = trade.serializeNBT();
         this.id = caravaneer.getEntityId();
     }

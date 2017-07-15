@@ -15,12 +15,12 @@ public class RenderVillager extends RenderCaravaneer<EntityVillagerCaravaneer> {
     }
 
     @Override
-    public ResourceLocation getLeaderTexture(EntityCaravaneer leader) {
+    public ResourceLocation getLeaderTexture(EntityVillagerCaravaneer leader) {
         return new ResourceLocation("minecraft:textures/entity/villager/priest.png");
     }
 
     @Override
-    public ResourceLocation getBaseTexture(EntityCaravaneer caravaneer) {
+    public ResourceLocation getBaseTexture(EntityVillagerCaravaneer caravaneer) {
         return new ResourceLocation("minecraft:textures/entity/villager/villager.png");
     }
 }

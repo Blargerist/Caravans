@@ -1,15 +1,18 @@
 package primetoxinz.caravans.common.entity;
 
 import com.google.common.collect.Lists;
-import minetweaker.MineTweakerAPI;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityBodyHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import primetoxinz.caravans.compat.EntityTradeable;
+import primetoxinz.caravans.compat.IEntity;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -121,27 +124,20 @@ public class EntityUtil {
         return (double) (random.nextInt((max - min) + 1) + min);
     }
 
-    public static EntityLiving createEntity(Class<? extends EntityLiving> clazz, World world) {
+    public static EntityLiving createEntity(IEntity input, World world) {
         try {
-            Constructor constructor = clazz.getConstructor(World.class);
+            Constructor constructor = ((EntityTradeable) input).getEntityClass().getConstructor(World.class);
             EntityLiving entity = (EntityLiving) constructor.newInstance(world);
+
+
+            if (input instanceof EntityTradeable && input.hasCustomInfo()) {
+                entity.readFromNBT(((EntityTradeable) input).getCustomNBT());
+            }
             return entity;
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
         return null;
-    }
-
-    public static Class<? extends EntityLiving> getEntity(String entity) {
-        Class<? extends EntityLiving> clazz;
-        try {
-            clazz = (Class<? extends EntityLiving>) Class.forName(entity);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            MineTweakerAPI.logError(entity + " cannot be found!");
-            return null;
-        }
-        return clazz;
     }
 
     public static EntityLiving setPosition(EntityLiving entityLiving, BlockPos pos) {
@@ -163,8 +159,8 @@ public class EntityUtil {
         return null;
     }
 
-    public static boolean takeLeashed(Class<? extends EntityLiving> clazz, EntityLivingBase living) {
-        EntityLiving leashed = EntityUtil.getLeashed(clazz, living.world, living);
+    public static boolean takeLeashed(IEntity entity, EntityLivingBase living) {
+        EntityLiving leashed = EntityUtil.getLeashed(((EntityTradeable) entity).getEntityClass(), living.world, living);
         if (leashed != null) {
             leashed.setDead();
             return true;
@@ -172,15 +168,33 @@ public class EntityUtil {
         return false;
     }
 
-    public static boolean giveLeashed(Class<? extends EntityLiving> clazz, EntityLivingBase attach) {
-        EntityLiving entity = EntityUtil.setPosition(EntityUtil.createEntity(clazz, attach.world), attach.getPosition());
+    public static boolean giveLeashed(IEntity entity, EntityLivingBase attach) {
+        EntityLiving e = EntityUtil.setPosition(EntityUtil.createEntity(entity, attach.world), attach.getPosition());
         if (attach instanceof EntityCaravaneer) {
             EntityCaravaneer c = (EntityCaravaneer) attach;
-            entity.setEntityInvulnerable(true);
-            c.getTradeEntities().add(entity);
+            e.setEntityInvulnerable(true);
+            c.getTradeEntities().add(e);
         }
-        boolean spawned = attach.world.spawnEntity(entity);
-        setLeashed(attach, entity, true);
+        boolean spawned = attach.world.spawnEntity(e);
+        setLeashed(attach, e, true);
         return spawned;
+    }
+
+
+    public static NBTTagCompound serializeIEntity(EntityTradeable entity) {
+        NBTTagCompound tag = new NBTTagCompound();
+        tag.setString("classPath", entity.getEntityClassPath());
+        if (entity.hasCustomInfo())
+            tag.setString("custom", entity.getCustomInfo());
+
+        return tag;
+    }
+
+    public static EntityTradeable deserializeIEntity(NBTTagCompound nbt) {
+        EntityTradeable e = new EntityTradeable();
+        e.setEntityClassPath(nbt.getString("classPath"));
+        if (nbt.hasKey("custom"))
+            e.setCustomInfo(nbt.getString("custom"));
+        return e;
     }
 }

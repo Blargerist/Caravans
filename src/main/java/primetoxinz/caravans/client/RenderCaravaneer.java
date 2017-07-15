@@ -18,12 +18,12 @@ public abstract class RenderCaravaneer<T extends EntityCaravaneer> extends Rende
         super(rendermanagerIn, modelbaseIn, shadowsizeIn);
     }
 
-    public abstract ResourceLocation getLeaderTexture(EntityCaravaneer leader);
-    public abstract ResourceLocation getBaseTexture(EntityCaravaneer caravaneer);
+    public abstract ResourceLocation getLeaderTexture(T leader);
+    public abstract ResourceLocation getBaseTexture(T caravaneer);
 
     @Nullable
     @Override
-    protected ResourceLocation getEntityTexture(EntityCaravaneer entity) {
+    protected ResourceLocation getEntityTexture(T entity) {
         if(entity.isLeader())
             return getLeaderTexture(entity);
         return getBaseTexture(entity);

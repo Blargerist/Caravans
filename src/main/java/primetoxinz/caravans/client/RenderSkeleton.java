@@ -26,12 +26,12 @@ public class RenderSkeleton extends RenderCaravaneer<EntitySkeletonCaravaneer> {
     }
 
     @Override
-    public ResourceLocation getLeaderTexture(EntityCaravaneer leader) {
+    public ResourceLocation getLeaderTexture(EntitySkeletonCaravaneer leader) {
         return WITHER_SKELETON_TEXTURES;
     }
 
     @Override
-    public ResourceLocation getBaseTexture(EntityCaravaneer caravaneer) {
+    public ResourceLocation getBaseTexture(EntitySkeletonCaravaneer caravaneer) {
         return SKELETON_TEXTURES;
     }
 }

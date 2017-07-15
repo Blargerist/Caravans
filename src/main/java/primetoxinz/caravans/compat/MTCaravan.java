@@ -31,6 +31,7 @@ public class MTCaravan {
         MODEL_TYPES.put("skeleton", EntitySkeletonCaravaneer.class);
         MODEL_TYPES.put("creeper", EntityCreeperCaravaneer.class);
         MODEL_TYPES.put("spider", EntitySpiderCaravaneer.class);
+        MODEL_TYPES.put("human", EntityHumanCaravaneer.class);
 
     }
 
@@ -79,7 +80,7 @@ public class MTCaravan {
 
         @Override
         public String describe() {
-                return String.format("Adding Caravan Follower: %s > %s ", builder,merchant);
+            return String.format("Adding Caravan Follower: %s > %s ", builder, merchant);
         }
 
         @Override

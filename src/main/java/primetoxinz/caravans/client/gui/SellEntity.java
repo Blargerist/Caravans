@@ -3,16 +3,13 @@ package primetoxinz.caravans.client.gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.NetworkManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 import primetoxinz.caravans.CaravansMod;
-import primetoxinz.caravans.api.IEntityTrade;
+import primetoxinz.caravans.api.ITradeEntity;
 import primetoxinz.caravans.client.gui.slot.SlotInput;
-import primetoxinz.caravans.client.gui.slot.SlotOutput;
-import primetoxinz.caravans.common.EntityTrade;
-import primetoxinz.caravans.common.ItemEntityTrade;
+import primetoxinz.caravans.common.trades.TradeEntity;
+import primetoxinz.caravans.common.trades.TradeItemEntity;
 import primetoxinz.caravans.common.entity.EntityUtil;
 import primetoxinz.caravans.network.MessageEntityTrade;
 import primetoxinz.caravans.network.NetworkHandler;
@@ -36,7 +33,7 @@ public class SellEntity extends GuiBase {
 
     public void buyTrade() {
         if (index < getTrades().size()) {
-            IEntityTrade trade = getTrades().get(index);
+            ITradeEntity trade = getTrades().get(index);
             MessageEntityTrade message = new MessageEntityTrade(trade, container.caravaneer);
             if (message != null) {
                 NetworkHandler.INSTANCE.sendToServer(message);
@@ -49,7 +46,7 @@ public class SellEntity extends GuiBase {
         return !getTrades().isEmpty();
     }
 
-    public List<IEntityTrade> getTrades() {
+    public List<ITradeEntity> getTrades() {
         return parent.container.merchant.getEntityTrades();
     }
 
@@ -132,20 +129,20 @@ public class SellEntity extends GuiBase {
 
     @Override
     public void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        List<IEntityTrade> trades = container.merchant.getEntityTrades();
+        List<ITradeEntity> trades = container.merchant.getEntityTrades();
         if (!trades.isEmpty()) {
 
-            IEntityTrade t = trades.get(index);
+            ITradeEntity t = trades.get(index);
             GlStateManager.color(1, 1, 1, 1.0F);
             if (!t.isInStock()) {
                 buy.setEnabled(false);
             }
-            if (t instanceof ItemEntityTrade) {
+            if (t instanceof TradeItemEntity) {
                 sellingEntity = EntityUtil.createEntity(t.getOutput(), container.world);
                 parent.drawEntityOnScreen(130, 64, 15, left() - mouseX, top() - mouseY, sellingEntity);
 
-            } else if (t instanceof EntityTrade) {
-                EntityTrade e = (EntityTrade) t;
+            } else if (t instanceof TradeEntity) {
+                TradeEntity e = (TradeEntity) t;
 
                 sellingEntity = EntityUtil.createEntity(e.getOutput(), container.world);
                 buyingEntity = EntityUtil.createEntity(e.getInput(), container.world);

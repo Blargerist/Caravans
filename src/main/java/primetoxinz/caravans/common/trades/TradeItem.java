@@ -1,32 +1,27 @@
-package primetoxinz.caravans.common;
+package primetoxinz.caravans.common.trades;
 
 import minetweaker.util.IntegerRange;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
-import net.minecraftforge.items.ItemStackHandler;
-import org.apache.commons.lang3.Range;
 import primetoxinz.caravans.api.ITrade;
-import stanhebben.zenscript.value.IntRange;
 
 /**
  * Created by primetoxinz on 7/4/17.
  */
-public class ItemTrade implements ITrade {
+public class TradeItem implements ITrade {
     private ItemStack input = ItemStack.EMPTY;
     private ItemStack output = ItemStack.EMPTY;
     private int stock;
     private IntegerRange range;
 
-    public ItemTrade(ItemStack input, ItemStack output, int min, int max) {
+    public TradeItem(ItemStack input, ItemStack output, int min, int max) {
         this.input = input;
         this.output = output;
         this.range = new IntegerRange(min, max);
     }
 
 
-    public ItemTrade(NBTTagCompound tag) {
+    public TradeItem(NBTTagCompound tag) {
         if (tag.hasKey("input"))
             this.input = new ItemStack((NBTTagCompound) tag.getTag("input"));
         else
@@ -60,7 +55,7 @@ public class ItemTrade implements ITrade {
 
     @Override
     public String toString() {
-        return String.format("%s -> %s : %s", getInput(), getOutput(), getStock());
+        return String.format("%s -> %s : %s\nItem", getInput(), getOutput(), getStock());
     }
 
     @Override
@@ -76,7 +71,7 @@ public class ItemTrade implements ITrade {
     }
 
     @Override
-    public ItemTrade create() {
+    public TradeItem create() {
         this.stock = range.getRandom();
         return this;
     }

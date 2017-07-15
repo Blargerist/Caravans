@@ -3,9 +3,9 @@ package primetoxinz.caravans.api;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import primetoxinz.caravans.common.EntityTrade;
-import primetoxinz.caravans.common.ItemEntityTrade;
-import primetoxinz.caravans.common.ItemTrade;
+import primetoxinz.caravans.common.trades.TradeEntity;
+import primetoxinz.caravans.common.trades.TradeItem;
+import primetoxinz.caravans.common.trades.TradeItemEntity;
 
 /**
  * Created by primetoxinz on 7/4/17.
@@ -25,11 +25,11 @@ public interface ITrade {
     static ITrade deserializeNBT(NBTTagCompound tag) {
         switch (tag.getString("type")) {
             case "item":
-                return new ItemTrade(tag);
+                return new TradeItem(tag);
             case "item_entity":
-                return new ItemEntityTrade(tag);
+                return new TradeItemEntity(tag);
             case "entity":
-                return new EntityTrade(tag);
+                return new TradeEntity(tag);
             default:
                 return null;
         }

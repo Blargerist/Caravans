@@ -1,13 +1,21 @@
 package primetoxinz.caravans;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import com.google.common.collect.Lists;
+import com.google.common.io.Resources;
+import com.google.gson.stream.JsonReader;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -37,8 +45,13 @@ import primetoxinz.caravans.network.MessageSyncLeash;
 import primetoxinz.caravans.network.NetworkHandler;
 import primetoxinz.caravans.proxy.CommonProxy;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * Created by primetoxinz on 7/1/17.
@@ -62,6 +75,7 @@ public class CaravansMod {
     public File caravansFolder;
 
     public static SoundEvent SPECIAL;
+
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         registerEntity(EntityVillagerCaravaneer.class, "caravaner.villager", 256, 1, true);
@@ -69,6 +83,7 @@ public class CaravansMod {
         registerEntity(EntitySkeletonCaravaneer.class, "caravaner.skeleton", 256, 1, true);
         registerEntity(EntitySpiderCaravaneer.class, "caravaner.spider", 256, 1, true);
         registerEntity(EntityCreeperCaravaneer.class, "caravaner.creeper", 256, 1, true);
+        registerEntity(EntityHumanCaravaneer.class, "caravaner.human", 256, 1, true);
         NetworkRegistry.INSTANCE.registerGuiHandler(CaravansMod.INSTANCE, new GuiHandler());
         NetworkHandler.register(MessageCaravan.class, Side.CLIENT);
         NetworkHandler.register(MessageSyncLeash.class, Side.CLIENT);
@@ -89,12 +104,15 @@ public class CaravansMod {
     public void postInit(FMLPostInitializationEvent event) {
         proxy.postInit(event);
         MTCompat.preInit();
+
     }
+
 
     @Mod.EventHandler
     public void serverStarting(FMLServerStartingEvent event) {
         event.registerServerCommand(new CommandCaravan());
     }
+
 
     public static SoundEvent registerSound(String soundName) {
         ResourceLocation soundID = new ResourceLocation(MODID, soundName);
@@ -137,10 +155,10 @@ public class CaravansMod {
         Random rand = world.rand;
         if (world.playerEntities.isEmpty())
             return;
-        if (event.phase == TickEvent.Phase.END && world.getWorldTime() == 2000) {
-            double d = rand.nextDouble();
-            double c = ConfigHandler.spawnPercent / 100;
-            if (Math.abs((d - c) - 1.0) <= 0.01) {
+        if (event.phase == TickEvent.Phase.END && (world.getWorldTime() % 24000) == 4000) {
+            double random = rand.nextDouble();
+            double chance = ConfigHandler.spawnPercent / 100d;
+            if (random < chance) {
                 CaravanBuilder builder = CaravanAPI.getRandomCaravan(world);
                 EntityPlayer player = EntityUtil.getRandomPlayer(world);
                 if (builder != null || player != null) {

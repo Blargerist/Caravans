@@ -19,6 +19,8 @@ import java.io.File;
 public class MTCompat {
 
     public static void preInit() {
+        MineTweakerAPI.registerClass(IEntity.class);
+
         MineTweakerAPI.registerClass(MTCaravan.class);
         MineTweakerAPI.registerClass(MTMerchant.class);
         File scriptDirectory = new File(CaravansMod.INSTANCE.caravansFolder, "scripts");
@@ -29,7 +31,6 @@ public class MTCompat {
         MineTweakerImplementationAPI.setScriptProvider(new ScriptProviderDirectory(scriptDirectory));
         MineTweakerImplementationAPI.addMineTweakerCommand("sellableEntities",new String[]{"List of Entity Classes which can be sold by a merchant"}, new CommandSellable());
         MineTweakerImplementationAPI.reload();
-
     }
 
     public static MerchantBuilder getMerchant(String name) {

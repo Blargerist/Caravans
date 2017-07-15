@@ -2,19 +2,9 @@ package primetoxinz.caravans.api;
 
 import com.google.common.collect.Lists;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.commons.lang3.StringUtils;
-import primetoxinz.caravans.common.ItemEntityTrade;
-import primetoxinz.caravans.common.ItemTrade;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,6 +41,11 @@ public class MerchantBuilder extends IForgeRegistryEntry.Impl<MerchantBuilder> {
 
     public Merchant create() {
         return new Merchant(getRegistryName(), trades.stream().map(ITrade::create).collect(Collectors.toList()), icon);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s:%s:%s", getRegistryName(), trades, icon);
     }
 }
 

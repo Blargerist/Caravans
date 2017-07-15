@@ -19,12 +19,12 @@ public class RenderZombie extends RenderCaravaneer<EntityZombieCaravaneer> {
     }
 
     @Override
-    public ResourceLocation getLeaderTexture(EntityCaravaneer leader) {
+    public ResourceLocation getLeaderTexture(EntityZombieCaravaneer leader) {
         return ZOMBIE_TEXTURES;
     }
 
     @Override
-    public ResourceLocation getBaseTexture(EntityCaravaneer caravaneer) {
+    public ResourceLocation getBaseTexture(EntityZombieCaravaneer caravaneer) {
         return ZOMBIE_TEXTURES;
     }
 }

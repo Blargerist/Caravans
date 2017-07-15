@@ -2,7 +2,7 @@ package primetoxinz.caravans.client.gui.slot;
 
 import primetoxinz.caravans.api.Merchant;
 import primetoxinz.caravans.client.gui.InventoryMerchant;
-import primetoxinz.caravans.common.ItemTrade;
+import primetoxinz.caravans.common.trades.TradeItem;
 
 /**
  * Created by primetoxinz on 7/6/17.
@@ -17,7 +17,7 @@ public class SlotOutput extends SlotBase {
         this.merchant = merchant;
     }
 
-    public ItemTrade getTrade() {
+    public TradeItem getTrade() {
         return merchant.getItemTrades().get(index);
     }
 

@@ -18,12 +18,12 @@ public class RenderSpider extends RenderCaravaneer<EntitySpiderCaravaneer> {
     }
 
     @Override
-    public ResourceLocation getLeaderTexture(EntityCaravaneer leader) {
+    public ResourceLocation getLeaderTexture(EntitySpiderCaravaneer leader) {
         return CAVE_SPIDER_TEXTURES;
     }
 
     @Override
-    public ResourceLocation getBaseTexture(EntityCaravaneer caravaneer) {
+    public ResourceLocation getBaseTexture(EntitySpiderCaravaneer caravaneer) {
         return SPIDER_TEXTURES;
     }
 

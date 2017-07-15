@@ -19,7 +19,7 @@ public class AIGoToPlayer extends AIAction {
 
     @Override
     public boolean shouldExecute() {
-        this.target = this.entity.getAttackTarget();
+        this.target = this.entity.getHangoutTarget();
         return this.target instanceof EntityPlayer;
     }
 
@@ -32,7 +32,7 @@ public class AIGoToPlayer extends AIAction {
     public void updateTask() {
         int range = (entity).isLeader() ? 5 : 10;
         if (this.target != null && entity.getDistanceToEntity(this.target) < range) {
-            this.entity.setAttackTarget(null);
+            this.entity.setTarget(null);
             this.entity.getNavigator().clearPathEntity();
             this.finished = true;
         }

@@ -9,12 +9,13 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import primetoxinz.caravans.api.IEntityTrade;
+import primetoxinz.caravans.api.ITradeEntity;
 import primetoxinz.caravans.api.ITrade;
-import primetoxinz.caravans.common.EntityTrade;
-import primetoxinz.caravans.common.ItemEntityTrade;
+import primetoxinz.caravans.common.trades.TradeEntity;
+import primetoxinz.caravans.common.trades.TradeItemEntity;
 import primetoxinz.caravans.common.ItemUtils;
 import primetoxinz.caravans.common.entity.EntityCaravaneer;
+import primetoxinz.caravans.compat.IEntity;
 
 import static primetoxinz.caravans.common.entity.EntityUtil.giveLeashed;
 import static primetoxinz.caravans.common.entity.EntityUtil.takeLeashed;
@@ -42,7 +43,7 @@ public class CommonProxy {
 
     public void buyEntityTrade(MessageContext context, NBTTagCompound tradeTag, int id) {
 
-        IEntityTrade trade = (IEntityTrade) ITrade.deserializeNBT(tradeTag);
+        ITradeEntity trade = (ITradeEntity) ITrade.deserializeNBT(tradeTag);
 
         World world = context.getServerHandler().player.world;
         EntityPlayerMP player = context.getServerHandler().player;
@@ -50,18 +51,18 @@ public class CommonProxy {
         EntityCaravaneer caravaneer = (EntityCaravaneer) world.getEntityByID(id);
         if (!trade.isInStock())
             return;
-        if (trade instanceof ItemEntityTrade) {
-            ItemEntityTrade itemEntityTrade = (ItemEntityTrade) trade;
+        if (trade instanceof TradeItemEntity) {
+            TradeItemEntity itemEntityTrade = (TradeItemEntity) trade;
             ItemStack input = itemEntityTrade.getInput();
-            Class<? extends EntityLiving> o = itemEntityTrade.getOutput();
+            IEntity o = itemEntityTrade.getOutput();
             if (ItemUtils.hasItemStack(player, input) && giveLeashed(o, player)) {
                 ItemUtils.takeItemStack(player, input, input.getCount());
                 trade.onTrade(world, caravaneer);
             }
-        } else if (trade instanceof EntityTrade) {
-            EntityTrade entityTrade = (EntityTrade) trade;
-            Class<? extends EntityLiving> i = entityTrade.getInput();
-            Class<? extends EntityLiving> o = entityTrade.getOutput();
+        } else if (trade instanceof TradeEntity) {
+            TradeEntity entityTrade = (TradeEntity) trade;
+            IEntity i = entityTrade.getInput();
+            IEntity o = entityTrade.getOutput();
             if (takeLeashed(o, caravaneer) && takeLeashed(i, player)) {
                 if(giveLeashed(o, player) && giveLeashed(i, caravaneer)) {
                     trade.onTrade(world, caravaneer);

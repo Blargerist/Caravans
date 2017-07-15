@@ -58,4 +58,9 @@ public class CaravanBuilder extends IForgeRegistryEntry.Impl<CaravanBuilder> {
     public String getStage() {
         return stage;
     }
+
+    @Override
+    public String toString() {
+        return String.format("CaravanBuilder:%s -> %s. Stage:%s", leaderClass,followerClasses, stage);
+    }
 }

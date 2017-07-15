@@ -4,7 +4,10 @@ import com.google.common.collect.Lists;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackMelee;
+import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,6 +22,7 @@ import primetoxinz.caravans.api.*;
 import primetoxinz.caravans.common.entity.ai.AISpreadOut;
 import primetoxinz.caravans.common.entity.ai.AIState;
 import primetoxinz.caravans.common.entity.ai.AIWanderNear;
+import primetoxinz.caravans.compat.IEntity;
 import primetoxinz.caravans.network.MessageCaravan;
 import primetoxinz.caravans.network.NetworkHandler;
 import primetoxinz.caravans.network.NetworkMessage;
@@ -39,6 +43,7 @@ public abstract class EntityCaravaneer extends EntityCreature implements IEntity
     private boolean leader;
     private BlockPos origins;
     public int stay;
+    public EntityLivingBase hangoutTarget;
     public UUID target;
     private List<EntityLiving> tradeEntities = Lists.newArrayList();
     private List<UUID> tradeUUIDs = Lists.newArrayList();
@@ -64,10 +69,17 @@ public abstract class EntityCaravaneer extends EntityCreature implements IEntity
     }
 
     @Override
+    protected boolean canDespawn() {
+        return false;
+    }
+
+    @Override
     protected void initEntityAI() {
         this.tasks.addTask(1, state = new AIState(this));
         this.tasks.addTask(2, new AISpreadOut(this));
         this.tasks.addTask(3, new AIWanderNear(this, 100));
+        this.tasks.addTask(5, new EntityAIAttackMelee(this, 1.0D, true));
+        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[0]));
     }
 
     @Override
@@ -105,8 +117,8 @@ public abstract class EntityCaravaneer extends EntityCreature implements IEntity
                 setCustomNameTag(getMerchant().getRealName());
 
                 for (ITrade trade : getMerchant().getTrades()) {
-                    if (trade instanceof IEntityTrade) {
-                        Class<? extends EntityLiving> entity = ((IEntityTrade) trade).getOutput();
+                    if (trade instanceof ITradeEntity) {
+                        IEntity entity = ((ITradeEntity) trade).getOutput();
                         EntityLiving living = EntityUtil.createEntity(entity, world);
                         living.setPosition(pos.getX(), pos.getY(), pos.getZ());
                         living.setLeashedToEntity(this, true);
@@ -125,11 +137,13 @@ public abstract class EntityCaravaneer extends EntityCreature implements IEntity
 
 
     public EntityCaravaneer setTarget(EntityPlayer player) {
-        setAttackTarget(player);
-        if(player.getGameProfile() != null)
-            target = player.getGameProfile().getId();
-        else
-            target = player.getUniqueID();
+        this.hangoutTarget = player;
+        if (player != null) {
+            if (player.getGameProfile() != null)
+                target = player.getGameProfile().getId();
+            else
+                target = player.getUniqueID();
+        }
         return this;
     }
 
@@ -164,8 +178,8 @@ public abstract class EntityCaravaneer extends EntityCreature implements IEntity
     @Override
     public void writeEntityToNBT(NBTTagCompound compound) {
         compound.setTag("caravan", caravan.serializeNBT());
-        if (getAttackTarget() instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) getAttackTarget();
+        if (hangoutTarget instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) hangoutTarget;
             compound.setString("player", player.getGameProfile().getId().toString());
         }
         compound.setBoolean("leader", leader);
@@ -274,5 +288,8 @@ public abstract class EntityCaravaneer extends EntityCreature implements IEntity
 
     public abstract SoundEvent getTradeSound();
 
+    public EntityLivingBase getHangoutTarget() {
+        return hangoutTarget;
+    }
 }
 

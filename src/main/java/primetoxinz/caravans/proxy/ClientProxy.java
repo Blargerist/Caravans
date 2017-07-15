@@ -35,6 +35,7 @@ public class ClientProxy extends CommonProxy {
         RenderingRegistry.registerEntityRenderingHandler(EntitySkeletonCaravaneer.class, RenderSkeleton::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityCreeperCaravaneer.class, RenderCreeper::new);
         RenderingRegistry.registerEntityRenderingHandler(EntitySpiderCaravaneer.class, RenderSpider::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityHumanCaravaneer.class, RenderHuman::new);
     }
 
     @SideOnly(Side.CLIENT)

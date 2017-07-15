@@ -28,12 +28,12 @@ public class RenderCreeper extends RenderCaravaneer<EntityCreeperCaravaneer> {
     }
 
     @Override
-    public ResourceLocation getLeaderTexture(EntityCaravaneer leader) {
+    public ResourceLocation getLeaderTexture(EntityCreeperCaravaneer leader) {
         return CREEPER_TEXTURES;
     }
 
     @Override
-    public ResourceLocation getBaseTexture(EntityCaravaneer caravaneer) {
+    public ResourceLocation getBaseTexture(EntityCreeperCaravaneer caravaneer) {
         return CREEPER_TEXTURES;
     }
 

@@ -1,10 +1,13 @@
 package primetoxinz.caravans;
 
+import com.google.common.collect.Lists;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.List;
 
 /**
  * Created by primetoxinz on 7/9/17.
@@ -27,6 +30,12 @@ public class ConfigHandler {
 
     @Config.Comment("How long a Caravan stays around in ticks")
     public static int hangoutTicks = 20 * 60;
+
+    @Config.Comment("Surprise!")
+    public static boolean surprise = true;
+
+    @Config.Comment("Player Names for skins used by human merchant model")
+    public static String[] playerNames = new String[]{"Darkosto"};
 
     @SubscribeEvent
     public static void onConfigChange(ConfigChangedEvent event) {
