@@ -2,7 +2,7 @@ package primetoxinz.caravans.api;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 import primetoxinz.caravans.common.entity.EntityCaravaneer;
 
 import java.util.HashMap;

@@ -13,6 +13,7 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -276,7 +277,7 @@ public abstract class EntityCaravaneer extends EntityCreature implements IEntity
 
     @Nullable
     @Override
-    protected abstract SoundEvent getHurtSound();
+    protected abstract SoundEvent getHurtSound(DamageSource damageSourceIn);
 
     @Nullable
     @Override

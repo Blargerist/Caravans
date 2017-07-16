@@ -4,12 +4,13 @@ buildscript {
         maven { url = "http://files.minecraftforge.net/maven" }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "0.1.3"
+
+version = "1.0.0"
 group = "primetoxinz.caravans"
 archivesBaseName = "Caravans"
 
@@ -19,10 +20,9 @@ compileJava {
 }
 
 minecraft {
-    version = "1.11.2-13.20.0.2315"
+    version = "1.12-14.21.1.2413"
     runDir = "run"
-
-    mappings = "snapshot_20170601"
+    mappings = "snapshot_20170627"
 }
 
 repositories {
@@ -32,10 +32,11 @@ repositories {
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.11.2:+"
-    deobfCompile "MineTweaker3:MineTweaker3-API:+"
-    deobfCompile "net.darkhax.bookshelf:Bookshelf:1.11.2-2.0.0.387"
-    compile "net.darkhax.gamestages:GameStages-1.11.2:1.0.11"
+    deobfCompile "mezz.jei:jei_1.12:+"
+    deobfCompile "CraftTweaker2:CraftTweaker2-API:+"
+    deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:+"
+//    deobfCompile "net.darkhax.bookshelf:Bookshelf:1.11.2-2.0.0.387"
+//    compile "net.darkhax.gamestages:GameStages-1.11.2:1.0.11"
 }
 
 

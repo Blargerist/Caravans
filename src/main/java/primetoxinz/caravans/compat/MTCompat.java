@@ -1,9 +1,10 @@
 package primetoxinz.caravans.compat;
 
-import minetweaker.MineTweakerAPI;
-import minetweaker.MineTweakerImplementationAPI;
-import minetweaker.mc1112.brackets.ItemBracketHandler;
-import minetweaker.runtime.providers.ScriptProviderDirectory;
+import crafttweaker.CraftTweakerAPI;
+import crafttweaker.CrafttweakerImplementationAPI;
+import crafttweaker.mc1120.brackets.BracketHandlerItem;
+import crafttweaker.mc1120.commands.CTChatCommand;
+import crafttweaker.runtime.providers.ScriptProviderDirectory;
 import net.minecraft.util.ResourceLocation;
 import primetoxinz.caravans.CaravansMod;
 import primetoxinz.caravans.api.CaravanAPI;
@@ -19,18 +20,18 @@ import java.io.File;
 public class MTCompat {
 
     public static void preInit() {
-        MineTweakerAPI.registerClass(IEntity.class);
+        CraftTweakerAPI.registerClass(IEntity.class);
 
-        MineTweakerAPI.registerClass(MTCaravan.class);
-        MineTweakerAPI.registerClass(MTMerchant.class);
+        CraftTweakerAPI.registerClass(MTCaravan.class);
+        CraftTweakerAPI.registerClass(MTMerchant.class);
         File scriptDirectory = new File(CaravansMod.INSTANCE.caravansFolder, "scripts");
         if (!scriptDirectory.exists())
             scriptDirectory.mkdirs();
-        MineTweakerAPI.registerBracketHandler(new ItemBracketHandler());
-        ItemBracketHandler.rebuildItemRegistry();
-        MineTweakerImplementationAPI.setScriptProvider(new ScriptProviderDirectory(scriptDirectory));
-        MineTweakerImplementationAPI.addMineTweakerCommand("sellableEntities",new String[]{"List of Entity Classes which can be sold by a merchant"}, new CommandSellable());
-        MineTweakerImplementationAPI.reload();
+        CraftTweakerAPI.registerBracketHandler(new BracketHandlerItem());
+        BracketHandlerItem.rebuildItemRegistry();
+        CrafttweakerImplementationAPI.setScriptProvider(new ScriptProviderDirectory(scriptDirectory));
+        CTChatCommand.registerCommand(new CommandSellable());
+        CrafttweakerImplementationAPI.load();
     }
 
     public static MerchantBuilder getMerchant(String name) {

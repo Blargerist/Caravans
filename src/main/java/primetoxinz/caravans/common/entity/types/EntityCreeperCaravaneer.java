@@ -1,6 +1,7 @@
 package primetoxinz.caravans.common.entity.types;
 
 import net.minecraft.init.SoundEvents;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import primetoxinz.caravans.api.Caravan;
@@ -22,7 +23,7 @@ public class EntityCreeperCaravaneer extends EntityCaravaneer {
 
     @Nullable
     @Override
-    protected SoundEvent getHurtSound() {
+    protected SoundEvent getHurtSound(DamageSource source) {
         return SoundEvents.ENTITY_CREEPER_HURT;
     }
 

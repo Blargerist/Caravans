@@ -1,21 +1,13 @@
 package primetoxinz.caravans;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import com.google.common.collect.Lists;
-import com.google.common.io.Resources;
-import com.google.gson.stream.JsonReader;
-import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -27,8 +19,8 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.common.registry.RegistryBuilder;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.registries.RegistryBuilder;
 import primetoxinz.caravans.api.Caravan;
 import primetoxinz.caravans.api.CaravanAPI;
 import primetoxinz.caravans.api.CaravanBuilder;
@@ -45,13 +37,9 @@ import primetoxinz.caravans.network.MessageSyncLeash;
 import primetoxinz.caravans.network.NetworkHandler;
 import primetoxinz.caravans.proxy.CommonProxy;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
+import java.rmi.registry.Registry;
 import java.util.Random;
-import java.util.UUID;
 
 /**
  * Created by primetoxinz on 7/1/17.
@@ -71,11 +59,10 @@ public class CaravansMod {
     @Mod.Instance(owner = MODID)
     public static CaravansMod INSTANCE;
 
+    @GameRegistry.ObjectHolder("caravans:caravans.special")
+    public final static SoundEvent SPECIAL = null;
 
     public File caravansFolder;
-
-    public static SoundEvent SPECIAL;
-
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         registerEntity(EntityVillagerCaravaneer.class, "caravaner.villager", 256, 1, true);
@@ -92,7 +79,7 @@ public class CaravansMod {
         caravansFolder = new File(event.getModConfigurationDirectory(), CaravansMod.MODID);
         if (!caravansFolder.exists())
             caravansFolder.mkdirs();
-        SPECIAL = registerSound("caravans.special");
+
     }
 
     @Mod.EventHandler
@@ -107,6 +94,10 @@ public class CaravansMod {
 
     }
 
+    @SubscribeEvent
+    public void registerSounds(RegistryEvent.Register<SoundEvent> event) {
+        event.getRegistry().register(registerSound("caravans.special"));
+    }
 
     @Mod.EventHandler
     public void serverStarting(FMLServerStartingEvent event) {
@@ -116,7 +107,7 @@ public class CaravansMod {
 
     public static SoundEvent registerSound(String soundName) {
         ResourceLocation soundID = new ResourceLocation(MODID, soundName);
-        return GameRegistry.register(new SoundEvent(soundID).setRegistryName(soundID));
+        return new SoundEvent(soundID).setRegistryName(soundID);
     }
 
     private static int availableEntityId;

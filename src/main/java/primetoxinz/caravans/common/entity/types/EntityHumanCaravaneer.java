@@ -5,6 +5,7 @@ import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
@@ -30,7 +31,7 @@ public class EntityHumanCaravaneer extends EntityCaravaneer {
 
     @Nullable
     @Override
-    protected SoundEvent getHurtSound() {
+    protected SoundEvent getHurtSound(DamageSource source) {
         return SoundEvents.ENTITY_PLAYER_HURT;
     }
 

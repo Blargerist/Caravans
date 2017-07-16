@@ -1,6 +1,6 @@
 package primetoxinz.caravans.common.trades;
 
-import minetweaker.util.IntegerRange;
+import crafttweaker.util.IntegerRange;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import primetoxinz.caravans.api.ITrade;

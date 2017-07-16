@@ -1,10 +1,9 @@
 package primetoxinz.caravans.compat;
 
 import com.google.common.collect.Maps;
-import minetweaker.IUndoableAction;
-import minetweaker.MineTweakerAPI;
+import crafttweaker.CraftTweakerAPI;
+import crafttweaker.IAction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import primetoxinz.caravans.CaravansMod;
 import primetoxinz.caravans.api.CaravanAPI;
 import primetoxinz.caravans.api.CaravanBuilder;
@@ -46,12 +45,12 @@ public class MTCaravan {
         CaravanBuilder builder = MTCompat.getCaravan(caravan);
         MerchantBuilder follower = MTCompat.getMerchant(merchant);
         if (builder != null && follower != null) {
-            MineTweakerAPI.apply(new AddFollower(builder, follower, modelType));
+            CraftTweakerAPI.apply(new AddFollower(builder, follower, modelType));
         }
     }
 
 
-    public static class AddFollower implements IUndoableAction {
+    public static class AddFollower implements IAction {
 
         private CaravanBuilder builder;
         private MerchantBuilder merchant;
@@ -69,37 +68,18 @@ public class MTCaravan {
         }
 
         @Override
-        public boolean canUndo() {
-            return false;
-        }
-
-        @Override
-        public void undo() {
-
-        }
-
-        @Override
         public String describe() {
             return String.format("Adding Caravan Follower: %s > %s ", builder, merchant);
         }
 
-        @Override
-        public String describeUndo() {
-            return null;
-        }
-
-        @Override
-        public Object getOverrideKey() {
-            return null;
-        }
     }
 
     @ZenMethod
     public static void registerCaravan(String name, @Optional String leaderModel, @Optional String gamestage) {
-        MineTweakerAPI.apply(new RegisterCaravan(name, gamestage, leaderModel));
+        CraftTweakerAPI.apply(new RegisterCaravan(name, gamestage, leaderModel));
     }
 
-    public static class RegisterCaravan implements IUndoableAction {
+    public static class RegisterCaravan implements IAction {
         private CaravanBuilder builder;
 
         protected RegisterCaravan(String name, String gamestage, @Optional String leaderModel) {
@@ -109,38 +89,20 @@ public class MTCaravan {
             }
         }
 
-        @Override
-        public boolean canUndo() {
-            return true;
-        }
-
 
         @Override
         public void apply() {
             if (!CaravanAPI.CARAVANS.containsKey(builder.getRegistryName())) {
-                GameRegistry.register(builder);
+                CaravanAPI.CARAVANS.register(builder);
             }
         }
 
-        @Override
-        public void undo() {
-
-        }
 
         @Override
         public String describe() {
             return String.format("Registering Caravan: %s ", builder);
         }
 
-        @Override
-        public String describeUndo() {
-            return null;
-        }
-
-        @Override
-        public Object getOverrideKey() {
-            return null;
-        }
     }
 
 
