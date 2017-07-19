@@ -7,6 +7,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -89,7 +90,7 @@ public class EntityUtil {
     }
 
     public static EntityPlayer getRandomPlayer(World world) {
-        List<EntityPlayer> players = world.playerEntities;
+        List<EntityPlayerMP> players = world.getMinecraftServer().getPlayerList().getPlayers();
         if (!players.isEmpty()) {
             int i = world.rand.nextInt(players.size());
             return players.get(i);

@@ -8,6 +8,7 @@ import com.google.gson.stream.JsonReader;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -153,7 +154,7 @@ public class CaravansMod {
             return;
         World world = event.world;
         Random rand = world.rand;
-        if (world.playerEntities.isEmpty()) {
+        if (world.getMinecraftServer().getPlayerList().getPlayers().isEmpty()) {
             if(ConfigHandler.debug)
                 FMLLog.warning("Caravans:No Players Found");
             return;
