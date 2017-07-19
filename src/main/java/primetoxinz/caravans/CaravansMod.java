@@ -62,7 +62,7 @@ public class CaravansMod {
     public static final String MODID = "caravans";
     public static final String NAME = "Caravans";
     public static final String VERSION = "{version}";
-    public static final String DEP = "after:crafttweaker";
+    public static final String DEP = "required-after:crafttweaker";
 
 
     @SidedProxy(modId = MODID, clientSide = "primetoxinz.caravans.proxy.ClientProxy", serverSide = "primetoxinz.caravans.proxy.ServerProxy")
@@ -153,12 +153,22 @@ public class CaravansMod {
             return;
         World world = event.world;
         Random rand = world.rand;
-        if (world.playerEntities.isEmpty())
+        if (world.playerEntities.isEmpty()) {
+            if(ConfigHandler.debug)
+                FMLLog.warning("Caravans:No Players Found");
             return;
-        if (event.phase == TickEvent.Phase.END && (world.getWorldTime() % 24000) == 4000) {
+        }
+
+        if (event.phase == TickEvent.Phase.END && (world.getWorldTime() % 24000) == ConfigHandler.worldTime) {
+
             double random = rand.nextDouble();
             double chance = ConfigHandler.spawnPercent / 100d;
-            if (random < chance) {
+            if(ConfigHandler.debug)
+                FMLLog.warning("Caravans:Attempting to spawn Caravan. Config Chance: %s Random Chance: %s", chance,random);
+            if (random <= chance) {
+                if(ConfigHandler.debug)
+                    FMLLog.warning("Successfully spawning a caravan!");
+
                 CaravanBuilder builder = CaravanAPI.getRandomCaravan(world);
                 EntityPlayer player = EntityUtil.getRandomPlayer(world);
                 if (builder != null || player != null) {
