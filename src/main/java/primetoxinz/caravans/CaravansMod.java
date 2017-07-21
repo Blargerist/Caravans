@@ -25,6 +25,7 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.registries.RegistryBuilder;
+import org.apache.logging.log4j.Logger;
 import primetoxinz.caravans.api.Caravan;
 import primetoxinz.caravans.api.CaravanAPI;
 import primetoxinz.caravans.api.CaravanBuilder;
@@ -42,7 +43,6 @@ import primetoxinz.caravans.network.NetworkHandler;
 import primetoxinz.caravans.proxy.CommonProxy;
 
 import java.io.File;
-import java.rmi.registry.Registry;
 import java.util.Random;
 
 /**
@@ -68,8 +68,10 @@ public class CaravansMod {
 
     public File caravansFolder;
 
+    public static Logger logger;
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        logger = event.getModLog();
         registerEntity(EntityVillagerCaravaneer.class, "caravaner.villager", 256, 1, true);
         registerEntity(EntityZombieCaravaneer.class, "caravaner.zombie", 256, 1, true);
         registerEntity(EntitySkeletonCaravaneer.class, "caravaner.skeleton", 256, 1, true);
@@ -151,16 +153,15 @@ public class CaravansMod {
         Random rand = world.rand;
         if (world.getMinecraftServer().getPlayerList().getPlayers().isEmpty()) {
             if (ConfigHandler.debug)
-                FMLLog.warning("Caravans:No Players Found");
+                logger.warn("Caravans:No Players Found");
             return;
         }
 
         if (event.phase == TickEvent.Phase.END && (world.getWorldTime() % 24000) == ConfigHandler.worldTime) {
-
             double random = rand.nextDouble();
             double chance = ConfigHandler.spawnPercent / 100d;
             if (ConfigHandler.debug)
-                FMLLog.warning("Caravans:Attempting to spawn Caravan. Config Chance: %s Random Chance: %s", chance, random);
+                logger.warn("Caravans:Attempting to spawn Caravan. Config Chance: %s Random Chance: %s", chance, random);
             if (random <= chance) {
                 CaravanBuilder builder = CaravanAPI.getRandomCaravan(world);
                 EntityPlayer player = EntityUtil.getRandomPlayer(world);
@@ -170,7 +171,7 @@ public class CaravansMod {
                         BlockPos pos = EntityUtil.generatePosition(world, player.getPosition(), ConfigHandler.maxRadius, ConfigHandler.minRadius);
                         caravan.spawn(pos, player);
                         if (ConfigHandler.debug)
-                            FMLLog.warning("Successfully spawning a caravan at %s! Going to %s", pos, player);
+                            logger.warn("Successfully spawning a caravan at %s! Going to %s", pos, player);
                         player.sendStatusMessage(new TextComponentTranslation("text.arriving"), true);
                     }
                 }

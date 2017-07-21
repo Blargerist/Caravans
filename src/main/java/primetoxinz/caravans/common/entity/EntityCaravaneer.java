@@ -306,32 +306,5 @@ public abstract class EntityCaravaneer extends EntityCreature implements IEntity
         return hangoutTarget;
     }
 
-    @Override
-    protected void updateLeashedState() {
-        if (this.leashNBTTag != null) {
-            this.recreateLeash();
-        }
-
-        if (this.getLeashed()) {
-            if (!this.isEntityAlive() || this.getLeashedToEntity() == null || this.getLeashedToEntity().isDead) {
-                this.clearLeashed(true, true);
-                return;
-            }
-            Entity entity = getLeashedToEntity();
-            float f = this.getDistanceToEntity(entity);
-            if (f > 6.0F) {
-                double d0 = (entity.posX - this.posX) / (double) f;
-                double d1 = (entity.posY - this.posY) / (double) f;
-                double d2 = (entity.posZ - this.posZ) / (double) f;
-                this.motionX += d0 * Math.abs(d0) * 0.4D;
-                this.motionY += d1 * Math.abs(d1) * 0.4D;
-                this.motionZ += d2 * Math.abs(d2) * 0.4D;
-            } else {
-                this.tasks.enableControlFlag(1);
-                Vec3d vec3d = (new Vec3d(entity.posX - this.posX, entity.posY - this.posY, entity.posZ - this.posZ)).normalize().scale((double) Math.max(f - 2.0F, 0.0F));
-                this.getNavigator().tryMoveToXYZ(this.posX + vec3d.xCoord, this.posY + vec3d.yCoord, this.posZ + vec3d.zCoord, this.followLeashSpeed());
-            }
-        }
-    }
 }
 

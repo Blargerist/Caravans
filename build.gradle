@@ -10,7 +10,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 
-version = "0.1.2-1.12"
+version = "0.1.6-1.12"
 group = "primetoxinz.caravans"
 archivesBaseName = "Caravans"
 
