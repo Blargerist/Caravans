@@ -39,6 +39,7 @@ public class Caravan implements INBTSerializable<NBTTagCompound> {
     protected Status status = Status.ARRIVING;
 
     protected String stage;
+    protected EntityPlayer target;
 
     public Caravan(World world, NBTTagCompound tag) {
         this.world = world;
@@ -79,6 +80,7 @@ public class Caravan implements INBTSerializable<NBTTagCompound> {
     }
 
     public void spawn(BlockPos pos, EntityPlayer player) {
+        this.target = player;
         getLeader().ifPresent(e -> e.setTarget(player));
         getLeader().ifPresent(e -> e.spawn(world, pos, Status.ARRIVING));
         List<EntityCaravaneer> entities = getEntities();
@@ -225,11 +227,20 @@ public class Caravan implements INBTSerializable<NBTTagCompound> {
     }
 
     public enum Status {
-        ARRIVING,
-        TRADING,
-        LEAVING,
-        GONE;
+        ARRIVING("caravan.never_arrived"),
+        TRADING("caravan.while_trading"),
+        LEAVING("caravan.while_leaving"),
+        GONE("caravan.has_left");
+        private String messageDeath;
         public static Status[] VALUES = values();
+
+        Status(String messageDeath) {
+            this.messageDeath = messageDeath;
+        }
+
+        public String getDeathMessage() {
+            return messageDeath;
+        }
     }
 
     public void setGameStage(String stage) {
@@ -238,5 +249,9 @@ public class Caravan implements INBTSerializable<NBTTagCompound> {
 
     public String getGameStage() {
         return stage;
+    }
+
+    public EntityPlayer getTarget() {
+        return target;
     }
 }

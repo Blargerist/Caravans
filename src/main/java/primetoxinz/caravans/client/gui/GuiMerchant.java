@@ -13,7 +13,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import primetoxinz.caravans.CaravansMod;
 import primetoxinz.caravans.client.gui.slot.SlotBase;
-import primetoxinz.caravans.client.gui.slot.SlotOutput;
 
 import java.io.IOException;
 import java.util.List;

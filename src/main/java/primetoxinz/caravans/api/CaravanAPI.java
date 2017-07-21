@@ -43,6 +43,8 @@ public class CaravanAPI {
 
     public static CaravanBuilder getRandomCaravan(World world) {
         List<CaravanBuilder> builders = CARAVANS.getValues();
+        if (builders.isEmpty())
+            return null;
         int i = world.rand.nextInt(builders.size());
         return builders.get(i);
     }

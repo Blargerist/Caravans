@@ -30,7 +30,7 @@ public class AIGoToPlayer extends AIAction {
 
     @Override
     public void updateTask() {
-        int range = (entity).isLeader() ? 5 : 10;
+        int range = (entity).isLeader() ? 1 : 1;
         if (this.target != null && entity.getDistanceToEntity(this.target) < range) {
             this.entity.setTarget(null);
             this.entity.getNavigator().clearPathEntity();

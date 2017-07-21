@@ -8,9 +8,9 @@ import net.minecraft.util.text.translation.I18n;
 import primetoxinz.caravans.CaravansMod;
 import primetoxinz.caravans.api.ITradeEntity;
 import primetoxinz.caravans.client.gui.slot.SlotInput;
+import primetoxinz.caravans.common.entity.EntityUtil;
 import primetoxinz.caravans.common.trades.TradeEntity;
 import primetoxinz.caravans.common.trades.TradeItemEntity;
-import primetoxinz.caravans.common.entity.EntityUtil;
 import primetoxinz.caravans.network.MessageEntityTrade;
 import primetoxinz.caravans.network.NetworkHandler;
 

@@ -7,7 +7,11 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -50,7 +54,7 @@ public class CaravansMod {
     public static final String MODID = "caravans";
     public static final String NAME = "Caravans";
     public static final String VERSION = "{version}";
-    public static final String DEP = "after:crafttweaker";
+    public static final String DEP = "required-after:crafttweaker";
 
 
     @SidedProxy(modId = MODID, clientSide = "primetoxinz.caravans.proxy.ClientProxy", serverSide = "primetoxinz.caravans.proxy.ServerProxy")
@@ -63,6 +67,7 @@ public class CaravansMod {
     public final static SoundEvent SPECIAL = null;
 
     public File caravansFolder;
+
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         registerEntity(EntityVillagerCaravaneer.class, "caravaner.villager", 256, 1, true);
@@ -79,7 +84,7 @@ public class CaravansMod {
         caravansFolder = new File(event.getModConfigurationDirectory(), CaravansMod.MODID);
         if (!caravansFolder.exists())
             caravansFolder.mkdirs();
-
+        registerSound("caravans.special");
     }
 
     @Mod.EventHandler
@@ -144,12 +149,19 @@ public class CaravansMod {
             return;
         World world = event.world;
         Random rand = world.rand;
-        if (world.playerEntities.isEmpty())
+        if (world.getMinecraftServer().getPlayerList().getPlayers().isEmpty()) {
+            if (ConfigHandler.debug)
+                FMLLog.warning("Caravans:No Players Found");
             return;
-        if (event.phase == TickEvent.Phase.END && (world.getWorldTime() % 24000) == 4000) {
+        }
+
+        if (event.phase == TickEvent.Phase.END && (world.getWorldTime() % 24000) == ConfigHandler.worldTime) {
+
             double random = rand.nextDouble();
             double chance = ConfigHandler.spawnPercent / 100d;
-            if (random < chance) {
+            if (ConfigHandler.debug)
+                FMLLog.warning("Caravans:Attempting to spawn Caravan. Config Chance: %s Random Chance: %s", chance, random);
+            if (random <= chance) {
                 CaravanBuilder builder = CaravanAPI.getRandomCaravan(world);
                 EntityPlayer player = EntityUtil.getRandomPlayer(world);
                 if (builder != null || player != null) {
@@ -157,11 +169,55 @@ public class CaravansMod {
                     if (MTGameStages.canSpawnCaravan(player, caravan)) {
                         BlockPos pos = EntityUtil.generatePosition(world, player.getPosition(), ConfigHandler.maxRadius, ConfigHandler.minRadius);
                         caravan.spawn(pos, player);
+                        if (ConfigHandler.debug)
+                            FMLLog.warning("Successfully spawning a caravan at %s! Going to %s", pos, player);
                         player.sendStatusMessage(new TextComponentTranslation("text.arriving"), true);
                     }
                 }
             }
 
+        }
+    }
+
+    @Mod.EventBusSubscriber(modid = CaravansMod.MODID)
+    @Config(modid = CaravansMod.MODID, name = "caravans/caravans")
+    public static class ConfigHandler {
+
+        @Config.Comment("Allow Caravans to randomly spawn")
+        public static boolean randomlySpawn = true;
+
+        @Config.Comment("Percent chance to spawn a Caravan each day ")
+        public static double spawnPercent = 10;
+
+        @Config.Comment("Maximum radius from player to spawn caravan")
+        public static int maxRadius = 100;
+
+        @Config.Comment("Minimum radius from player to spawn caravan")
+        public static int minRadius = 80;
+
+        @Config.Comment("How long a Caravan stays around in ticks")
+        public static int hangoutTicks = 20 * 60;
+
+        @Config.RangeInt(min = 0, max = 24000)
+        @Config.Comment("World time to try spawning a Caravan in ticks. A bed wakes up at 0")
+        public static int worldTime = 4000;
+        @Config.Comment("Surprise!")
+        public static boolean surprise = true;
+
+        @Config.Comment("Player Names for skins used by human merchant model")
+        public static String[] playerNames = new String[]{"Darkosto"};
+
+        @Config.Comment("Debug Mode")
+        public static boolean debug = true;
+
+        @Config.Comment("Trade Experience")
+        public static int experience = 3;
+
+        @SubscribeEvent
+        public static void onConfigChange(ConfigChangedEvent event) {
+            if (event.getModID().equals(CaravansMod.MODID)) {
+                ConfigManager.sync(CaravansMod.MODID, Config.Type.INSTANCE);
+            }
         }
     }
 }

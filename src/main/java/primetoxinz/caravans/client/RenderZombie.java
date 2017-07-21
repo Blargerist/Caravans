@@ -1,11 +1,8 @@
 package primetoxinz.caravans.client;
 
-import net.minecraft.client.model.ModelVillager;
 import net.minecraft.client.model.ModelZombie;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
-import primetoxinz.caravans.common.entity.EntityCaravaneer;
-import primetoxinz.caravans.common.entity.types.EntityVillagerCaravaneer;
 import primetoxinz.caravans.common.entity.types.EntityZombieCaravaneer;
 
 /**
