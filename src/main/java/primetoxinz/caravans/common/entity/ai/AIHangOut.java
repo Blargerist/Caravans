@@ -5,7 +5,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import primetoxinz.caravans.CaravansMod;
-import primetoxinz.caravans.ConfigHandler;
 import primetoxinz.caravans.common.entity.EntityCaravaneer;
 
 /**
@@ -25,7 +24,7 @@ public class AIHangOut extends AIAction {
     public void updateTask() {
         super.updateTask();
 
-        if (ConfigHandler.surprise && entity.stay == 0) {
+        if (CaravansMod.ConfigHandler.surprise && entity.stay == 0) {
             World world = entity.world;
             if(entity.target != null) {
                 EntityPlayer player = world.getPlayerEntityByUUID(entity.target);
@@ -40,8 +39,8 @@ public class AIHangOut extends AIAction {
 
     @Override
     public boolean isFinished() {
-        if (ConfigHandler.hangoutTicks == -1)
+        if (CaravansMod.ConfigHandler.hangoutTicks == -1)
             return false;
-        return entity.stay >= ConfigHandler.hangoutTicks;
+        return entity.stay >= CaravansMod.ConfigHandler.hangoutTicks;
     }
 }

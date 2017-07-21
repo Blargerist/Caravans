@@ -1,6 +1,5 @@
 package primetoxinz.caravans.proxy;
 
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -9,12 +8,12 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import primetoxinz.caravans.api.ITradeEntity;
 import primetoxinz.caravans.api.ITrade;
-import primetoxinz.caravans.common.trades.TradeEntity;
-import primetoxinz.caravans.common.trades.TradeItemEntity;
+import primetoxinz.caravans.api.ITradeEntity;
 import primetoxinz.caravans.common.ItemUtils;
 import primetoxinz.caravans.common.entity.EntityCaravaneer;
+import primetoxinz.caravans.common.trades.TradeEntity;
+import primetoxinz.caravans.common.trades.TradeItemEntity;
 import primetoxinz.caravans.compat.IEntity;
 
 import static primetoxinz.caravans.common.entity.EntityUtil.giveLeashed;

@@ -3,6 +3,8 @@ package primetoxinz.caravans.api;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import primetoxinz.caravans.CaravansMod;
+import primetoxinz.caravans.common.entity.EntityUtil;
 import primetoxinz.caravans.common.trades.TradeEntity;
 import primetoxinz.caravans.common.trades.TradeItem;
 import primetoxinz.caravans.common.trades.TradeItemEntity;
@@ -38,6 +40,7 @@ public interface ITrade {
     default void onTrade(World world, EntityLiving living) {
         if(getStock() > 0)
             setStock(Math.max(0, getStock() - 1));
+        EntityUtil.giveExperience(world,living.getPosition(), CaravansMod.ConfigHandler.experience);
     }
 
     default boolean isInStock() {

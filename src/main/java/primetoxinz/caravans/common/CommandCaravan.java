@@ -8,8 +8,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
-import org.apache.commons.lang3.StringUtils;
-import primetoxinz.caravans.ConfigHandler;
+import primetoxinz.caravans.CaravansMod;
 import primetoxinz.caravans.api.Caravan;
 import primetoxinz.caravans.api.CaravanAPI;
 import primetoxinz.caravans.api.CaravanBuilder;
@@ -49,8 +48,8 @@ public class CommandCaravan extends CommandBase {
             builder = CaravanAPI.getCaravan(args[1]);
         if (builder == null)
             throw new CommandException("Caravan " + args[1] + " was not found");
-        int maxRadius = ConfigHandler.maxRadius;
-        int minRadius = ConfigHandler.minRadius;
+        int maxRadius = CaravansMod.ConfigHandler.maxRadius;
+        int minRadius = CaravansMod.ConfigHandler.minRadius;
         if (args.length > 2)
             maxRadius = parseInt(args[2]);
         if (args.length > 3)

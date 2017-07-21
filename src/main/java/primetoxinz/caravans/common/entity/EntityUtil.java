@@ -5,7 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityBodyHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.passive.EntityTameable;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -197,5 +197,10 @@ public class EntityUtil {
         if (nbt.hasKey("custom"))
             e.setCustomInfo(nbt.getString("custom"));
         return e;
+    }
+
+    public static void giveExperience(World world, BlockPos pos, int count) {
+        EntityXPOrb orb = new EntityXPOrb(world,pos.getX(),pos.getY(),pos.getZ(),count);
+        world.spawnEntity(orb);
     }
 }

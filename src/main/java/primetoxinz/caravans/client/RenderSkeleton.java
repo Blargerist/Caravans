@@ -4,7 +4,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import primetoxinz.caravans.client.models.ModelSkeleton;
-import primetoxinz.caravans.common.entity.EntityCaravaneer;
 import primetoxinz.caravans.common.entity.types.EntitySkeletonCaravaneer;
 
 /**

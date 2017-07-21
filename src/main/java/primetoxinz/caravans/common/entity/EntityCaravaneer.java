@@ -2,10 +2,7 @@ package primetoxinz.caravans.common.entity;
 
 import com.google.common.collect.Lists;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
@@ -15,9 +12,14 @@ import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-import primetoxinz.caravans.api.*;
+import primetoxinz.caravans.api.Caravan;
+import primetoxinz.caravans.api.ITrade;
+import primetoxinz.caravans.api.ITradeEntity;
+import primetoxinz.caravans.api.Merchant;
 import primetoxinz.caravans.common.entity.ai.AISpreadOut;
 import primetoxinz.caravans.common.entity.ai.AIState;
 import primetoxinz.caravans.common.entity.ai.AIWanderNear;
@@ -160,8 +162,16 @@ public abstract class EntityCaravaneer extends EntityCreature implements IEntity
     public void setDead() {
         super.setDead();
         sync();
+
+
         if (caravan != null) {
+            if (caravan.getStatus() != null && caravan.getStatus() != Caravan.Status.GONE && caravan.getTarget() != null) {
+                caravan.getTarget().sendMessage(new TextComponentTranslation(getCaravan().getStatus().getDeathMessage()));
+            }
             if (isLeader()) {
+                if (caravan.getStatus() != null && caravan.getStatus() == Caravan.Status.GONE && caravan.getTarget() != null) {
+                    caravan.getTarget().sendMessage(new TextComponentTranslation(getCaravan().getStatus().getDeathMessage()));
+                }
                 this.caravan.setLeader(null);
             } else {
                 this.caravan.removeFollower(this);
@@ -293,6 +303,34 @@ public abstract class EntityCaravaneer extends EntityCreature implements IEntity
 
     public EntityLivingBase getHangoutTarget() {
         return hangoutTarget;
+    }
+
+    @Override
+    protected void updateLeashedState() {
+        if (this.leashNBTTag != null) {
+            this.recreateLeash();
+        }
+
+        if (this.getLeashed()) {
+            if (!this.isEntityAlive() || this.getLeashedToEntity() == null || this.getLeashedToEntity().isDead) {
+                this.clearLeashed(true, true);
+                return;
+            }
+            Entity entity = getLeashedToEntity();
+            float f = this.getDistanceToEntity(entity);
+            if (f > 6.0F) {
+                double d0 = (entity.posX - this.posX) / (double) f;
+                double d1 = (entity.posY - this.posY) / (double) f;
+                double d2 = (entity.posZ - this.posZ) / (double) f;
+                this.motionX += d0 * Math.abs(d0) * 0.4D;
+                this.motionY += d1 * Math.abs(d1) * 0.4D;
+                this.motionZ += d2 * Math.abs(d2) * 0.4D;
+            } else {
+                this.tasks.enableControlFlag(1);
+                Vec3d vec3d = (new Vec3d(entity.posX - this.posX, entity.posY - this.posY, entity.posZ - this.posZ)).normalize().scale((double) Math.max(f - 2.0F, 0.0F));
+                this.getNavigator().tryMoveToXYZ(this.posX + vec3d.xCoord, this.posY + vec3d.yCoord, this.posZ + vec3d.zCoord, this.followLeashSpeed());
+            }
+        }
     }
 }
 

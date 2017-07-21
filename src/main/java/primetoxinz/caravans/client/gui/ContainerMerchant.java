@@ -15,7 +15,6 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.SlotItemHandler;
 import primetoxinz.caravans.api.Caravan;
 import primetoxinz.caravans.api.Merchant;
-import primetoxinz.caravans.api.MerchantBuilder;
 import primetoxinz.caravans.client.gui.slot.SlotInput;
 import primetoxinz.caravans.client.gui.slot.SlotOutput;
 import primetoxinz.caravans.common.ItemUtils;
