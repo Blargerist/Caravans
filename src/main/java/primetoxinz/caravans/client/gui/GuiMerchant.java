@@ -111,6 +111,7 @@ public class GuiMerchant extends GuiContainer {
         for (GuiBase g : GUIs)
             if (g.isEnabled())
                 g.drawScreen(mouseX, mouseY, partialTicks);
+        this.renderHoveredToolTip(mouseX, mouseY);
     }
 
     public void drawSlot(SlotBase slot, int x, int y) {

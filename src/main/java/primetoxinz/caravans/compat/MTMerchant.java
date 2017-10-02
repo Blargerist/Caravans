@@ -61,20 +61,46 @@ public class MTMerchant {
 
     @ZenMethod
     public static void addEntityTrade(String merchant, IEntity input, IEntity output) {
-        MerchantBuilder m = MTCompat.getMerchant(merchant);
-        TradeEntity trade = new TradeEntity(input, output);
-        if (m != null) {
-            CraftTweakerAPI.apply(new AddTrade(m, trade));
-        }
+    	if (input != null && output != null)
+    	{
+    		MerchantBuilder m = MTCompat.getMerchant(merchant);
+            TradeEntity trade = new TradeEntity(input, output);
+            if (m != null) {
+                CraftTweakerAPI.apply(new AddTrade(m, trade));
+            }
+    	}
+    	else
+    	{
+            if (input == null)
+            {
+            	CaravansMod.logger.error("Bad entity trade input added to merchant " + merchant + ". The trade will not be added.");
+            }
+            if (output == null)
+            {
+            	CaravansMod.logger.error("Bad entity trade output added to merchant " + merchant + ". The trade will not be added.");
+            }
+    	}
     }
 
     @ZenMethod
     public static void addItemEntityTrade(String merchant, IItemStack input, IEntity output) {
         MerchantBuilder m = MTCompat.getMerchant(merchant);
         ItemStack in = toStack(input);
-        TradeItemEntity trade = new TradeItemEntity(in, output);
-        if (m != null) {
-            CraftTweakerAPI.apply(new AddTrade(m, trade));
+        if (in == null)
+        {
+        	CaravansMod.logger.error("Bad item trade input added to merchant " + merchant + ". Replacing with an empty item.");
+        	in = ItemStack.EMPTY;
+        }
+        if (output == null)
+        {
+        	CaravansMod.logger.error("Bad entity trade output added to merchant " + merchant + ". The trade will not be added.");
+        }
+        else
+        {
+        	TradeItemEntity trade = new TradeItemEntity(in, output);
+            if (m != null) {
+                CraftTweakerAPI.apply(new AddTrade(m, trade));
+            }
         }
     }
 
@@ -82,7 +108,17 @@ public class MTMerchant {
     public static void addTrade(String merchant, IItemStack input, IItemStack output, int min, int max) {
         MerchantBuilder m = MTCompat.getMerchant(merchant);
         ItemStack in = toStack(input);
+        if (in == null)
+        {
+        	CaravansMod.logger.error("Bad item trade input added to merchant " + merchant + ". Replacing with an empty item.");
+        	in = ItemStack.EMPTY;
+        }
         ItemStack out = toStack(output);
+        if (out == null)
+        {
+        	CaravansMod.logger.error("Bad item trade output added to merchant " + merchant + ". Replacing with an empty item.");
+        	out = ItemStack.EMPTY;
+        }
         TradeItem trade = new TradeItem(in, out, min, max);
         if (m != null) {
             CraftTweakerAPI.apply(new AddTrade(m, trade));

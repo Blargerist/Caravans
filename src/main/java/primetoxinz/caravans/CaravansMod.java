@@ -49,12 +49,13 @@ import java.util.Random;
  * Created by primetoxinz on 7/1/17.
  */
 @Mod.EventBusSubscriber(modid = CaravansMod.MODID)
-@Mod(modid = CaravansMod.MODID, name = CaravansMod.NAME, version = CaravansMod.VERSION, dependencies = CaravansMod.DEP)
+@Mod(modid = CaravansMod.MODID, name = CaravansMod.NAME, version = CaravansMod.VERSION, dependencies = CaravansMod.DEP, acceptedMinecraftVersions = CaravansMod.MCVERSIONS)
 public class CaravansMod {
     public static final String MODID = "caravans";
     public static final String NAME = "Caravans";
     public static final String VERSION = "{version}";
     public static final String DEP = "required-after:crafttweaker";
+    public static final String MCVERSIONS = "[1.12,1.13)";
 
 
     @SidedProxy(modId = MODID, clientSide = "primetoxinz.caravans.proxy.ClientProxy", serverSide = "primetoxinz.caravans.proxy.ServerProxy")
@@ -165,7 +166,7 @@ public class CaravansMod {
             if (random <= chance) {
                 CaravanBuilder builder = CaravanAPI.getRandomCaravan(world);
                 EntityPlayer player = EntityUtil.getRandomPlayer(world);
-                if (builder != null || player != null) {
+                if (builder != null && player != null) {
                     Caravan caravan = builder.create(world);
                     if (MTGameStages.canSpawnCaravan(player, caravan)) {
                         BlockPos pos = EntityUtil.generatePosition(world, player.getPosition(), ConfigHandler.maxRadius, ConfigHandler.minRadius);

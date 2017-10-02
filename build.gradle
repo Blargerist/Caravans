@@ -10,7 +10,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 
-version = "0.1.6-1.12"
+version = "0.2.0-1.12"
 group = "primetoxinz.caravans"
 archivesBaseName = "Caravans"
 
@@ -20,7 +20,7 @@ compileJava {
 }
 
 minecraft {
-    version = "1.12-14.21.1.2413"
+    version = "1.12.2-14.23.0.2493"
     runDir = "run"
     mappings = "snapshot_20170627"
 }
@@ -32,11 +32,8 @@ repositories {
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.12:+"
-    deobfCompile "CraftTweaker2:CraftTweaker2-API:+"
-    deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:+"
-//    deobfCompile "net.darkhax.bookshelf:Bookshelf:1.11.2-2.0.0.387"
-//    compile "net.darkhax.gamestages:GameStages-1.11.2:1.0.11"
+	compile fileTree(dir: 'dependencies/CraftTweaker2', include: '*.jar')
+    compile fileTree(dir: 'dependencies/JEI', include: '*.jar')
 }
 
 
