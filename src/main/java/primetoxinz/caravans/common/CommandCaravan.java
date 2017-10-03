@@ -6,12 +6,12 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import primetoxinz.caravans.CaravansMod;
 import primetoxinz.caravans.api.Caravan;
 import primetoxinz.caravans.api.CaravanAPI;
 import primetoxinz.caravans.api.CaravanBuilder;
+import primetoxinz.caravans.common.entity.EntityUtil;
 import primetoxinz.caravans.compat.MTGameStages;
 
 import javax.annotation.Nullable;
@@ -57,8 +57,7 @@ public class CommandCaravan extends CommandBase {
         Caravan caravan = builder.create(world);
         if (MTGameStages.canSpawnCaravan(player, caravan)) {
             BlockPos pos = generatePosition(world, player.getPosition(), maxRadius, minRadius);
-            caravan.spawn(pos, player);
-            player.sendStatusMessage(new TextComponentString("A Caravan is arriving"), true);
+            EntityUtil.spawnCaravan(world, player, pos, caravan);
         } else {
             throw new CommandException("Player cannot spawn this caravan yet");
         }

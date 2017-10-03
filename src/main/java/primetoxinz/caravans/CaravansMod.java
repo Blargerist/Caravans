@@ -5,13 +5,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -148,37 +146,37 @@ public class CaravansMod {
 
     @SubscribeEvent
     public static void onWorldTick(TickEvent.WorldTickEvent event) {
-        if (!ConfigHandler.randomlySpawn)
-            return;
-        World world = event.world;
-        Random rand = world.rand;
-        if (world.getMinecraftServer().getPlayerList().getPlayers().isEmpty()) {
-            if (ConfigHandler.debug)
-                logger.warn("Caravans:No Players Found");
-            return;
-        }
-
-        if (event.phase == TickEvent.Phase.END && (world.getWorldTime() % 24000) == ConfigHandler.worldTime) {
-            double random = rand.nextDouble();
-            double chance = ConfigHandler.spawnPercent / 100d;
-            if (ConfigHandler.debug)
-                logger.warn("Caravans:Attempting to spawn Caravan. Config Chance: %s Random Chance: %s", chance, random);
-            if (random <= chance) {
-                CaravanBuilder builder = CaravanAPI.getRandomCaravan(world);
-                EntityPlayer player = EntityUtil.getRandomPlayer(world);
-                if (builder != null && player != null) {
-                    Caravan caravan = builder.create(world);
-                    if (MTGameStages.canSpawnCaravan(player, caravan)) {
-                        BlockPos pos = EntityUtil.generatePosition(world, player.getPosition(), ConfigHandler.maxRadius, ConfigHandler.minRadius);
-                        caravan.spawn(pos, player);
-                        if (ConfigHandler.debug)
-                            logger.warn("Successfully spawning a caravan at %s! Going to %s", pos, player);
-                        player.sendStatusMessage(new TextComponentTranslation("text.arriving"), true);
-                    }
-                }
+    	if (!event.world.isRemote)
+    	{
+    		if (!ConfigHandler.randomlySpawn)
+                return;
+            World world = event.world;
+            Random rand = world.rand;
+            if (world.playerEntities.isEmpty()) {
+//                if (ConfigHandler.debug)
+//                    logger.warn("Caravans:No Players Found In World " + world.provider.getDimension());
+                return;
             }
 
-        }
+            if (event.phase == TickEvent.Phase.END && (world.getWorldTime() % 24000) == ConfigHandler.worldTime) {
+                double random = rand.nextDouble();
+                double chance = ConfigHandler.spawnPercent / 100d;
+                if (ConfigHandler.debug)
+                    logger.warn("Caravans:Attempting to spawn Caravan. Config Chance: %s Random Chance: %s", chance, random);
+                if (random <= chance) {
+                    CaravanBuilder builder = CaravanAPI.getRandomCaravan(world);
+                    EntityPlayer player = EntityUtil.getRandomPlayer(world);
+                    if (builder != null && player != null) {
+                        Caravan caravan = builder.create(world);
+                        if (MTGameStages.canSpawnCaravan(player, caravan)) {
+                            BlockPos pos = EntityUtil.generatePosition(world, player.getPosition(), ConfigHandler.maxRadius, ConfigHandler.minRadius);
+                            EntityUtil.spawnCaravan(world, player, pos, caravan);
+                        }
+                    }
+                }
+
+            }
+    	}
     }
 
     @Mod.EventBusSubscriber(modid = CaravansMod.MODID)

@@ -7,11 +7,14 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import primetoxinz.caravans.CaravansMod;
+import primetoxinz.caravans.CaravansMod.ConfigHandler;
+import primetoxinz.caravans.api.Caravan;
 import primetoxinz.caravans.compat.EntityTradeable;
 import primetoxinz.caravans.compat.IEntity;
 
@@ -90,7 +93,7 @@ public class EntityUtil {
     }
 
     public static EntityPlayer getRandomPlayer(World world) {
-        List<EntityPlayerMP> players = world.getMinecraftServer().getPlayerList().getPlayers();
+        List<EntityPlayer> players = world.playerEntities;
         if (!players.isEmpty()) {
             int i = world.rand.nextInt(players.size());
             return players.get(i);
@@ -202,5 +205,21 @@ public class EntityUtil {
     public static void giveExperience(World world, BlockPos pos, int count) {
         EntityXPOrb orb = new EntityXPOrb(world,pos.getX(),pos.getY(),pos.getZ(),count);
         world.spawnEntity(orb);
+    }
+    
+    public static void spawnCaravan(final World world, final EntityPlayer player, final BlockPos pos, final Caravan caravan)
+    {
+    	caravan.spawn(pos, player);
+    	if (ConfigHandler.debug)
+            CaravansMod.logger.warn("Successfully spawning a caravan at %s! Going to %s", pos, player);
+    	boolean eastWest = pos.getX() > player.getPosition().getX();
+    	int eastWestDiff = Math.abs(pos.getX() - player.getPosition().getX());
+    	
+    	boolean northSouth = pos.getZ() < player.getPosition().getZ();
+    	int northSouthDiff = Math.abs(pos.getZ() - player.getPosition().getZ());
+    	
+    	final TextComponentTranslation message = new TextComponentTranslation("text.arriving", (northSouthDiff > 25 ? (northSouth ? "north" : "south") : "") + (eastWestDiff > 25 ? (eastWest ? "east" : "west") : ""));
+        player.sendMessage(message);
+        player.sendStatusMessage(message, true);
     }
 }

@@ -1,4 +1,4 @@
-text.arriving=A caravan is arriving!
+text.arriving=A caravan is arriving from the %s!
 text.buy_entity=Selling:
 text.sell_entity=Buying:
 entity.caravans.caravan.villager.name=Caravaneer
