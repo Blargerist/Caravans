@@ -236,11 +236,14 @@ public abstract class EntityCaravaneer extends EntityCreature implements IEntity
 
     @Override
     protected boolean processInteract(EntityPlayer player, EnumHand hand) {
-        sync();
-        if (isLeader() && getCaravan().getStatus() == Caravan.Status.TRADING) {
-            getCaravan().openFirst(player);
-            return true;
-        }
+    	if (!this.world.isRemote)
+    	{
+    		sync();
+            if (isLeader() && getCaravan().getStatus() == Caravan.Status.TRADING) {
+                getCaravan().openFirst(player);
+                return true;
+            }
+    	}
         return false;
     }
 

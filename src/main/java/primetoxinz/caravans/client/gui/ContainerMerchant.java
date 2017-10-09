@@ -13,6 +13,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.SlotItemHandler;
+import primetoxinz.caravans.CaravansMod;
 import primetoxinz.caravans.api.Caravan;
 import primetoxinz.caravans.api.Merchant;
 import primetoxinz.caravans.client.gui.slot.SlotInput;
@@ -101,6 +102,7 @@ public class ContainerMerchant extends Container {
                     ItemUtils.takeItemStack(player, input.getStack(), input.getStack().getCount());
                     if (merchant != null) {
                         output.getTrade().onTrade(world, caravaneer);
+                        player.addExperience(CaravansMod.ConfigHandler.experience);
                     }
                 }
             }

@@ -40,7 +40,7 @@ public interface ITrade {
     default void onTrade(World world, EntityLiving living) {
         if(getStock() > 0)
             setStock(Math.max(0, getStock() - 1));
-        EntityUtil.giveExperience(world,living.getPosition(), CaravansMod.ConfigHandler.experience);
+//        EntityUtil.giveExperience(world,living.getPosition(), CaravansMod.ConfigHandler.experience);
     }
 
     default boolean isInStock() {
